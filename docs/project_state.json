@@ -1,24 +1,29 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - MVP",
   "fecha_actualizacion": "2026-09-25",
-  "fase_actual": "Fase 1 - Estructura inicial y Base de Datos",
+  "fase_actual": "Fase 2 - Backend Analitico (FastAPI)",
   "backlog": {
     "completado": [
-      "Inicialización de repositorio Git local",
-      "Creación de estructura de carpetas (db, backend, frontend, docs)"
+      "Inicializacion de repositorio Git local",
+      "Creacion de estructura de carpetas (db, backend, frontend, docs)",
+      "Instalacion de PostgreSQL 18.6",
+      "Esquema PostgreSQL (7 tablas) con datos semilla cargados - Capa 1 completa"
     ],
-    "en_progreso": [
-      "Creación de schema.sql con datos semilla (Capa 1)"
-    ],
+    "en_progreso": [],
     "pendiente": [
       "Backend FastAPI (Capa 2)",
       "Frontend Java/JSP + Chart.js (Capa 3)"
     ]
   },
-  "archivos_modificados_recientemente": [],
+  "archivos_modificados_recientemente": [
+    "db/schema.sql"
+  ],
   "decisiones_de_diseno": [
     "Arquitectura de 3 capas: PostgreSQL -> FastAPI -> Java/JSP",
-    "Infraestructura local a costo $0 (localhost:8080 y localhost:8000)"
+    "Infraestructura local a costo $0 (localhost:8080 y localhost:8000)",
+    "PostgreSQL 18.6 instalado con puerto por defecto 5432"
   ],
-  "errores_resueltos": []
+  "errores_resueltos": [
+    "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario"
+  ]
 }
