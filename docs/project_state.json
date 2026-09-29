@@ -1,24 +1,26 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - MVP",
-  "fecha_actualizacion": "2026-09-27",
-  "fase_actual": "Fase 2 - Backend Analitico (FastAPI) en progreso",
+  "fecha_actualizacion": "2026-09-29",
+  "fase_actual": "Fase 2 completada - Backend Analitico (FastAPI) funcional. Iniciando Fase 3 - Frontend",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
       "Creacion de estructura de carpetas (db, backend, frontend, docs)",
       "Instalacion de PostgreSQL 18.6",
-      "Esquema PostgreSQL (7 tablas) con datos semilla cargados - Capa 1 completa"
+      "Esquema PostgreSQL (7 tablas) con datos semilla cargados - Capa 1 completa",
+      "Backend FastAPI completo y verificado - Capa 2 completa: entorno virtual, dependencias, conexion a PostgreSQL, 3 endpoints de KPIs (OTIF, Lead Time, Proveedores) responden 200 con datos reales"
     ],
-    "en_progreso": [
-      "Entorno virtual y dependencias de FastAPI (Capa 2)",
-      "Endpoints de KPIs: OTIF, Lead Time, Proveedores"
-    ],
+    "en_progreso": [],
     "pendiente": [
       "Frontend Java/JSP + Chart.js (Capa 3)"
     ]
   },
   "archivos_modificados_recientemente": [
     "db/schema.sql",
+    "backend/requirements.txt",
+    "backend/app/__init__.py",
+    "backend/app/database.py",
+    "backend/app/main.py",
     "docs/project_state.json"
   ],
   "decisiones_de_diseno": [
@@ -26,10 +28,14 @@
     "Infraestructura local a costo $0 (localhost:8080 y localhost:8000)",
     "PostgreSQL 18.6 instalado con puerto por defecto 5432",
     "Python actualizado de 3.12.10 a 3.13.15 para alinear con la recomendacion del PDR seccion 4.3 - confirmado como version predeterminada del comando python con where.exe python",
-    "psycopg2-binary actualizado de 2.9.9 a 2.9.10 porque la version 2.9.9 no tiene wheel precompilado para Python 3.13, evitando instalar Microsoft C++ Build Tools"
+    "psycopg2-binary actualizado de 2.9.9 a 2.9.10 porque la version 2.9.9 no tiene wheel precompilado para Python 3.13, evitando instalar Microsoft C++ Build Tools",
+    "fastapi instalado con extra [standard] (fastapi[standard]==0.135.1) porque el comando CLI 'fastapi dev' requiere ese extra, no basta con fastapi a secas",
+    "Contrasena de PostgreSQL cambiada a una sin acentos ni simbolos especiales, y .env regenerado en UTF-8 puro, para evitar errores de codificacion al conectar desde psycopg2"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
-    "Error compilando psycopg2-binary 2.9.9 en Python 3.13 (faltaba Visual C++ Build Tools) - resuelto actualizando a psycopg2-binary 2.9.10 con wheel precompilado"
+    "Error compilando psycopg2-binary 2.9.9 en Python 3.13 (faltaba Visual C++ Build Tools) - resuelto actualizando a psycopg2-binary 2.9.10 con wheel precompilado",
+    "RuntimeError al ejecutar 'fastapi dev' - resuelto instalando fastapi[standard]==0.135.1 en vez de fastapi==0.135.1",
+    "UnicodeDecodeError al conectar a PostgreSQL desde FastAPI (byte invalido en .env) - resuelto cambiando la contrasena de postgres a una sin caracteres especiales y regenerando .env en UTF-8 puro con heredoc"
   ]
 }
