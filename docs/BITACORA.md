@@ -4,6 +4,9 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-29 03:03 | 4fab2a8 | feat(dashboard): agregar modulos de Inventario y Envios/Logistica - 4 modulos del PDR cubiertos, con correccion de codificacion en SKU-002 |
+| 2026-09-29 03:01 | 990f216 | feat(dashboard): agregar modulos de Inventario y Envios/Logistica - 4 modulos del PDR cubiertos en el dashboard |
+| 2026-09-29 02:43 | f78cd12 | docs: actualizar BITACORA.md - modulo de inventarios agregado al dashboard |
 | 2026-09-29 02:43 | 6b4b05d | docs: registrar nuevo endpoint de inventario y correccion de codificacion en productos |
 | 2026-09-29 02:41 | 49852d4 | feat: agregar endpoint /kpis/inventario y tabla de inventario en el dashboard - cubre Modulo de Inventarios con alerta visual de stock 0 |
 | 2026-09-29 02:04 | 1b3dc94 | docs: actualizar BITACORA.md - cierre completo del MVP end-to-end funcional |
