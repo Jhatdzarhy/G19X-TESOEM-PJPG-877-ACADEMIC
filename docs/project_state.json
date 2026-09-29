@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - MVP",
   "fecha_actualizacion": "2026-09-29",
-  "fase_actual": "Fase 2 completada - Backend Analitico (FastAPI) funcional. Iniciando Fase 3 - Frontend (entorno Java y Tomcat listo)",
+  "fase_actual": "Fase 3 en progreso - Frontend Java/JSP verificado en Tomcat, iniciando conexion con FastAPI y Chart.js",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -10,11 +10,15 @@
       "Esquema PostgreSQL (7 tablas) con datos semilla cargados - Capa 1 completa",
       "Backend FastAPI completo y verificado - Capa 2 completa: entorno virtual, dependencias, conexion a PostgreSQL, 3 endpoints de KPIs (OTIF, Lead Time, Proveedores) responden 200 con datos reales",
       "Instalacion de JDK 21 LTS (Eclipse Temurin 21.0.12.1) como Java predeterminado, con JAVA_HOME y PATH configurados",
-      "Instalacion de Apache Tomcat 10.1.60 (zip) en C:\\tomcat\\apache-tomcat-10.1.60 - arranca con catalina.bat run y responde en localhost:8080"
+      "Instalacion de Apache Tomcat 10.1.60 (zip) en C:\\tomcat\\apache-tomcat-10.1.60 - arranca con startup.bat y responde en localhost:8080",
+      "Estructura del proyecto web creada (webapp/WEB-INF/web.xml, webapp/css, webapp/js) y desplegada en Tomcat como aplicacion 'supplychain'",
+      "Primera pagina JSP (index.jsp) desplegada y verificada exitosamente en http://localhost:8080/supplychain/ - Capa 3 arranca correctamente y procesa codigo Java del lado del servidor"
     ],
-    "en_progreso": [],
+    "en_progreso": [
+      "Conectar el frontend JSP/JavaScript con los endpoints de FastAPI (KPIs) via fetch"
+    ],
     "pendiente": [
-      "Frontend Java/JSP + Chart.js (Capa 3)"
+      "Vistas con Chart.js consumiendo /kpis/otif, /kpis/lead-time, /kpis/proveedores"
     ]
   },
   "archivos_modificados_recientemente": [
@@ -23,6 +27,8 @@
     "backend/app/__init__.py",
     "backend/app/database.py",
     "backend/app/main.py",
+    "frontend/webapp/WEB-INF/web.xml",
+    "frontend/webapp/index.jsp",
     "docs/project_state.json"
   ],
   "decisiones_de_diseno": [
@@ -35,12 +41,15 @@
     "Contrasena de PostgreSQL cambiada a una sin acentos ni simbolos especiales, y .env regenerado en UTF-8 puro, para evitar errores de codificacion al conectar desde psycopg2",
     "JDK 21 LTS instalado junto al JDK 26 ya existente (coexisten) por la recomendacion del PDR seccion 4.3 de compatibilidad probada con Tomcat 10.1.x; JAVA_HOME apunta a C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.12.101-hotspot\\",
     "Tomcat instalado desde el zip (no el instalador de servicio) en C:\\tomcat para controlar el arranque manualmente en desarrollo",
-    "El aviso de Tomcat Native (APR) al arrancar es informativo y se ignora: Tomcat usa el conector Java http-nio-8080"
+    "El aviso de Tomcat Native (APR) al arrancar es informativo y se ignora: Tomcat usa el conector Java http-nio-8080",
+    "La aplicacion web se despliega copiando la carpeta webapp/ directamente a C:\\tomcat\\apache-tomcat-10.1.60\\webapps\\supplychain (sin empaquetar en .war) para agilizar el ciclo de desarrollo del MVP"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
     "Error compilando psycopg2-binary 2.9.9 en Python 3.13 (faltaba Visual C++ Build Tools) - resuelto actualizando a psycopg2-binary 2.9.10 con wheel precompilado",
     "RuntimeError al ejecutar 'fastapi dev' - resuelto instalando fastapi[standard]==0.135.1 en vez de fastapi==0.135.1",
-    "UnicodeDecodeError al conectar a PostgreSQL desde FastAPI (byte invalido en .env) - resuelto cambiando la contrasena de postgres a una sin caracteres especiales y regenerando .env en UTF-8 puro con heredoc"
+    "UnicodeDecodeError al conectar a PostgreSQL desde FastAPI (byte invalido en .env) - resuelto cambiando la contrasena de postgres a una sin caracteres especiales y regenerando .env en UTF-8 puro con heredoc",
+    "CATALINA_HOME no definido al ejecutar version.bat - resuelto configurando la variable de entorno de usuario y abriendo una ventana nueva de PowerShell",
+    "Archivo index.jsp creado accidentalmente como carpeta en VS Code - resuelto eliminandolo y usando la opcion correcta 'Nuevo archivo...' desde el menu contextual"
   ]
 }
