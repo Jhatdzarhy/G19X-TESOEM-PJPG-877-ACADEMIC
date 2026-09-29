@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - MVP",
   "fecha_actualizacion": "2026-09-29",
-  "fase_actual": "Fase 3 completada - Dashboard ejecutivo end-to-end funcional (PostgreSQL -> FastAPI -> JSP/Chart.js)",
+  "fase_actual": "Fase 3 completada - Dashboard ejecutivo con 4 modulos funcionales (Proveedores, Compras/OTIF, Inventarios, Logistica/Envios)",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -14,12 +14,14 @@
       "Estructura del proyecto web creada (webapp/WEB-INF/web.xml, webapp/css, webapp/js) y desplegada en Tomcat como aplicacion 'supplychain'",
       "Primera pagina JSP (index.jsp) desplegada y verificada exitosamente en http://localhost:8080/supplychain/ - Capa 3 arranca correctamente y procesa codigo Java del lado del servidor",
       "Dashboard ejecutivo funcional con Bootstrap 5 y Chart.js, conectado en vivo a los 3 endpoints de FastAPI (OTIF, Lead Time, Proveedores) - Capa 3 verificada end-to-end en http://localhost:8080/supplychain/",
-      "Correccion de codificacion de 'Mexico' en tabla proveedores - datos mostrados correctamente en el dashboard"
-      "Endpoint /kpis/inventario agregado (stock actual por producto: entradas - salidas) y conectado al dashboard con tabla resaltando en rojo productos sin stock (table-danger)"
+      "Correccion de codificacion de 'Mexico' en tabla proveedores - datos mostrados correctamente en el dashboard",
+      "Endpoint /kpis/inventario agregado (stock actual por producto: entradas - salidas) y conectado al dashboard con tabla resaltando en rojo productos sin stock (table-danger)",
+      "Endpoint /kpis/envios agregado (estado A tiempo / Tardio por envio, comparando fecha_llegada_real vs fecha_llegada_estim) y conectado al dashboard con tabla e insignias verde/roja - Modulo de Logistica cubierto"
     ],
     "en_progreso": [],
     "pendiente": [
-      "Agregar KPIs adicionales cubriendo mas modulos (Inventarios, Almacenes, Alertas)",
+      "Modulo de Almacenes (capacidad y ocupacion)",
+      "Modulo de Alertas Ejecutivas (umbrales de KPIs)",
       "Manual tecnico y plan de mantenimiento (fases 7 y 8 del cronograma)"
     ]
   },
@@ -46,7 +48,8 @@
     "Tomcat instalado desde el zip (no el instalador de servicio) en C:\\tomcat para controlar el arranque manualmente en desarrollo",
     "El aviso de Tomcat Native (APR) al arrancar es informativo y se ignora: Tomcat usa el conector Java http-nio-8080",
     "La aplicacion web se despliega copiando la carpeta webapp/ directamente a C:\\tomcat\\apache-tomcat-10.1.60\\webapps\\supplychain (sin empaquetar en .war) para agilizar el ciclo de desarrollo del MVP",
-    "Dashboard construido con Bootstrap 5.3.8 y Chart.js 4 via CDN, consumiendo los endpoints de FastAPI con fetch desde dashboard.js"
+    "Dashboard construido con Bootstrap 5.3.8 y Chart.js 4 via CDN, consumiendo los endpoints de FastAPI con fetch desde dashboard.js",
+    "Estado de envios (A tiempo / Tardio) calculado comparando fecha_llegada_real vs fecha_llegada_estim directamente en el endpoint, sin necesidad de la tabla fact_supply_chain para el MVP"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -58,7 +61,7 @@
     "Archivo dashboard.js creado por error fuera de la carpeta js/ - resuelto moviendolo con Move-Item a webapp/js/dashboard.js",
     "Error 404 al cargar dashboard.js en el navegador - causado por el archivo mal ubicado, resuelto tras corregir su ubicacion y redesplegar en Tomcat",
     "net::ERR_CONNECTION_REFUSED al llamar a los endpoints de FastAPI desde el dashboard - causado porque el servidor fastapi dev se habia detenido, resuelto volviendolo a levantar en una ventana dedicada",
-    "Caracter 'MÃ©xico' mal codificado en la tabla proveedores por discrepancia de codepage de consola (850 vs 1252) al ejecutar schema.sql - corregido con UPDATE directo usando 'Mexico' sin acento para evitar el mismo problema de codificacion"
+    "Caracter 'MÃ©xico' mal codificado en la tabla proveedores por discrepancia de codepage de consola (850 vs 1252) al ejecutar schema.sql - corregido con UPDATE directo usando 'Mexico' sin acento para evitar el mismo problema de codificacion",
     "Caracter 'ElÃ©ctrico' mal codificado en producto SKU-002 por la misma discrepancia de codepage - corregido con UPDATE usando 'Electrico' sin acento"
   ]
 }
