@@ -4,6 +4,9 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-29 02:00 | 5cdfb09 | docs: cerrar Capa 3 - registrar todos los errores resueltos y estado final del dashboard funcional |
+| 2026-09-29 01:46 | 09f9aad | feat(frontend): dashboard funcional con Bootstrap 5 y Chart.js conectado a FastAPI - Capa 3 completa end-to-end |
+| 2026-09-29 01:24 | 54f706f | docs: actualizar BITACORA.md - Capa 3 frontend verificado en Tomcat |
 | 2026-09-29 01:24 | 43b6e00 | feat(frontend): desplegar index.jsp de prueba y registrar hito de Capa 3 verificada en Tomcat |
 | 2026-09-29 01:23 | 9349c36 | feat(frontend): crear estructura web.xml y index.jsp de prueba - Capa 3 verificada en Tomcat localhost:8080 |
 | 2026-09-28 23:35 | 3675017 | docs: actualizar BITACORA.md - entorno Java y Tomcat |
