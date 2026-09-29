@@ -4,6 +4,8 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-28 23:35 | 5532099 | docs: registrar entorno Java - JDK 21 Temurin y Tomcat 10.1.60 verificados |
+| 2026-09-28 22:54 | 1d17af0 | docs: actualizar BITACORA.md - cierre completo de Capa 2 |
 | 2026-09-28 22:53 | a244444 | docs: cerrar Capa 2 - registrar todas las decisiones y errores resueltos del backend FastAPI |
 | 2026-09-28 22:50 | 5944def | feat(backend): agregar database.py y main.py con endpoints de KPIs (OTIF, Lead Time, Proveedores) - Capa 2 completa y verificada |
 | 2026-09-28 22:50 | 94316cb | fix(backend): actualizar requirements.txt con fastapi[standard] y psycopg2-binary 2.9.10 |
