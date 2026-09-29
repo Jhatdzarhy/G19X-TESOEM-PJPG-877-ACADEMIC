@@ -15,6 +15,7 @@
       "Primera pagina JSP (index.jsp) desplegada y verificada exitosamente en http://localhost:8080/supplychain/ - Capa 3 arranca correctamente y procesa codigo Java del lado del servidor",
       "Dashboard ejecutivo funcional con Bootstrap 5 y Chart.js, conectado en vivo a los 3 endpoints de FastAPI (OTIF, Lead Time, Proveedores) - Capa 3 verificada end-to-end en http://localhost:8080/supplychain/",
       "Correccion de codificacion de 'Mexico' en tabla proveedores - datos mostrados correctamente en el dashboard"
+      "Endpoint /kpis/inventario agregado (stock actual por producto: entradas - salidas) y conectado al dashboard con tabla resaltando en rojo productos sin stock (table-danger)"
     ],
     "en_progreso": [],
     "pendiente": [
@@ -58,5 +59,6 @@
     "Error 404 al cargar dashboard.js en el navegador - causado por el archivo mal ubicado, resuelto tras corregir su ubicacion y redesplegar en Tomcat",
     "net::ERR_CONNECTION_REFUSED al llamar a los endpoints de FastAPI desde el dashboard - causado porque el servidor fastapi dev se habia detenido, resuelto volviendolo a levantar en una ventana dedicada",
     "Caracter 'MÃ©xico' mal codificado en la tabla proveedores por discrepancia de codepage de consola (850 vs 1252) al ejecutar schema.sql - corregido con UPDATE directo usando 'Mexico' sin acento para evitar el mismo problema de codificacion"
+    "Caracter 'ElÃ©ctrico' mal codificado en producto SKU-002 por la misma discrepancia de codepage - corregido con UPDATE usando 'Electrico' sin acento"
   ]
 }
