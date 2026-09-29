@@ -4,6 +4,7 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-29 14:17 | aed0e2c | docs: actualizar BITACORA.md - dashboard con 6 modulos funcionales, MVP muy solido |
 | 2026-09-29 14:17 | 3271e04 | feat(dashboard): agregar modulo de Alertas Ejecutivas - 6 modulos del PDR cubiertos |
 | 2026-09-29 14:13 | 024f788 | feat(dashboard): agregar modulo de Alertas Ejecutivas - 6 modulos del PDR cubiertos |
 | 2026-09-29 13:55 | e9aac3f | docs: actualizar BITACORA.md - dashboard con 5 modulos funcionales |
