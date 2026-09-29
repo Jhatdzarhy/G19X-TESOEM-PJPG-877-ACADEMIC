@@ -4,6 +4,9 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-29 02:43 | 6b4b05d | docs: registrar nuevo endpoint de inventario y correccion de codificacion en productos |
+| 2026-09-29 02:41 | 49852d4 | feat: agregar endpoint /kpis/inventario y tabla de inventario en el dashboard - cubre Modulo de Inventarios con alerta visual de stock 0 |
+| 2026-09-29 02:04 | 1b3dc94 | docs: actualizar BITACORA.md - cierre completo del MVP end-to-end funcional |
 | 2026-09-29 02:01 | 7546633 | docs: actualizar BITACORA.md - cierre completo del MVP end-to-end funcional |
 | 2026-09-29 02:00 | 5cdfb09 | docs: cerrar Capa 3 - registrar todos los errores resueltos y estado final del dashboard funcional |
 | 2026-09-29 01:46 | 09f9aad | feat(frontend): dashboard funcional con Bootstrap 5 y Chart.js conectado a FastAPI - Capa 3 completa end-to-end |
