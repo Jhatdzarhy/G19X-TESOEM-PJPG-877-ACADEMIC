@@ -25,9 +25,11 @@
     "Arquitectura de 3 capas: PostgreSQL -> FastAPI -> Java/JSP",
     "Infraestructura local a costo $0 (localhost:8080 y localhost:8000)",
     "PostgreSQL 18.6 instalado con puerto por defecto 5432",
-    "Python actualizado de 3.12.10 a 3.13.15 para alinear con la recomendacion del PDR seccion 4.3 - confirmado como version predeterminada del comando python con where.exe python"
+    "Python actualizado de 3.12.10 a 3.13.15 para alinear con la recomendacion del PDR seccion 4.3 - confirmado como version predeterminada del comando python con where.exe python",
+    "psycopg2-binary actualizado de 2.9.9 a 2.9.10 porque la version 2.9.9 no tiene wheel precompilado para Python 3.13, evitando instalar Microsoft C++ Build Tools"
   ],
   "errores_resueltos": [
-    "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario"
+    "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
+    "Error compilando psycopg2-binary 2.9.9 en Python 3.13 (faltaba Visual C++ Build Tools) - resuelto actualizando a psycopg2-binary 2.9.10 con wheel precompilado"
   ]
 }
