@@ -4,6 +4,9 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-29 13:55 | 07e0c32 | feat(dashboard): agregar modulo de Almacenes - 5 modulos del PDR cubiertos, con cache-busting en dashboard.js |
+| 2026-09-29 13:52 | f0ed1cb | feat(dashboard): agregar modulo de Almacenes - 5 modulos del PDR cubiertos, con cache-busting en dashboard.js |
+| 2026-09-29 03:03 | 079a130 | docs: actualizar BITACORA.md - dashboard con 4 modulos funcionales |
 | 2026-09-29 03:03 | 4fab2a8 | feat(dashboard): agregar modulos de Inventario y Envios/Logistica - 4 modulos del PDR cubiertos, con correccion de codificacion en SKU-002 |
 | 2026-09-29 03:01 | 990f216 | feat(dashboard): agregar modulos de Inventario y Envios/Logistica - 4 modulos del PDR cubiertos en el dashboard |
 | 2026-09-29 02:43 | f78cd12 | docs: actualizar BITACORA.md - modulo de inventarios agregado al dashboard |
