@@ -76,3 +76,41 @@ def get_proveedores():
         conn.close()
 
     return {"proveedores": rows}
+
+@app.get("/kpis/inventario")
+def get_inventario():
+    """Stock actual por producto: entradas - salidas (Módulo de Inventarios)"""
+    query = """
+        SELECT
+            p.producto_id,
+            p.nombre,
+            p.sku,
+            COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'ENTRADA' THEN m.cantidad ELSE 0 END), 0) AS total_entradas,
+            COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'SALIDA' THEN m.cantidad ELSE 0 END), 0) AS total_salidas
+        FROM productos p
+        LEFT JOIN movimientos_inventario m ON m.producto_id = p.producto_id
+        GROUP BY p.producto_id, p.nombre, p.sku
+        ORDER BY p.nombre;
+    """
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query)
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    inventario = []
+    for row in rows:
+        entradas = float(row["total_entradas"])
+        salidas = float(row["total_salidas"])
+        inventario.append({
+            "producto_id": row["producto_id"],
+            "nombre": row["nombre"],
+            "sku": row["sku"],
+            "total_entradas": entradas,
+            "total_salidas": salidas,
+            "stock_actual": entradas - salidas
+        })
+
+    return {"inventario": inventario}

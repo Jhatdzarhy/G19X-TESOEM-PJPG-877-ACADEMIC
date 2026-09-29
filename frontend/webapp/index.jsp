@@ -70,7 +70,21 @@
                 </div>
             </div>
         </div>
-
+        <div class="row g-3 mt-3">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header">Inventario por Producto</div>
+                    <div class="card-body">
+                        <table class="table table-sm" id="tabla-inventario">
+                            <thead>
+                                <tr><th>SKU</th><th>Producto</th><th>Entradas</th><th>Salidas</th><th>Stock Actual</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
         <p class="text-center text-muted mt-4">
             <small>Fecha del servidor (JSP): <%= new java.util.Date() %></small>
         </p>

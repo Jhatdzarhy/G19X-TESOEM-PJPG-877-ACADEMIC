@@ -46,8 +46,25 @@ async function cargarProveedores() {
     });
 }
 
+async function cargarInventario() {
+    const res = await fetch(`${API_BASE}/kpis/inventario`);
+    const data = await res.json();
+    const inventario = data.inventario;
+
+    const tbody = document.querySelector("#tabla-inventario tbody");
+    tbody.innerHTML = "";
+    inventario.forEach(p => {
+        const fila = document.createElement("tr");
+        const claseStock = p.stock_actual <= 0 ? "table-danger" : "";
+        fila.className = claseStock;
+        fila.innerHTML = `<td>${p.sku}</td><td>${p.nombre}</td><td>${p.total_entradas}</td><td>${p.total_salidas}</td><td>${p.stock_actual}</td>`;
+        tbody.appendChild(fila);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     cargarOTIF();
     cargarLeadTime();
     cargarProveedores();
+    cargarInventario();
 });
