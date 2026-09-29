@@ -114,3 +114,47 @@ def get_inventario():
         })
 
     return {"inventario": inventario}
+
+@app.get("/kpis/envios")
+def get_envios():
+    """Estado de envíos por proveedor: a tiempo / tardío / en tránsito (Módulo de Logística)"""
+    query = """
+        SELECT
+            e.envio_id,
+            pr.nombre AS proveedor,
+            e.fecha_salida,
+            e.fecha_llegada_estim,
+            e.fecha_llegada_real,
+            e.costo_flete
+        FROM envios e
+        JOIN proveedores pr ON pr.proveedor_id = e.proveedor_id
+        ORDER BY e.fecha_salida;
+    """
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query)
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    envios = []
+    for row in rows:
+        if row["fecha_llegada_real"] is None:
+            estado = "En transito"
+        elif row["fecha_llegada_real"] <= row["fecha_llegada_estim"]:
+            estado = "A tiempo"
+        else:
+            estado = "Tardio"
+
+        envios.append({
+            "envio_id": row["envio_id"],
+            "proveedor": row["proveedor"],
+            "fecha_salida": row["fecha_salida"].strftime("%Y-%m-%d") if row["fecha_salida"] else None,
+            "fecha_llegada_estim": row["fecha_llegada_estim"].strftime("%Y-%m-%d") if row["fecha_llegada_estim"] else None,
+            "fecha_llegada_real": row["fecha_llegada_real"].strftime("%Y-%m-%d") if row["fecha_llegada_real"] else None,
+            "costo_flete": float(row["costo_flete"]) if row["costo_flete"] is not None else 0,
+            "estado": estado
+        })
+
+    return {"envios": envios}

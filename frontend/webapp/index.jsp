@@ -70,6 +70,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row g-3 mt-3">
             <div class="col-12">
                 <div class="card shadow-sm">
@@ -85,6 +86,30 @@
                 </div>
             </div>
         </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header">Estado de Envíos (Logística)</div>
+                    <div class="card-body">
+                        <table class="table table-sm table-hover" id="tabla-envios">
+                            <thead>
+                                <tr>
+                                    <th>Proveedor</th>
+                                    <th>Salida</th>
+                                    <th>Llegada Estimada</th>
+                                    <th>Llegada Real</th>
+                                    <th>Costo Flete</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <p class="text-center text-muted mt-4">
             <small>Fecha del servidor (JSP): <%= new java.util.Date() %></small>
         </p>

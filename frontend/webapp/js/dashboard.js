@@ -62,9 +62,33 @@ async function cargarInventario() {
     });
 }
 
+async function cargarEnvios() {
+    const res = await fetch(`${API_BASE}/kpis/envios`);
+    const data = await res.json();
+    const envios = data.envios;
+
+    const tbody = document.querySelector("#tabla-envios tbody");
+    tbody.innerHTML = "";
+
+    envios.forEach(e => {
+        const badgeClass = e.estado === "A tiempo" ? "bg-success" : "bg-danger";
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+            <td>${e.proveedor}</td>
+            <td>${e.fecha_salida}</td>
+            <td>${e.fecha_llegada_estim}</td>
+            <td>${e.fecha_llegada_real}</td>
+            <td>$${e.costo_flete}</td>
+            <td><span class="badge ${badgeClass}">${e.estado}</span></td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     cargarOTIF();
     cargarLeadTime();
     cargarProveedores();
     cargarInventario();
+    cargarEnvios();
 });
