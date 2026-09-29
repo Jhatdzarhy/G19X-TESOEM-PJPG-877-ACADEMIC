@@ -4,6 +4,7 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-29 02:01 | 7546633 | docs: actualizar BITACORA.md - cierre completo del MVP end-to-end funcional |
 | 2026-09-29 02:00 | 5cdfb09 | docs: cerrar Capa 3 - registrar todos los errores resueltos y estado final del dashboard funcional |
 | 2026-09-29 01:46 | 09f9aad | feat(frontend): dashboard funcional con Bootstrap 5 y Chart.js conectado a FastAPI - Capa 3 completa end-to-end |
 | 2026-09-29 01:24 | 54f706f | docs: actualizar BITACORA.md - Capa 3 frontend verificado en Tomcat |
