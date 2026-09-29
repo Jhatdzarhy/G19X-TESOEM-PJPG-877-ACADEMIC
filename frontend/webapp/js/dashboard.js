@@ -1,5 +1,27 @@
 const API_BASE = "http://localhost:8000";
 
+async function cargarAlertas() {
+    const res = await fetch(`${API_BASE}/kpis/alertas`);
+    const data = await res.json();
+    const alertas = data.alertas;
+
+    const contenedor = document.getElementById("contenedor-alertas");
+    contenedor.innerHTML = "";
+
+    if (alertas.length === 0) {
+        contenedor.innerHTML = `<div class="alert alert-success mb-0">✅ No hay alertas activas. Todos los indicadores dentro de rango.</div>`;
+        return;
+    }
+
+    alertas.forEach(a => {
+        const claseAlerta = a.severidad === "alta" ? "alert-danger" : "alert-warning";
+        const div = document.createElement("div");
+        div.className = `alert ${claseAlerta} mb-2`;
+        div.innerHTML = `<strong>[${a.tipo}]</strong> ${a.mensaje}`;
+        contenedor.appendChild(div);
+    });
+}
+
 async function cargarOTIF() {
     const res = await fetch(`${API_BASE}/kpis/otif`);
     const data = await res.json();
@@ -100,6 +122,7 @@ async function cargarAlmacenes() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    cargarAlertas();
     cargarOTIF();
     cargarLeadTime();
     cargarProveedores();

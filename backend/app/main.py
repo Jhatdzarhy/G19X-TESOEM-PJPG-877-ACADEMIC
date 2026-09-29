@@ -182,3 +182,64 @@ def get_almacenes():
         conn.close()
 
     return {"almacenes": rows}
+
+@app.get("/kpis/alertas")
+def get_alertas():
+    conn = get_connection()
+    alertas = []
+    try:
+        with conn.cursor() as cur:
+            # Alerta 1: productos sin stock
+            cur.execute("""
+                SELECT p.sku, p.nombre,
+                       COALESCE(SUM(CASE WHEN m.tipo_movimiento='ENTRADA' THEN m.cantidad ELSE 0 END),0) -
+                       COALESCE(SUM(CASE WHEN m.tipo_movimiento='SALIDA' THEN m.cantidad ELSE 0 END),0) AS stock_actual
+                FROM productos p
+                LEFT JOIN movimientos_inventario m ON m.producto_id = p.producto_id
+                GROUP BY p.sku, p.nombre
+                HAVING COALESCE(SUM(CASE WHEN m.tipo_movimiento='ENTRADA' THEN m.cantidad ELSE 0 END),0) -
+                       COALESCE(SUM(CASE WHEN m.tipo_movimiento='SALIDA' THEN m.cantidad ELSE 0 END),0) <= 0;
+            """)
+            for row in cur.fetchall():
+                alertas.append({
+                    "tipo": "Inventario",
+                    "severidad": "alta",
+                    "mensaje": f"Producto {row['nombre']} ({row['sku']}) sin stock disponible"
+                })
+
+            # Alerta 2: envios tardios
+            cur.execute("""
+                SELECT pr.nombre AS proveedor, e.fecha_llegada_estim, e.fecha_llegada_real
+                FROM envios e
+                JOIN proveedores pr ON pr.proveedor_id = e.proveedor_id
+                WHERE e.fecha_llegada_real IS NOT NULL
+                AND e.fecha_llegada_real > e.fecha_llegada_estim;
+            """)
+            for row in cur.fetchall():
+                alertas.append({
+                    "tipo": "Logistica",
+                    "severidad": "media",
+                    "mensaje": f"Envio de {row['proveedor']} llego tarde (estimado {row['fecha_llegada_estim']}, real {row['fecha_llegada_real']})"
+                })
+
+            # Alerta 3: OTIF por debajo del umbral (70%)
+            cur.execute("""
+                SELECT
+                    COUNT(*) FILTER (WHERE fecha_entrega_real IS NOT NULL AND fecha_entrega_real <= fecha_entrega_estim) AS a_tiempo,
+                    COUNT(*) FILTER (WHERE fecha_entrega_real IS NOT NULL) AS total
+                FROM ordenes_compra;
+            """)
+            row = cur.fetchone()
+            total = row["total"] or 0
+            a_tiempo = row["a_tiempo"] or 0
+            otif = (a_tiempo / total * 100) if total > 0 else 0
+            if otif < 70:
+                alertas.append({
+                    "tipo": "Compras",
+                    "severidad": "alta",
+                    "mensaje": f"OTIF actual ({round(otif, 1)}%) esta por debajo del umbral minimo de 70%"
+                })
+    finally:
+        conn.close()
+
+    return {"alertas": alertas, "total_alertas": len(alertas)}
