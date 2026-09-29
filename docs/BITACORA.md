@@ -4,6 +4,9 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-29 14:37 | a3c631d | chore: normalizar terminadores de linea en .gitignore (sin cambios de contenido) |
+| 2026-09-29 14:34 | 3a9eb43 | feat(dashboard): agregar modulo de IA - Indice de Riesgo de Proveedor - 7 modulos del PDR cubiertos, MVP completo |
+| 2026-09-29 14:19 | 174bd0a | docs: actualizar BITACORA.md - dashboard con 6 modulos funcionales, MVP muy solido |
 | 2026-09-29 14:17 | aed0e2c | docs: actualizar BITACORA.md - dashboard con 6 modulos funcionales, MVP muy solido |
 | 2026-09-29 14:17 | 3271e04 | feat(dashboard): agregar modulo de Alertas Ejecutivas - 6 modulos del PDR cubiertos |
 | 2026-09-29 14:13 | 024f788 | feat(dashboard): agregar modulo de Alertas Ejecutivas - 6 modulos del PDR cubiertos |
