@@ -4,6 +4,9 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-29 01:24 | 43b6e00 | feat(frontend): desplegar index.jsp de prueba y registrar hito de Capa 3 verificada en Tomcat |
+| 2026-09-29 01:23 | 9349c36 | feat(frontend): crear estructura web.xml y index.jsp de prueba - Capa 3 verificada en Tomcat localhost:8080 |
+| 2026-09-28 23:35 | 3675017 | docs: actualizar BITACORA.md - entorno Java y Tomcat |
 | 2026-09-28 23:35 | 5532099 | docs: registrar entorno Java - JDK 21 Temurin y Tomcat 10.1.60 verificados |
 | 2026-09-28 22:54 | 1d17af0 | docs: actualizar BITACORA.md - cierre completo de Capa 2 |
 | 2026-09-28 22:53 | a244444 | docs: cerrar Capa 2 - registrar todas las decisiones y errores resueltos del backend FastAPI |
