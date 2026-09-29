@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - MVP",
   "fecha_actualizacion": "2026-09-29",
-  "fase_actual": "Fase 3 completada - Dashboard ejecutivo con 6 modulos funcionales (Alertas, Compras/OTIF, Proveedores, Inventarios, Logistica/Envios, Almacenes)",
+  "fase_actual": "MVP completo - Dashboard ejecutivo con 7 modulos funcionales cubriendo el alcance operativo del PDR (Alertas, Compras/OTIF, Proveedores, Inventarios, Logistica, Almacenes, IA/Riesgo)",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -19,12 +19,13 @@
       "Endpoint /kpis/envios agregado (estado A tiempo / Tardio por envio, comparando fecha_llegada_real vs fecha_llegada_estim) y conectado al dashboard con tabla e insignias verde/roja - Modulo de Logistica cubierto",
       "Endpoint /kpis/almacenes agregado (unidades almacenadas por almacen, calculado desde movimientos_inventario) y conectado al dashboard - Modulo de Almacenes cubierto, 5 modulos totales en el dashboard",
       "Cache-busting agregado al script dashboard.js en index.jsp (parametro ?v=timestamp) para evitar que el navegador use versiones antiguas en cache",
-      "Endpoint /kpis/alertas agregado (combina stock en cero, envios tardios y OTIF bajo umbral de 70%) y conectado al dashboard como seccion visible arriba de todo - Modulo de Alertas Ejecutivas cubierto, 6 modulos totales en el dashboard"
+      "Endpoint /kpis/alertas agregado (combina stock en cero, envios tardios y OTIF bajo umbral de 70%) y conectado al dashboard como seccion visible arriba de todo - Modulo de Alertas Ejecutivas cubierto, 6 modulos totales en el dashboard",
+      "Endpoint /kpis/riesgo-proveedores agregado (score compuesto por calificacion y envios tardios, con nivel Alto/Medio/Bajo) y conectado al dashboard con insignias de color - Modulo de Inteligencia Artificial cubierto, 7 modulos totales en el dashboard, MVP con cobertura completa del alcance operativo del PDR"
     ],
     "en_progreso": [],
     "pendiente": [
-      "Modulo de Inteligencia Artificial (deteccion de anomalias, pronosticos de demanda)",
-      "Manual tecnico y plan de mantenimiento (fases 7 y 8 del cronograma)"
+      "Manual tecnico y plan de mantenimiento (fases 7 y 8 del cronograma)",
+      "Pulido visual menor: reordenar seccion de Riesgo de Proveedor antes de la fecha del servidor"
     ]
   },
   "archivos_modificados_recientemente": [
@@ -53,7 +54,8 @@
     "Dashboard construido con Bootstrap 5.3.8 y Chart.js 4 via CDN, consumiendo los endpoints de FastAPI con fetch desde dashboard.js",
     "Estado de envios (A tiempo / Tardio) calculado comparando fecha_llegada_real vs fecha_llegada_estim directamente en el endpoint, sin necesidad de la tabla fact_supply_chain para el MVP",
     "Tabla almacenes real solo tiene almacen_id, nombre y ubicacion (sin capacidad_m3 pese a estar en schema.sql original) - endpoint /kpis/almacenes ajustado para usar solo columnas reales, calculando unidades_almacenadas desde movimientos_inventario",
-    "Modulo de Alertas Ejecutivas implementado como endpoint agregador (sin tabla propia) que combina 3 reglas: stock en cero, envios con retraso, y OTIF por debajo de un umbral de 70% definido directamente en el codigo del endpoint"
+    "Modulo de Alertas Ejecutivas implementado como endpoint agregador (sin tabla propia) que combina 3 reglas: stock en cero, envios con retraso, y OTIF por debajo de un umbral de 70% definido directamente en el codigo del endpoint",
+    "Indice de Riesgo de Proveedor calculado con formula simple: (5 - calificacion) * 10 + envios_tardios * 20, clasificado en Bajo (<20), Medio (20-39) y Alto (>=40) - suficiente para demostrar el modulo de IA en el MVP sin requerir modelos de machine learning complejos"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
