@@ -85,10 +85,25 @@ async function cargarEnvios() {
     });
 }
 
+async function cargarAlmacenes() {
+    const res = await fetch(`${API_BASE}/kpis/almacenes`);
+    const data = await res.json();
+    const almacenes = data.almacenes;
+
+    const tbody = document.querySelector("#tabla-almacenes tbody");
+    tbody.innerHTML = "";
+    almacenes.forEach(a => {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `<td>${a.nombre}</td><td>${a.ubicacion}</td><td>${a.unidades_almacenadas}</td>`;
+        tbody.appendChild(fila);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     cargarOTIF();
     cargarLeadTime();
     cargarProveedores();
     cargarInventario();
     cargarEnvios();
+    cargarAlmacenes();
 });

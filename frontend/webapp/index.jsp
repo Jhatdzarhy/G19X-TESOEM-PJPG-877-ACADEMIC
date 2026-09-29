@@ -110,6 +110,26 @@
             </div>
         </div>
 
+        <div class="row g-3 mt-3">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header">Ocupación de Almacenes</div>
+                    <div class="card-body">
+                        <table class="table table-sm" id="tabla-almacenes">
+                            <thead>
+                                <tr>
+                                    <th>Almacén</th>
+                                    <th>Ubicación</th>
+                                    <th>Unidades Almacenadas</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <p class="text-center text-muted mt-4">
             <small>Fecha del servidor (JSP): <%= new java.util.Date() %></small>
         </p>
@@ -118,6 +138,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/dashboard.js?v=<%= System.currentTimeMillis() %>"></script>
 </body>
 </html>

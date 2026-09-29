@@ -158,3 +158,27 @@ def get_envios():
         })
 
     return {"envios": envios}
+
+@app.get("/kpis/almacenes")
+def get_almacenes():
+    query = """
+        SELECT
+            a.almacen_id,
+            a.nombre,
+            a.ubicacion,
+            COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'ENTRADA' THEN m.cantidad ELSE 0 END), 0) -
+            COALESCE(SUM(CASE WHEN m.tipo_movimiento = 'SALIDA' THEN m.cantidad ELSE 0 END), 0) AS unidades_almacenadas
+        FROM almacenes a
+        LEFT JOIN movimientos_inventario m ON m.almacen_id = a.almacen_id
+        GROUP BY a.almacen_id, a.nombre, a.ubicacion
+        ORDER BY a.almacen_id;
+    """
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query)
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    return {"almacenes": rows}
