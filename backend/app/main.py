@@ -243,3 +243,48 @@ def get_alertas():
         conn.close()
 
     return {"alertas": alertas, "total_alertas": len(alertas)}
+
+@app.get("/kpis/riesgo-proveedores")
+def get_riesgo_proveedores():
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT proveedor_id, nombre, calificacion FROM proveedores;")
+            proveedores = cur.fetchall()
+
+            cur.execute("""
+                SELECT proveedor_id,
+                       COUNT(*) FILTER (
+                           WHERE fecha_llegada_real IS NOT NULL
+                           AND fecha_llegada_real > fecha_llegada_estim
+                       ) AS envios_tardios
+                FROM envios
+                GROUP BY proveedor_id;
+            """)
+            tardios_por_proveedor = {row["proveedor_id"]: row["envios_tardios"] for row in cur.fetchall()}
+    finally:
+        conn.close()
+
+    resultado = []
+    for p in proveedores:
+        tardios = tardios_por_proveedor.get(p["proveedor_id"], 0)
+        # Score: a menor calificacion y mas envios tardios, mayor riesgo
+        score = round((5 - float(p["calificacion"])) * 10 + tardios * 20, 1)
+
+        if score >= 40:
+            nivel = "Alto"
+        elif score >= 20:
+            nivel = "Medio"
+        else:
+            nivel = "Bajo"
+
+        resultado.append({
+            "proveedor_id": p["proveedor_id"],
+            "nombre": p["nombre"],
+            "calificacion": float(p["calificacion"]),
+            "envios_tardios": tardios,
+            "score_riesgo": score,
+            "nivel_riesgo": nivel
+        })
+
+    return {"riesgo_proveedores": resultado}

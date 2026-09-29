@@ -138,6 +138,29 @@
 
     </div>
 
+        <div class="row g-3 mt-3">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header">Índice de Riesgo de Proveedor (IA)</div>
+                    <div class="card-body">
+                        <table class="table table-sm table-hover" id="tabla-riesgo">
+                            <thead>
+                                <tr>
+                                    <th>Proveedor</th>
+                                    <th>Calificación</th>
+                                    <th>Envíos Tardíos</th>
+                                    <th>Score de Riesgo</th>
+                                    <th>Nivel</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <script src="js/dashboard.js?v=<%= System.currentTimeMillis() %>"></script>

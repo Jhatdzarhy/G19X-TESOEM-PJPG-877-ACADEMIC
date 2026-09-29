@@ -129,4 +129,30 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarInventario();
     cargarEnvios();
     cargarAlmacenes();
+    cargarRiesgoProveedores();
 });
+
+async function cargarRiesgoProveedores() {
+    const res = await fetch(`${API_BASE}/kpis/riesgo-proveedores`);
+    const data = await res.json();
+    const riesgos = data.riesgo_proveedores;
+
+    const tbody = document.querySelector("#tabla-riesgo tbody");
+    tbody.innerHTML = "";
+
+    riesgos.forEach(r => {
+        let badgeClass = "bg-success";
+        if (r.nivel_riesgo === "Alto") badgeClass = "bg-danger";
+        else if (r.nivel_riesgo === "Medio") badgeClass = "bg-warning text-dark";
+
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+            <td>${r.nombre}</td>
+            <td>${r.calificacion}</td>
+            <td>${r.envios_tardios}</td>
+            <td>${r.score_riesgo}</td>
+            <td><span class="badge ${badgeClass}">${r.nivel_riesgo}</span></td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
