@@ -1,14 +1,16 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - MVP",
   "fecha_actualizacion": "2026-09-29",
-  "fase_actual": "Fase 2 completada - Backend Analitico (FastAPI) funcional. Iniciando Fase 3 - Frontend",
+  "fase_actual": "Fase 2 completada - Backend Analitico (FastAPI) funcional. Iniciando Fase 3 - Frontend (entorno Java y Tomcat listo)",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
       "Creacion de estructura de carpetas (db, backend, frontend, docs)",
       "Instalacion de PostgreSQL 18.6",
       "Esquema PostgreSQL (7 tablas) con datos semilla cargados - Capa 1 completa",
-      "Backend FastAPI completo y verificado - Capa 2 completa: entorno virtual, dependencias, conexion a PostgreSQL, 3 endpoints de KPIs (OTIF, Lead Time, Proveedores) responden 200 con datos reales"
+      "Backend FastAPI completo y verificado - Capa 2 completa: entorno virtual, dependencias, conexion a PostgreSQL, 3 endpoints de KPIs (OTIF, Lead Time, Proveedores) responden 200 con datos reales",
+      "Instalacion de JDK 21 LTS (Eclipse Temurin 21.0.12.1) como Java predeterminado, con JAVA_HOME y PATH configurados",
+      "Instalacion de Apache Tomcat 10.1.60 (zip) en C:\\tomcat\\apache-tomcat-10.1.60 - arranca con catalina.bat run y responde en localhost:8080"
     ],
     "en_progreso": [],
     "pendiente": [
@@ -30,7 +32,10 @@
     "Python actualizado de 3.12.10 a 3.13.15 para alinear con la recomendacion del PDR seccion 4.3 - confirmado como version predeterminada del comando python con where.exe python",
     "psycopg2-binary actualizado de 2.9.9 a 2.9.10 porque la version 2.9.9 no tiene wheel precompilado para Python 3.13, evitando instalar Microsoft C++ Build Tools",
     "fastapi instalado con extra [standard] (fastapi[standard]==0.135.1) porque el comando CLI 'fastapi dev' requiere ese extra, no basta con fastapi a secas",
-    "Contrasena de PostgreSQL cambiada a una sin acentos ni simbolos especiales, y .env regenerado en UTF-8 puro, para evitar errores de codificacion al conectar desde psycopg2"
+    "Contrasena de PostgreSQL cambiada a una sin acentos ni simbolos especiales, y .env regenerado en UTF-8 puro, para evitar errores de codificacion al conectar desde psycopg2",
+    "JDK 21 LTS instalado junto al JDK 26 ya existente (coexisten) por la recomendacion del PDR seccion 4.3 de compatibilidad probada con Tomcat 10.1.x; JAVA_HOME apunta a C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.12.101-hotspot\\",
+    "Tomcat instalado desde el zip (no el instalador de servicio) en C:\\tomcat para controlar el arranque manualmente en desarrollo",
+    "El aviso de Tomcat Native (APR) al arrancar es informativo y se ignora: Tomcat usa el conector Java http-nio-8080"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
