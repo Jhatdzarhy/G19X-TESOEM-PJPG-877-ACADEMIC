@@ -4,6 +4,7 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-09-30 23:31 | f9c9df8 | docs: actualizar BITACORA.md - decision de diseno de la version definitiva |
 | 2026-09-30 23:28 | c3ce179 | docs(diseno): definir direccion visual de la version definitiva - estado de la cadena, centro de soluciones y criterio de graficas sobre texto |
 | 2026-09-29 14:38 | 7bf3787 | docs: actualizar BITACORA.md - MVP completo con 7 modulos |
 | 2026-09-29 14:37 | a3c631d | chore: normalizar terminadores de linea en .gitignore (sin cambios de contenido) |
