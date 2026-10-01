@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - MVP",
-  "fecha_actualizacion": "2026-09-29",
-  "fase_actual": "MVP completo - Dashboard ejecutivo con 7 modulos funcionales cubriendo el alcance operativo del PDR (Alertas, Compras/OTIF, Proveedores, Inventarios, Logistica, Almacenes, IA/Riesgo)",
+  "fecha_actualizacion": "2026-09-30",
+  "fase_actual": "Diseno de la version definitiva - direccion visual definida, pendiente implementacion",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -25,7 +25,9 @@
     "en_progreso": [],
     "pendiente": [
       "Manual tecnico y plan de mantenimiento (fases 7 y 8 del cronograma)",
-      "Pulido visual menor: reordenar seccion de Riesgo de Proveedor antes de la fecha del servidor"
+      "Pulido visual menor: reordenar seccion de Riesgo de Proveedor antes de la fecha del servidor",
+      "Implementar Centro de soluciones: motor de recomendaciones en FastAPI y tablas recomendaciones y plan_acciones. Requiere control de cambios con Edgar (riesgo R6)",
+      "Mover las llamadas del navegador a FastAPI hacia Servlets de Java, como indica el PDR seccion 4"
     ]
   },
   "archivos_modificados_recientemente": [
@@ -55,7 +57,13 @@
     "Estado de envios (A tiempo / Tardio) calculado comparando fecha_llegada_real vs fecha_llegada_estim directamente en el endpoint, sin necesidad de la tabla fact_supply_chain para el MVP",
     "Tabla almacenes real solo tiene almacen_id, nombre y ubicacion (sin capacidad_m3 pese a estar en schema.sql original) - endpoint /kpis/almacenes ajustado para usar solo columnas reales, calculando unidades_almacenadas desde movimientos_inventario",
     "Modulo de Alertas Ejecutivas implementado como endpoint agregador (sin tabla propia) que combina 3 reglas: stock en cero, envios con retraso, y OTIF por debajo de un umbral de 70% definido directamente en el codigo del endpoint",
-    "Indice de Riesgo de Proveedor calculado con formula simple: (5 - calificacion) * 10 + envios_tardios * 20, clasificado en Bajo (<20), Medio (20-39) y Alto (>=40) - suficiente para demostrar el modulo de IA en el MVP sin requerir modelos de machine learning complejos"
+    "Indice de Riesgo de Proveedor calculado con formula simple: (5 - calificacion) * 10 + envios_tardios * 20, clasificado en Bajo (<20), Medio (20-39) y Alto (>=40) - suficiente para demostrar el modulo de IA en el MVP sin requerir modelos de machine learning complejos",
+    "Direccion visual de la version definitiva: franja 'Estado de la cadena' con 5 estaciones (Proveedores, Compras, Transporte, Almacenes, Inventario), cada una con minigrafica de 30 dias contra su meta",
+    "Se agrega Centro de soluciones: cada problema detectado por la IA muestra evidencia en grafica, solucion recomendada, impacto estimado en MXN y plan de accion. La IA solo recomienda, no ejecuta compras (alcance PDR seccion 2)",
+    "Criterio de diseno: graficas primero, texto solo para acciones, a partir de la revision con una ingeniera del area",
+    "Tipografia Barlow y Barlow Condensed (Google Fonts). Azul #1A56A8 solo para datos; rojo, ambar y verde reservados para estados",
+    "Se descartan los conceptos de imagen generados por IA por texto ilegible, porcentajes inconsistentes y uso de donas y medidores",
+    "Correccion de consistencia en el diseno: rotacion de 6.1x equivale a unos 60 dias de inventario, no 24"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
