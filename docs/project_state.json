@@ -63,7 +63,8 @@
     "Criterio de diseno: graficas primero, texto solo para acciones, a partir de la revision con una ingeniera del area",
     "Tipografia Barlow y Barlow Condensed (Google Fonts). Azul #1A56A8 solo para datos; rojo, ambar y verde reservados para estados",
     "Se descartan los conceptos de imagen generados por IA por texto ilegible, porcentajes inconsistentes y uso de donas y medidores",
-    "Correccion de consistencia en el diseno: rotacion de 6.1x equivale a unos 60 dias de inventario, no 24"
+    "Correccion de consistencia en el diseno: rotacion de 6.1x equivale a unos 60 dias de inventario, no 24",
+    "MVP congelado con la etiqueta mvp-v1.0 (commit 7bf3787, MVP completo con 7 modulos). El proyecto final se desarrolla en la rama proyecto-final, con una base de datos nueva (supply_chain_final) y scripts en db/final para no alterar el MVP"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
