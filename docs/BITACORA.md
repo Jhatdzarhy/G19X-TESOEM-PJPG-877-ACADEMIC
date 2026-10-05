@@ -4,6 +4,8 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-05 17:20 | 9d0e494 | docs: congelar MVP con tag mvp-v1.0 y abrir rama proyecto-final |
+| 2026-09-30 23:34 | 7305fb0 | docs: actualizar BITACORA.md - corregir saltos de linea a formato Windows (CRLF) |
 | 2026-09-30 23:31 | f9c9df8 | docs: actualizar BITACORA.md - decision de diseno de la version definitiva |
 | 2026-09-30 23:28 | c3ce179 | docs(diseno): definir direccion visual de la version definitiva - estado de la cadena, centro de soluciones y criterio de graficas sobre texto |
 | 2026-09-29 14:38 | 7bf3787 | docs: actualizar BITACORA.md - MVP completo con 7 modulos |
