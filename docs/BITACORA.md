@@ -4,6 +4,12 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-05 18:03 | 278d4e4 | docs: registrar esquema de supply_chain_final, ETL del Sprint 1 y aprobacion del asesor |
+| 2026-10-05 17:57 | c95432f | feat(db): tablas recomendaciones y plan_acciones del Centro de soluciones (cambio aprobado por Asesor) |
+| 2026-10-05 17:57 | 5594eaf | feat(db): esquema del proyecto final segun PDR 8.1 y 8.2 (11 tablas) en supply_chain_final |
+| 2026-10-05 17:55 | e13bde3 | feat(etl): catalogo de productos desde DummyJSON hacia productos y volumen por SKU |
+| 2026-10-05 17:55 | 8a33ad6 | feat(etl): carga de tipo de cambio desde ExchangeRate-API hacia supply_chain_final |
+| 2026-10-05 17:21 | 497294c | docs: actualizar BITACORA.md - rama proyecto-final iniciada |
 | 2026-10-05 17:20 | 9d0e494 | docs: congelar MVP con tag mvp-v1.0 y abrir rama proyecto-final |
 | 2026-09-30 23:34 | 7305fb0 | docs: actualizar BITACORA.md - corregir saltos de linea a formato Windows (CRLF) |
 | 2026-09-30 23:31 | f9c9df8 | docs: actualizar BITACORA.md - decision de diseno de la version definitiva |
