@@ -1,7 +1,7 @@
 {
-  "proyecto": "Dashboard Ejecutivo de Supply Chain - MVP",
-  "fecha_actualizacion": "2026-09-30",
-  "fase_actual": "Diseno de la version definitiva - direccion visual definida, pendiente implementacion",
+  "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
+  "fecha_actualizacion": "2026-10-05",
+  "fase_actual": "Proyecto final - Sprint 1 (datos): esquema de supply_chain_final y ETL de ExchangeRate-API y DummyJSON listos; siguiente: generador de 12 meses de operacion",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -20,22 +20,33 @@
       "Endpoint /kpis/almacenes agregado (unidades almacenadas por almacen, calculado desde movimientos_inventario) y conectado al dashboard - Modulo de Almacenes cubierto, 5 modulos totales en el dashboard",
       "Cache-busting agregado al script dashboard.js en index.jsp (parametro ?v=timestamp) para evitar que el navegador use versiones antiguas en cache",
       "Endpoint /kpis/alertas agregado (combina stock en cero, envios tardios y OTIF bajo umbral de 70%) y conectado al dashboard como seccion visible arriba de todo - Modulo de Alertas Ejecutivas cubierto, 6 modulos totales en el dashboard",
-      "Endpoint /kpis/riesgo-proveedores agregado (score compuesto por calificacion y envios tardios, con nivel Alto/Medio/Bajo) y conectado al dashboard con insignias de color - Modulo de Inteligencia Artificial cubierto, 7 modulos totales en el dashboard, MVP con cobertura completa del alcance operativo del PDR"
+      "Endpoint /kpis/riesgo-proveedores agregado (score compuesto por calificacion y envios tardios, con nivel Alto/Medio/Bajo) y conectado al dashboard con insignias de color - Modulo de Inteligencia Artificial cubierto, 7 modulos totales en el dashboard, MVP con cobertura completa del alcance operativo del PDR",
+      "Base supply_chain_final creada con 13 tablas: esquema del PDR (db/final/01_esquema_pdr.sql, 11 tablas) y Centro de soluciones (db/final/02_centro_soluciones.sql, tablas recomendaciones y plan_acciones)",
+      "ETL en Python (backend/etl): tipo de cambio desde ExchangeRate-API (3 pares, tasa del dia) y catalogo de 12 productos desde DummyJSON cargados en supply_chain_final"
     ],
-    "en_progreso": [],
+    "en_progreso": [
+      "Sprint 1 - datos: generador de 12 meses de operacion (proveedores, almacenes, ordenes, envios, movimientos) y despues clima historico con Open-Meteo"
+    ],
     "pendiente": [
       "Manual tecnico y plan de mantenimiento (fases 7 y 8 del cronograma)",
-      "Pulido visual menor: reordenar seccion de Riesgo de Proveedor antes de la fecha del servidor",
-      "Implementar Centro de soluciones: motor de recomendaciones en FastAPI y tablas recomendaciones y plan_acciones. Requiere control de cambios con Edgar (riesgo R6)",
-      "Mover las llamadas del navegador a FastAPI hacia Servlets de Java, como indica el PDR seccion 4"
+      "Sprint 1: clima historico con Open-Meteo guardado en envios.condicion_climatica",
+      "Sprint 2: motor analitico en FastAPI (11 KPIs del PDR, pronostico, anomalias, riesgo de proveedores y recomendaciones con su plan de acciones en las tablas recomendaciones y plan_acciones)",
+      "Sprint 3: capa de Servlets de Java como controladores que consumen FastAPI, con sesion y roles (PDR seccion 4); el navegador deja de llamar directo a FastAPI",
+      "Sprint 4: vistas JSP del diseno final (Resumen ejecutivo y Centro de soluciones) con Bootstrap 5 y Chart.js",
+      "Sprint 5: vistas por modulo, pruebas de calidad y documentacion"
     ]
   },
   "archivos_modificados_recientemente": [
     "db/schema.sql",
+    "db/final/01_esquema_pdr.sql",
+    "db/final/02_centro_soluciones.sql",
     "backend/requirements.txt",
     "backend/app/__init__.py",
     "backend/app/database.py",
     "backend/app/main.py",
+    "backend/etl/cargar_tipo_cambio.py",
+    "backend/etl/cargar_productos.py",
+    "backend/etl/datos/volumen_por_sku.json",
     "frontend/webapp/WEB-INF/web.xml",
     "frontend/webapp/index.jsp",
     "frontend/webapp/js/dashboard.js",
@@ -64,7 +75,10 @@
     "Tipografia Barlow y Barlow Condensed (Google Fonts). Azul #1A56A8 solo para datos; rojo, ambar y verde reservados para estados",
     "Se descartan los conceptos de imagen generados por IA por texto ilegible, porcentajes inconsistentes y uso de donas y medidores",
     "Correccion de consistencia en el diseno: rotacion de 6.1x equivale a unos 60 dias de inventario, no 24",
-    "MVP congelado con la etiqueta mvp-v1.0 (commit 7bf3787, MVP completo con 7 modulos). El proyecto final se desarrolla en la rama proyecto-final, con una base de datos nueva (supply_chain_final) y scripts en db/final para no alterar el MVP"
+    "MVP congelado con la etiqueta mvp-v1.0 (commit 7bf3787, MVP completo con 7 modulos). El proyecto final se desarrolla en la rama proyecto-final, con una base de datos nueva (supply_chain_final) y scripts en db/final para no alterar el MVP",
+    "Las tablas del Centro de soluciones fueron aprobadas por el asesor mediante control de cambios (riesgo R6). La evidencia de cada recomendacion se guarda como JSONB y los valores de modulo y severidad se almacenan sin acentos para evitar problemas de codificacion",
+    "Productos cargados desde DummyJSON (12 SKU de 6 categorias) con el sku del catalogo. costo_unitario en USD, moneda de origen. El volumen por unidad se deriva de las dimensiones del catalogo (datos de muestra) y se guarda en backend/etl/datos/volumen_por_sku.json para calcular la utilizacion de almacen sin modificar el esquema del PDR",
+    "Tipo de cambio desde el endpoint abierto de ExchangeRate-API, una tasa por dia (el endpoint se actualiza una vez al dia y exige atribucion en la interfaz)"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -81,6 +95,8 @@
     "Columna capacidad_m3 no existia en la tabla real almacenes (solo almacen_id, nombre, ubicacion) aunque estaba en schema.sql original - endpoint ajustado para usar solo las columnas reales",
     "Caracteres 'AlmacÃ©n' y 'MÃ©xico' mal codificados en tabla almacenes por la misma discrepancia de codepage - corregidos con UPDATE sin acentos",
     "Dashboard mostraba tabla de Almacenes vacia pese a que el archivo dashboard.js en Tomcat ya tenia la funcion cargarAlmacenes - causado por cache del navegador con la version anterior del JS, resuelto con Ctrl+Shift+R (recarga forzada) y agregando cache-busting con timestamp en el script del JSP",
-    "dashboard.js tenia dos bloques DOMContentLoaded duplicados (uno con cargarAlertas y otro sin ella) causando doble ejecucion de todas las funciones - resuelto consolidando en un solo bloque DOMContentLoaded al final del archivo"
+    "dashboard.js tenia dos bloques DOMContentLoaded duplicados (uno con cargarAlertas y otro sin ella) causando doble ejecucion de todas las funciones - resuelto consolidando en un solo bloque DOMContentLoaded al final del archivo",
+    "UndefinedTable (no existe la relacion tipo_cambio) al ejecutar el primer ETL - la base supply_chain_final estaba vacia porque los scripts de db/final no se habian creado ni ejecutado; resuelto creando y ejecutando 01_esquema_pdr.sql y 02_centro_soluciones.sql (13 tablas)",
+    "El commit de 02_centro_soluciones.sql quedo con el mensaje del esquema del PDR - corregido con git commit --amend antes de existir un repositorio remoto"
   ]
 }
