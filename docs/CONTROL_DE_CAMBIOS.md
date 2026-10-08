@@ -31,6 +31,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 | CC-12 | 2026-10-07 | 4.2 | Precisión | Ramas del repositorio y contenido no publicable |
 | CC-13 | 2026-10-07 | 4.3 | Precisión | Versiones exactas instaladas |
 | CC-14 | 2026-10-07 | 10 | Adición | Extensión de la fecha de entrega y reprogramación del cierre |
+| CC-15 | 2026-10-08 | 7 | Interpretación | Definición operativa de Variación de costo, Rotación, Días de inventario e Impacto de tipo de cambio |
 
 ---
 
@@ -66,13 +67,14 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 - **Cambio:** el histórico de 12 meses se carga desde Banxico SIE (tipo de cambio FIX, fuente oficial, gratuita con token). ExchangeRate-API se mantiene como fuente de la tasa diaria. Cada registro guarda su fuente en `tipo_cambio.fuente`.
 - **Justificación:** dato oficial y trazable en lugar de una serie inventada (pilar de datos confiables). Mitiga además el riesgo R2 (poco histórico).
 - **Seguridad:** el token se guarda solo en `.env`, que no se versiona.
-- **Estado:** aprobado; pendiente de implementar.
+- **Estado:** aprobado e implementado (`backend/etl/cargar_banxico.py`: 251 días hábiles de la serie SF43718, del 2025-10-01 al 2026-09-30). `cargar_tipo_cambio.py` usa `ON CONFLICT` por fuente para no borrar el histórico.
 
 ### CC-04. Clima histórico antes de simular la operación
 - **Qué dice el PDR:** la Sección 5.2 enriquece los datos con variables de riesgo climático de Open-Meteo; el Módulo 3 incluye incidencias en ruta por clima.
 - **Cambio:** el clima histórico diario se descarga primero (con caché local) y el simulador lo usa para aumentar la probabilidad de retraso en días de lluvia fuerte o tormenta, escribiendo `condicion_climatica` y `precipitacion_mm` en el mismo paso.
 - **Justificación:** si el clima se agrega después, no tendría relación con los retrasos y el análisis mostraría correlaciones falsas.
-- **Estado:** aprobado; pendiente de implementar.
+- **Precisión de implementación:** el archivo histórico de Open-Meteo (reanálisis ERA5) no reporta códigos de tormenta eléctrica y suaviza los extremos; la condición se clasifica por precipitación con los rangos del Servicio Meteorológico Nacional: lluvia desde 1 mm, lluvia fuerte desde 25 mm y tormenta desde 50 mm (lluvia muy fuerte) o con código 95 a 99.
+- **Estado:** aprobado e implementado (`backend/etl/descargar_clima.py` con caché local para 10 puntos; `backend/etl/generar_operacion.py` aplica el clima al retraso de cada envío).
 
 ### CC-05. Dos lecturas del Fill Rate
 - **Qué dice el PDR:** la Sección 7 define el Fill Rate en la categoría Inventario como unidades entregadas entre solicitadas; la Sección 8.2 lo calcula desde `fact_supply_chain`.
@@ -150,3 +152,14 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 
 - **Justificación:** extensión otorgada para la entrega del proyecto. El cronograma original del PDR no se modifica.
 - **Estado:** registrado.
+
+### CC-15. Definición operativa de cuatro KPIs
+- **Qué dice el PDR:** la Sección 7 define Variación de Costo de Compra (costo real menos presupuestado entre presupuestado), Rotación de Inventario (costo de mercancía vendida entre inventario promedio), Días de Inventario Disponible (inventario actual entre consumo diario promedio) e Impacto de Tipo de Cambio, sin fijar la base de comparación ni la unidad de medida.
+- **Cambio:**
+  - **Variación de costo de compra:** el costo presupuestado es el costo estándar del catálogo (`productos.costo_unitario`); el real es `detalle_orden_compra.precio_unitario`.
+  - **Rotación de inventario:** en valor a costo estándar; el inventario promedio es el promedio del inventario diario al cierre, reconstruido desde `movimientos_inventario`. Se anualiza.
+  - **Días de inventario disponible:** inventario promedio en valor entre el costo de mercancía vendida diario promedio, con la misma base que la rotación.
+  - **Impacto de tipo de cambio:** compras valuadas al tipo de cambio FIX vigente en la fecha de cada orden, menos las mismas compras valuadas al FIX del inicio del periodo, en MXN. Fines de semana y festivos toman el FIX del día hábil anterior.
+- **Justificación:** sin una base fija, cada KPI admite varios cálculos con resultados distintos. Fijarla hace los indicadores reproducibles y verificables con SQL (criterio de aceptación de la Sección 12).
+- **Verificación:** `db/final/validar_kpis.sql` calcula los 11 KPIs y 10 pruebas de integridad sobre los datos simulados: 23 de 23 correctas.
+- **Estado:** Aprobado e implementado.
