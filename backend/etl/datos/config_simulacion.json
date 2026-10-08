@@ -267,7 +267,8 @@
     "variables_diarias": ["weather_code", "precipitation_sum"],
     "codigos_tormenta": [95, 96, 99],
     "umbral_lluvia_mm": 1.0,
-    "umbral_lluvia_fuerte_mm": 20.0,
+    "umbral_lluvia_fuerte_mm": 25.0,
+    "umbral_tormenta_mm": 50.0,
     "condiciones": ["DESPEJADO", "LLUVIA", "LLUVIA_FUERTE", "TORMENTA"],
     "impacto": {
       "LLUVIA":        { "prob_retraso_extra": 0.05, "retraso_extra_dias": [1, 1] },
