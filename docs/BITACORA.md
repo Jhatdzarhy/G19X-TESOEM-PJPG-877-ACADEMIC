@@ -4,6 +4,10 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-07 18:51 | 65de168 | chore: excluir documentos de diseno y entregables del repositorio publico |
+| 2026-10-07 18:49 | a981d93 | docs: registrar decisiones del Sprint 1, diseno compacto y extension de entrega al 16 de octubre |
+| 2026-10-07 18:49 | 7c2b130 | docs: crear registro de control de cambios respecto al PDR (CC-01 a CC-14) |
+| 2026-10-05 18:04 | d214851 | docs: actualizar BITACORA.md - esquema final y ETL de tipo de cambio y productos |
 | 2026-10-05 18:03 | 278d4e4 | docs: registrar esquema de supply_chain_final, ETL del Sprint 1 y aprobacion del asesor |
 | 2026-10-05 17:57 | c95432f | feat(db): tablas recomendaciones y plan_acciones del Centro de soluciones (cambio aprobado por Asesor) |
 | 2026-10-05 17:57 | 5594eaf | feat(db): esquema del proyecto final segun PDR 8.1 y 8.2 (11 tablas) en supply_chain_final |
