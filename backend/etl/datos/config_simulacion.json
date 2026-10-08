@@ -1,0 +1,340 @@
+{
+  "_meta": {
+    "descripcion": "Parametros del generador de 12 meses de operacion simulada. Datos simulados con reglas de negocio, no provienen de un ERP real (PDR seccion 2, fuera de alcance).",
+    "control_de_cambios": ["CC-02", "CC-04", "CC-05", "CC-06", "CC-07", "CC-11"],
+    "version": 1,
+    "reglas": [
+      "Todos los textos que van a la base estan en ASCII, sin acentos ni enie (CC-11).",
+      "precio_unitario y monto_total en USD, moneda de origen de productos; la conversion a MXN se hace en la capa analitica con tipo_cambio (CC-03).",
+      "envios.almacen_origen_id guarda el almacen de destino (CC-06).",
+      "Las coordenadas de proveedores son su ubicacion real; el clima de la ruta se toma en punto_despacho_mx y en el almacen de destino (CC-04)."
+    ]
+  },
+
+  "simulacion": {
+    "semilla": 20260930,
+    "fecha_inicio": "2025-10-01",
+    "fecha_fin": "2026-09-30",
+    "moneda_compras": "USD",
+    "zona_horaria": "America/Mexico_City"
+  },
+
+  "almacenes": [
+    {
+      "clave": "CDMX",
+      "nombre": "Almacen CDMX",
+      "ubicacion": "Ciudad de Mexico",
+      "latitud": 19.432608,
+      "longitud": -99.133209,
+      "capacidad_m3": 120.0,
+      "reparto_demanda": 0.45
+    },
+    {
+      "clave": "MTY",
+      "nombre": "Almacen Monterrey",
+      "ubicacion": "Monterrey, Nuevo Leon",
+      "latitud": 25.686614,
+      "longitud": -100.316113,
+      "capacidad_m3": 75.0,
+      "reparto_demanda": 0.30
+    },
+    {
+      "clave": "GDL",
+      "nombre": "Almacen Guadalajara",
+      "ubicacion": "Guadalajara, Jalisco",
+      "latitud": 20.659699,
+      "longitud": -103.349609,
+      "capacidad_m3": 70.0,
+      "reparto_demanda": 0.25
+    }
+  ],
+
+  "proveedores": [
+    {
+      "clave": "NORTE",
+      "nombre": "Norte Electronica",
+      "pais": "Mexico",
+      "ciudad": "Apodaca",
+      "latitud": 25.781700,
+      "longitud": -100.188600,
+      "punto_despacho_mx": { "nombre": "Apodaca", "latitud": 25.781700, "longitud": -100.188600 },
+      "calificacion_inicial": 4.40,
+      "dias_preparacion": 2,
+      "transito_internacional_dias": 0,
+      "prob_a_tiempo": 0.92,
+      "retraso_dias": [1, 3],
+      "fill_rate_medio": 0.97,
+      "factor_precio": 1.00,
+      "volatilidad_precio": 0.010,
+      "cargo_internacional_mxn": 0
+    },
+    {
+      "clave": "DELTA",
+      "nombre": "Delta Import",
+      "pais": "Mexico",
+      "ciudad": "Manzanillo",
+      "latitud": 19.052200,
+      "longitud": -104.315800,
+      "punto_despacho_mx": { "nombre": "Manzanillo", "latitud": 19.052200, "longitud": -104.315800 },
+      "calificacion_inicial": 3.90,
+      "dias_preparacion": 3,
+      "transito_internacional_dias": 0,
+      "prob_a_tiempo": 0.86,
+      "retraso_dias": [1, 4],
+      "fill_rate_medio": 0.95,
+      "factor_precio": 0.96,
+      "volatilidad_precio": 0.015,
+      "cargo_internacional_mxn": 0
+    },
+    {
+      "clave": "PACIFICO",
+      "nombre": "Pacifico Trading",
+      "pais": "China",
+      "ciudad": "Shenzhen",
+      "latitud": 22.543100,
+      "longitud": 114.057900,
+      "punto_despacho_mx": { "nombre": "Manzanillo", "latitud": 19.052200, "longitud": -104.315800 },
+      "calificacion_inicial": 3.80,
+      "dias_preparacion": 5,
+      "transito_internacional_dias": 24,
+      "prob_a_tiempo": 0.84,
+      "retraso_dias": [2, 7],
+      "fill_rate_medio": 0.94,
+      "factor_precio": 0.90,
+      "volatilidad_precio": 0.020,
+      "cargo_internacional_mxn": 45000
+    },
+    {
+      "clave": "FRONTERA",
+      "nombre": "Frontera Supply",
+      "pais": "Estados Unidos",
+      "ciudad": "Laredo",
+      "latitud": 27.530600,
+      "longitud": -99.480300,
+      "punto_despacho_mx": { "nombre": "Nuevo Laredo", "latitud": 27.477900, "longitud": -99.549600 },
+      "calificacion_inicial": 4.10,
+      "dias_preparacion": 2,
+      "transito_internacional_dias": 2,
+      "prob_a_tiempo": 0.88,
+      "retraso_dias": [1, 3],
+      "fill_rate_medio": 0.96,
+      "factor_precio": 1.03,
+      "volatilidad_precio": 0.012,
+      "cargo_internacional_mxn": 9000
+    },
+    {
+      "clave": "BAJIO",
+      "nombre": "Muebles del Bajio",
+      "pais": "Mexico",
+      "ciudad": "Leon",
+      "latitud": 21.125000,
+      "longitud": -101.686000,
+      "punto_despacho_mx": { "nombre": "Leon", "latitud": 21.125000, "longitud": -101.686000 },
+      "calificacion_inicial": 4.20,
+      "dias_preparacion": 4,
+      "transito_internacional_dias": 0,
+      "prob_a_tiempo": 0.90,
+      "retraso_dias": [1, 3],
+      "fill_rate_medio": 0.97,
+      "factor_precio": 0.98,
+      "volatilidad_precio": 0.008,
+      "cargo_internacional_mxn": 0
+    },
+    {
+      "clave": "CASAHOGAR",
+      "nombre": "Casa Hogar Distribuciones",
+      "pais": "Mexico",
+      "ciudad": "Zapopan",
+      "latitud": 20.721400,
+      "longitud": -103.391800,
+      "punto_despacho_mx": { "nombre": "Zapopan", "latitud": 20.721400, "longitud": -103.391800 },
+      "calificacion_inicial": 4.50,
+      "dias_preparacion": 1,
+      "transito_internacional_dias": 0,
+      "prob_a_tiempo": 0.94,
+      "retraso_dias": [1, 2],
+      "fill_rate_medio": 0.98,
+      "factor_precio": 1.00,
+      "volatilidad_precio": 0.006,
+      "cargo_internacional_mxn": 0
+    },
+    {
+      "clave": "DEPCENTRO",
+      "nombre": "Deportes del Centro",
+      "pais": "Mexico",
+      "ciudad": "Queretaro",
+      "latitud": 20.588800,
+      "longitud": -100.389900,
+      "punto_despacho_mx": { "nombre": "Queretaro", "latitud": 20.588800, "longitud": -100.389900 },
+      "calificacion_inicial": 4.30,
+      "dias_preparacion": 1,
+      "transito_internacional_dias": 0,
+      "prob_a_tiempo": 0.93,
+      "retraso_dias": [1, 2],
+      "fill_rate_medio": 0.97,
+      "factor_precio": 1.00,
+      "volatilidad_precio": 0.006,
+      "cargo_internacional_mxn": 0
+    },
+    {
+      "clave": "ATLANTICO",
+      "nombre": "Atlantico Global",
+      "pais": "China",
+      "ciudad": "Ningbo",
+      "latitud": 29.868300,
+      "longitud": 121.544000,
+      "punto_despacho_mx": { "nombre": "Lazaro Cardenas", "latitud": 17.958300, "longitud": -102.194400 },
+      "calificacion_inicial": 3.60,
+      "dias_preparacion": 6,
+      "transito_internacional_dias": 26,
+      "prob_a_tiempo": 0.80,
+      "retraso_dias": [3, 8],
+      "fill_rate_medio": 0.93,
+      "factor_precio": 0.85,
+      "volatilidad_precio": 0.020,
+      "cargo_internacional_mxn": 52000
+    }
+  ],
+
+  "proveedor_principal": "NORTE",
+
+  "surtido": {
+    "_descripcion": "Proveedores de cada SKU con su participacion en las ordenes; cada SKU tiene al menos dos fuentes (diversificacion, PDR modulo 5).",
+    "LAP-APP-APP-078": { "NORTE": 0.70, "FRONTERA": 0.30 },
+    "LAP-ASU-ASU-079": { "NORTE": 0.60, "FRONTERA": 0.40 },
+    "MOB-AMA-AMA-099": { "DELTA": 0.60, "PACIFICO": 0.40 },
+    "MOB-APP-APP-100": { "DELTA": 0.50, "PACIFICO": 0.30, "FRONTERA": 0.20 },
+    "SMA-APP-IPH-121": { "NORTE": 0.50, "DELTA": 0.50 },
+    "SMA-APP-IPH-122": { "NORTE": 0.50, "DELTA": 0.50 },
+    "FUR-ANN-ANN-011": { "BAJIO": 0.80, "ATLANTICO": 0.20 },
+    "FUR-ANN-ANN-012": { "BAJIO": 0.80, "ATLANTICO": 0.20 },
+    "KIT-BRD-BAM-048": { "CASAHOGAR": 0.70, "ATLANTICO": 0.30 },
+    "KIT-BRD-BLA-049": { "CASAHOGAR": 0.70, "ATLANTICO": 0.30 },
+    "SPO-BRD-AME-137": { "DEPCENTRO": 0.70, "ATLANTICO": 0.30 },
+    "SPO-BRD-BAS-138": { "DEPCENTRO": 0.70, "ATLANTICO": 0.30 }
+  },
+
+  "demanda": {
+    "_descripcion": "Unidades diarias solicitadas por SKU en toda la red al inicio del periodo; se reparten por almacen con reparto_demanda. Fuente de demanda_diaria (CC-02, CC-05).",
+    "base_diaria_por_sku": {
+      "LAP-APP-APP-078": 18,
+      "LAP-ASU-ASU-079": 15,
+      "MOB-AMA-AMA-099": 90,
+      "MOB-APP-APP-100": 120,
+      "SMA-APP-IPH-121": 55,
+      "SMA-APP-IPH-122": 70,
+      "FUR-ANN-ANN-011": 6,
+      "FUR-ANN-ANN-012": 5,
+      "KIT-BRD-BAM-048": 260,
+      "KIT-BRD-BLA-049": 300,
+      "SPO-BRD-AME-137": 110,
+      "SPO-BRD-BAS-138": 140
+    },
+    "estacionalidad_semanal": {
+      "_descripcion": "Factor por dia de la semana, lunes a domingo; promedio 1.0. Periodo 7 para Holt-Winters (CC-07).",
+      "factores": [1.05, 1.00, 1.00, 1.05, 1.15, 0.90, 0.85]
+    },
+    "tendencia_anual": 0.06,
+    "ruido_cv": 0.18,
+    "eventos_calendario": [
+      { "clave": "BUEN_FIN", "inicio": "2025-11-14", "fin": "2025-11-17", "factor": 1.60 },
+      { "clave": "TEMPORADA_NAVIDAD", "inicio": "2025-12-10", "fin": "2025-12-24", "factor": 1.30 },
+      { "clave": "CUESTA_ENERO", "inicio": "2026-01-05", "fin": "2026-01-31", "factor": 0.85 }
+    ]
+  },
+
+  "politica_inventario": {
+    "_descripcion": "Revision diaria por almacen y SKU. Se ordena cuando la posicion (stock + en transito) cae bajo el punto de reorden = demanda media x (lead time esperado + dias de seguridad), hasta cubrir cobertura_objetivo_dias.",
+    "cobertura_inicial_dias": 35,
+    "cobertura_objetivo_dias": 50,
+    "stock_seguridad_dias": 12,
+    "ventana_demanda_media_dias": 28,
+    "consolidar_por_proveedor_y_almacen": true,
+    "utilizacion_maxima_para_ordenar": 0.95
+  },
+
+  "transporte": {
+    "_descripcion": "Costo de flete en MXN por envio: cargo_fijo + km de ruta x tarifa + cargo_internacional del proveedor. Km de ruta = distancia en linea recta x factor_ruta.",
+    "factor_ruta": 1.25,
+    "velocidad_km_dia": 550,
+    "cargo_fijo_mxn": 2500,
+    "tarifa_mxn_km": 32,
+    "ruido_costo_cv": 0.08
+  },
+
+  "clima": {
+    "_descripcion": "Open-Meteo, API de archivo, datos diarios con cache local; se descarga antes del generador (CC-04). Se evalua cada dia de transito en punto_despacho_mx y en el almacen de destino; manda la peor condicion.",
+    "variables_diarias": ["weather_code", "precipitation_sum"],
+    "codigos_tormenta": [95, 96, 99],
+    "umbral_lluvia_mm": 1.0,
+    "umbral_lluvia_fuerte_mm": 20.0,
+    "condiciones": ["DESPEJADO", "LLUVIA", "LLUVIA_FUERTE", "TORMENTA"],
+    "impacto": {
+      "LLUVIA":        { "prob_retraso_extra": 0.05, "retraso_extra_dias": [1, 1] },
+      "LLUVIA_FUERTE": { "prob_retraso_extra": 0.25, "retraso_extra_dias": [1, 2] },
+      "TORMENTA":      { "prob_retraso_extra": 0.45, "retraso_extra_dias": [1, 3] }
+    },
+    "carpeta_cache": "backend/etl/cache/clima"
+  },
+
+  "eventos_inyectados": {
+    "_descripcion": "Anomalias con verdad conocida para validar Isolation Forest (CC-07). El generador las aplica y escribe el detalle con los ids afectados en backend/etl/datos/eventos_inyectados.json.",
+    "eventos": [
+      {
+        "clave": "EV01_ALZA_PRECIO_NORTE",
+        "tipo": "ALZA_PRECIO",
+        "proveedor": "NORTE",
+        "skus": ["LAP-APP-APP-078", "LAP-ASU-ASU-079"],
+        "inicio": "2026-08-10",
+        "fin": "2026-09-30",
+        "magnitud": 0.068,
+        "forma": "GRADUAL"
+      },
+      {
+        "clave": "EV02_RETRASOS_DELTA",
+        "tipo": "DETERIORO_PUNTUALIDAD",
+        "proveedor": "DELTA",
+        "inicio": "2026-09-01",
+        "fin": "2026-09-30",
+        "prob_a_tiempo": 0.50,
+        "retraso_dias": [2, 5]
+      },
+      {
+        "clave": "EV03_PICO_LAPTOP_MTY",
+        "tipo": "PICO_DEMANDA",
+        "almacen": "MTY",
+        "skus": ["LAP-APP-APP-078"],
+        "inicio": "2026-09-08",
+        "fin": "2026-09-30",
+        "magnitud": 0.22,
+        "forma": "ESCALON"
+      },
+      {
+        "clave": "EV04_FALTANTES_PACIFICO",
+        "tipo": "BAJA_FILL_RATE",
+        "proveedor": "PACIFICO",
+        "inicio": "2026-03-01",
+        "fin": "2026-03-31",
+        "fill_rate_medio": 0.80
+      },
+      {
+        "clave": "EV05_CAIDA_AIRPODS_CDMX",
+        "tipo": "CAIDA_DEMANDA",
+        "almacen": "CDMX",
+        "skus": ["MOB-APP-APP-100"],
+        "inicio": "2026-07-15",
+        "fin": "2026-09-30",
+        "magnitud": -0.40,
+        "forma": "ESCALON"
+      },
+      {
+        "clave": "EV06_FLETE_FRONTERA",
+        "tipo": "ALZA_FLETE",
+        "proveedor": "FRONTERA",
+        "inicio": "2026-01-12",
+        "fin": "2026-01-25",
+        "magnitud": 0.35
+      }
+    ]
+  }
+}
