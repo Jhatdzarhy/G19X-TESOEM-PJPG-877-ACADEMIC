@@ -4,6 +4,13 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-08 15:24 | 29fe151 | docs: cierre del Sprint 1 en project_state.json |
+| 2026-10-08 14:39 | e2e62c6 | docs: registrar CC-15 y marcar CC-03 y CC-04 como implementados |
+| 2026-10-08 14:15 | 75bb2ba | feat(db): agregacion a fact_supply_chain y dim_tiempo con funcion refrescar_modelo_estrella |
+| 2026-10-08 14:10 | b666672 | feat(db): validacion de integridad y de los 11 KPIs del PDR sobre los datos simulados |
+| 2026-10-08 14:07 | d1f5e19 | feat(etl): generador de 12 meses de operacion simulada con clima real y eventos inyectados |
+| 2026-10-08 14:07 | eec32bf | fix(etl): ampliar ventanas de eventos inyectados para validar Isolation Forest (CC-07) |
+| 2026-10-07 22:04 | 6dde2da | docs: actualizar BITACORA.md - insumos del Sprint 1 completos (clima y Banxico SIE) |
 | 2026-10-07 22:03 | a6a6866 | docs: registrar historico de Banxico SIE y correccion del ETL de tipo de cambio en project_state.json |
 | 2026-10-07 22:01 | 077e082 | fix(etl): tipo de cambio diario con ON CONFLICT por fuente para no borrar el historico de Banxico |
 | 2026-10-07 21:55 | c8a72b1 | feat(etl): carga del historico FIX USD-MXN desde Banxico SIE con fuente BANXICO_SIE (CC-03) |
