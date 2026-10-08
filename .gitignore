@@ -4,3 +4,9 @@
 target/
 *.class
 .env
+
+# Documentos no publicables (autorizado por Edgar Loeffelmann)
+*.docx
+*.pdf
+docs/PDR*
+docs/*MVP*
