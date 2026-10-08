@@ -10,3 +10,4 @@ target/
 *.pdf
 docs/PDR*
 docs/*MVP*
+backend/etl/cache/
