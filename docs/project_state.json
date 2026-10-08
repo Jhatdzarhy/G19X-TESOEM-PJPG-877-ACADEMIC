@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
   "fecha_actualizacion": "2026-10-07",
-  "fase_actual": "Proyecto final - Sprint 1 (datos): config_simulacion.json listo y token de Banxico SIE verificado; siguiente: descarga de clima historico de Open-Meteo con cache y cargador de Banxico SIE",
+    "fase_actual": "Proyecto final - Sprint 1 (datos): clima historico de Open-Meteo descargado en cache; siguiente: cargador del historico de Banxico SIE y generador de 12 meses",
     "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -27,14 +27,14 @@
       "Maqueta visual de la version definitiva: Resumen ejecutivo compacto y vista del Centro de soluciones (referencia de diseno, no codigo)",
       "Extensiones del modelo (CC-02) aplicadas en supply_chain_final con db/final/03_extensiones_modelo.sql: cantidad_recibida, orden_id en movimientos, tabla demanda_diaria, coordenadas, precipitacion_mm, fuente en tipo_cambio, vistas de dimensiones, indices de PDR 8.2 y columnas opciones, ahorro_real_mxn, motivo_descarte y estado DESCARTADA en recomendaciones; verificado con db/final/03_verificar_extensiones.sql (36 de 36 pruebas)",
       "backend/etl/datos/config_simulacion.json: 3 almacenes con coordenadas y capacidad, 8 proveedores con perfil de puntualidad, fill rate y precio, surtido con al menos dos fuentes por SKU, demanda base con estacionalidad semanal, politica de inventario, transporte, reglas de clima y 6 eventos inyectados",
-      "Token de Banxico SIE obtenido, guardado en backend/.env (ignorado por .gitignore) y verificado con la serie SF43718 (FIX)"
+      "Token de Banxico SIE obtenido, guardado en backend/.env (ignorado por .gitignore) y verificado con la serie SF43718 (FIX)",
+      "Clima historico diario de Open-Meteo (2025-10-01 a 2026-09-30) descargado con backend/etl/descargar_clima.py para 10 puntos (3 almacenes y 7 puntos de despacho), 365 dias cada uno, en cache local backend/etl/cache/clima (CC-04)"
     ],
     "en_progreso": [
       "Sprint 1 - datos: generador de 12 meses de operacion (proveedores, almacenes, ordenes, envios, movimientos, demanda) con semilla fija, periodo 2025-10-01 a 2026-09-30"
     ],
     "pendiente": [
       "Sprint 1: cargador del historico diario del tipo de cambio FIX USD-MXN de 12 meses desde Banxico SIE (serie SF43718) en tipo_cambio con fuente BANXICO_SIE",
-      "Sprint 1: clima historico con Open-Meteo (API de archivo) con cache local, descargado antes del generador para que los retrasos dependan del clima real; guardado en envios.condicion_climatica",
       "Sprint 1: db/final/validar_kpis.sql para comprobar rangos de los 11 KPIs, stock no negativo, fechas validas y ausencia de caracteres no ASCII",
       "Sprint 1: script de agregacion hacia fact_supply_chain y dim_tiempo (flujo PDR 5.2)",
       "Sprint 2: motor analitico en FastAPI (11 KPIs del PDR, pronostico, anomalias, riesgo de proveedores y recomendaciones con su plan de acciones en las tablas recomendaciones y plan_acciones)",
@@ -51,7 +51,9 @@
     ]
   },
 "archivos_modificados_recientemente": [
+    "backend/etl/descargar_clima.py",
     "backend/etl/datos/config_simulacion.json",
+    ".gitignore",
     "docs/project_state.json"
   ],
 
@@ -110,7 +112,9 @@
     "Capacidad de almacenes calibrada con volumen_por_sku.json para una utilizacion promedio de 75% (CDMX 120 m3), 82% (Monterrey 75 m3) y 70% (Guadalajara 70 m3); las cifras son pequenas porque los volumenes de DummyJSON son datos de muestra",
     "Proveedores ficticios con perfiles distintos; los internacionales despachan por Manzanillo, Lazaro Cardenas o Nuevo Laredo y el clima de la ruta se evalua en ese punto y en el almacen de destino",
     "Seis eventos inyectados alineados con los casos del Centro de soluciones (alza de precio, retrasos, pico de demanda, faltantes, exceso de inventario y alza de flete) para validar Isolation Forest con verdad conocida",
-    "No se activa python.terminal.useEnvFile en VS Code: los scripts cargan .env con python-dotenv y los secretos no se inyectan en todas las terminales"
+    "No se activa python.terminal.useEnvFile en VS Code: los scripts cargan .env con python-dotenv y los secretos no se inyectan en todas las terminales",
+    "El archivo historico de Open-Meteo (reanalisis ERA5) no reporta codigos de tormenta electrica (95-99) y suaviza extremos; la condicion climatica se clasifica por precipitacion con rangos del Servicio Meteorologico Nacional: LLUVIA desde 1 mm, LLUVIA_FUERTE desde 25 mm y TORMENTA desde 50 mm (lluvia muy fuerte) o con codigo 95-99",
+    "La cache de clima (backend/etl/cache/) no se versiona; se regenera con descargar_clima.py y el script usa solo la biblioteca estandar de Python"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
