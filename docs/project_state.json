@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
-  "fecha_actualizacion": "2026-10-05",
-  "fase_actual": "Proyecto final - Sprint 1 (datos): esquema de supply_chain_final y ETL de ExchangeRate-API y DummyJSON listos; siguiente: generador de 12 meses de operacion",
+  "fecha_actualizacion": "2026-10-07",
+  "fase_actual": "Proyecto final - Sprint 1 (datos): siguiente tarea es el generador de 12 meses; decisiones de datos cerradas (extensiones del modelo, Banxico SIE, clima antes del generador) y registradas en docs/CONTROL_DE_CAMBIOS.md; siguiente: crear y ejecutar db/final/03_extensiones_modelo.sql",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -22,34 +22,40 @@
       "Endpoint /kpis/alertas agregado (combina stock en cero, envios tardios y OTIF bajo umbral de 70%) y conectado al dashboard como seccion visible arriba de todo - Modulo de Alertas Ejecutivas cubierto, 6 modulos totales en el dashboard",
       "Endpoint /kpis/riesgo-proveedores agregado (score compuesto por calificacion y envios tardios, con nivel Alto/Medio/Bajo) y conectado al dashboard con insignias de color - Modulo de Inteligencia Artificial cubierto, 7 modulos totales en el dashboard, MVP con cobertura completa del alcance operativo del PDR",
       "Base supply_chain_final creada con 13 tablas: esquema del PDR (db/final/01_esquema_pdr.sql, 11 tablas) y Centro de soluciones (db/final/02_centro_soluciones.sql, tablas recomendaciones y plan_acciones)",
-      "ETL en Python (backend/etl): tipo de cambio desde ExchangeRate-API (3 pares, tasa del dia) y catalogo de 12 productos desde DummyJSON cargados en supply_chain_final"
+      "ETL en Python (backend/etl): tipo de cambio desde ExchangeRate-API (3 pares, tasa del dia) y catalogo de 12 productos desde DummyJSON cargados en supply_chain_final",
+      "Revision de consistencia entre PDR, project_state.json y BITACORA.md: identificados huecos de trazabilidad para OTIF y Fill Rate, falta de historico de tipo de cambio y limite de estacionalidad de Holt-Winters con 12 meses",
+      "Maqueta visual de la version definitiva: Resumen ejecutivo compacto y vista del Centro de soluciones (referencia de diseno, no codigo)"
     ],
     "en_progreso": [
-      "Sprint 1 - datos: generador de 12 meses de operacion (proveedores, almacenes, ordenes, envios, movimientos) y despues clima historico con Open-Meteo"
+      "Sprint 1 - datos: generador de 12 meses de operacion (proveedores, almacenes, ordenes, envios, movimientos, demanda) con semilla fija, periodo 2025-10-01 a 2026-09-30"
     ],
     "pendiente": [
-      "Manual tecnico y plan de mantenimiento (fases 7 y 8 del cronograma)",
-      "Sprint 1: clima historico con Open-Meteo guardado en envios.condicion_climatica",
+      "Sprint 1: crear y ejecutar db/final/03_extensiones_modelo.sql",
+      "Sprint 1: solicitar token gratuito de Banxico SIE, guardarlo en .env y cargar el historico diario del tipo de cambio FIX USD-MXN de 12 meses en tipo_cambio",
+      "Sprint 1: backend/etl/datos/config_simulacion.json con perfiles de proveedores, almacenes con capacidad y coordenadas, proveedor principal y demanda base por SKU",
+      "Sprint 1: clima historico con Open-Meteo (API de archivo) con cache local, descargado antes del generador para que los retrasos dependan del clima real; guardado en envios.condicion_climatica",
+      "Sprint 1: db/final/validar_kpis.sql para comprobar rangos de los 11 KPIs, stock no negativo, fechas validas y ausencia de caracteres no ASCII",
+      "Sprint 1: script de agregacion hacia fact_supply_chain y dim_tiempo (flujo PDR 5.2)",
       "Sprint 2: motor analitico en FastAPI (11 KPIs del PDR, pronostico, anomalias, riesgo de proveedores y recomendaciones con su plan de acciones en las tablas recomendaciones y plan_acciones)",
+      "Sprint 2: verificar que plan_acciones permita registrar el ahorro real medido para la comparacion de ahorro real contra proyectado",
       "Sprint 3: capa de Servlets de Java como controladores que consumen FastAPI, con sesion y roles (PDR seccion 4); el navegador deja de llamar directo a FastAPI",
-      "Sprint 4: vistas JSP del diseno final (Resumen ejecutivo y Centro de soluciones) con Bootstrap 5 y Chart.js",
-      "Sprint 5: vistas por modulo, pruebas de calidad y documentacion"
+      "Sprint 4: vistas JSP del diseno final (Resumen ejecutivo compacto y Centro de soluciones) con Bootstrap 5 y Chart.js",
+      "Sprint 4 o 5: simulador de eventos y actualizacion en vivo (consulta periodica para KPIs y Server-Sent Events para actividad y alertas, a traves de los Servlets)",
+      "Sprint 5: vistas por modulo (Compras con tipo de cambio, Inventarios, Logistica con rutas y clima, Almacenes, Proveedores con riesgo, Alertas, Administracion), pruebas de calidad y documentacion",
+      "Seguridad: escapar datos antes de insertarlos con innerHTML (XSS, OWASP) y contrasenas cifradas (riesgo R7)",
+      "Fijar la version exacta de Chart.js en la URL del CDN (PDR seccion 4.3)",
+      "README.md en la rama proyecto-final y backend/.env.example sin contrasenas",
+      "Push inicial a GitHub (ramas master y proyecto-final, etiqueta mvp-v1.0) cuando el proyecto final este mas avanzado, previa verificacion de que no hay .env, contrasenas ni documentos no publicables en el historial",
+      "Matriz de trazabilidad PDR: cada elemento del PDR ligado a su archivo, endpoint o consulta, para la defensa",
+      "Manual tecnico y plan de mantenimiento (fases 7 y 8 del cronograma)"
     ]
   },
   "archivos_modificados_recientemente": [
-    "db/schema.sql",
     "db/final/01_esquema_pdr.sql",
     "db/final/02_centro_soluciones.sql",
-    "backend/requirements.txt",
-    "backend/app/__init__.py",
-    "backend/app/database.py",
-    "backend/app/main.py",
     "backend/etl/cargar_tipo_cambio.py",
     "backend/etl/cargar_productos.py",
     "backend/etl/datos/volumen_por_sku.json",
-    "frontend/webapp/WEB-INF/web.xml",
-    "frontend/webapp/index.jsp",
-    "frontend/webapp/js/dashboard.js",
     "docs/project_state.json"
   ],
   "decisiones_de_diseno": [
@@ -78,7 +84,30 @@
     "MVP congelado con la etiqueta mvp-v1.0 (commit 7bf3787, MVP completo con 7 modulos). El proyecto final se desarrolla en la rama proyecto-final, con una base de datos nueva (supply_chain_final) y scripts en db/final para no alterar el MVP",
     "Las tablas del Centro de soluciones fueron aprobadas por el asesor mediante control de cambios (riesgo R6). La evidencia de cada recomendacion se guarda como JSONB y los valores de modulo y severidad se almacenan sin acentos para evitar problemas de codificacion",
     "Productos cargados desde DummyJSON (12 SKU de 6 categorias) con el sku del catalogo. costo_unitario en USD, moneda de origen. El volumen por unidad se deriva de las dimensiones del catalogo (datos de muestra) y se guarda en backend/etl/datos/volumen_por_sku.json para calcular la utilizacion de almacen sin modificar el esquema del PDR",
-    "Tipo de cambio desde el endpoint abierto de ExchangeRate-API, una tasa por dia (el endpoint se actualiza una vez al dia y exige atribucion en la interfaz)"
+    "Tipo de cambio desde el endpoint abierto de ExchangeRate-API, una tasa por dia (el endpoint se actualiza una vez al dia y exige atribucion en la interfaz)",
+    "Criterio del proyecto: el PDR se cumple al 100% como base; se permiten adiciones que lo extiendan sin modificar ni eliminar nada de el, documentadas en project_state.json",
+    "Las tablas recomendaciones y plan_acciones son adiciones que implementan el Modulo 6 (IA) y el objetivo de apoyo a la toma de decisiones (PDR seccion 2) sin alterar el PDR",
+    "Trazabilidad de KPIs con relaciones explicitas (llaves foraneas) en lugar de joins por coincidencia de fecha, para que el modelo sea valido con datos reales de un ERP",
+    "envios.almacen_origen_id se interpreta como almacen de destino en el flujo de compras (proveedor hacia almacen), sin renombrar la columna",
+    "Holt-Winters con estacionalidad semanal (periodo 7) sobre datos diarios, porque 12 meses no permiten estimar estacionalidad anual",
+    "Generador con semilla fija, ejecucion idempotente y anomalias inyectadas con verdad conocida (backend/etl/datos/eventos_inyectados.json) para medir la deteccion de Isolation Forest",
+    "Valores de texto en la base solo en ASCII: constantes sin acentos, saneamiento NFKD antes de insertar, client_encoding UTF8 y validacion final de caracteres no ASCII",
+    "El PDR, el documento MVP y cualquier dato sensible de la empresa no se publican en GitHub, por autorizacion de Edgar Loeffelmann (lider de proyecto); se excluyen en .gitignore (*.docx, *.pdf, docs/PDR*, docs/*MVP*). La acreditacion del proyecto la indica Hugo De la O (asesor tecnico)",
+    "Los commits duplicados del MVP no se eliminan para no reescribir el historial ni alterar la etiqueta mvp-v1.0; para evitar nuevos duplicados se revisa git diff --staged antes de cada commit y se usa git commit --amend solo sobre el ultimo commit no subido",
+    "El push a GitHub se pospone hasta avanzar el proyecto final; los commits locales siguen como evidencia de trabajo continuo (PDR seccion 4.2)",
+    "Cronograma del PDR: 14 de septiembre al 2 de octubre de 2026; el MVP se desarrollo dentro de la Fase 5 (25 al 29 de septiembre). La entrega se extendio al 16 de octubre de 2026 (CC-14): desarrollo de la version final del 5 al 13 de octubre, QA el 14, documentacion y plan de mantenimiento el 15, entrega y cierre el 16",
+    "Aclaracion de alcance del MVP: cubre 6 de los 8 modulos del PDR (Compras de forma parcial via lead time; Administracion pendiente); Indicadores Principales es una seccion de la vista, no un modulo del PDR",
+    "Ajuste de diseno: el Resumen ejecutivo se limita a Estado de la cadena, Que atender hoy y Demanda y pronostico, para caber en una pantalla y responder como estamos y que hacer hoy",
+    "El Centro de soluciones pasa a una vista propia dentro del modulo de Inteligencia artificial; Riesgo de proveedores, Rutas y clima y Tipo de cambio se mueven a los modulos Proveedores, Logistica y transporte, y Compras",
+    "Actividad en tiempo real se muestra como franja de un evento en el Resumen con acceso al historial completo; Fuentes de datos se enlaza desde el pie de pagina con las atribuciones de las APIs",
+    "Diseno del dashboard: estados con texto o icono ademas del color, frescura y origen (simulado o real) visibles en cada cifra, pronostico con banda de incertidumbre y Que atender hoy limitado a 5 elementos ordenados por impacto en MXN",
+    "Extensiones del modelo aprobadas en db/final/03_extensiones_modelo.sql: cantidad_recibida en detalle_orden_compra, orden_id en movimientos_inventario, tabla demanda_diaria, coordenadas en almacenes y proveedores, precipitacion_mm en envios, fuente en tipo_cambio, vistas de dimensiones e indices de la seccion 8.2 del PDR",
+    "Fill Rate en dos lecturas: de servicio desde demanda_diaria (KPI de Inventario del PDR) y de proveedor desde cantidad_recibida (insumo del indice de riesgo)",
+    "Librerias de Python para la capa analitica: pandas, statsmodels (Holt-Winters), scikit-learn (Isolation Forest); versiones exactas fijadas en requirements.txt al instalarlas",
+    "El PDR v1.0 no se modifica. Toda extension, precision o interpretacion del PDR se registra en docs/CONTROL_DE_CAMBIOS.md (control de cambios formal, riesgo R6) con su justificacion y la seccion del PDR que la sustenta; las decisiones tecnicas siguen registrandose en project_state.json",
+    "Historico de tipo de cambio de 12 meses desde Banxico SIE (tipo de cambio FIX, fuente oficial, token en .env que nunca se sube); ExchangeRate-API se mantiene como fuente de la tasa diaria segun el PDR; cada registro de tipo_cambio guarda su fuente",
+    "El clima historico de Open-Meteo se descarga antes del generador; el generador lo usa para aumentar la probabilidad de retraso en dias de lluvia fuerte o tormenta y escribe envios.condicion_climatica en el mismo paso, para que la relacion entre clima y puntualidad sea real",
+    "Actualizacion en vivo con tecnologias del PDR: consulta periodica cada 30 a 60 segundos para KPIs y Server-Sent Events desde Servlets asincronos para actividad y alertas; LISTEN/NOTIFY de PostgreSQL como mejora posterior"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
