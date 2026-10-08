@@ -1,8 +1,8 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
   "fecha_actualizacion": "2026-10-07",
-    "fase_actual": "Proyecto final - Sprint 1 (datos): clima historico de Open-Meteo descargado en cache; siguiente: cargador del historico de Banxico SIE y generador de 12 meses",
-    "backlog": {
+  "fase_actual": "Proyecto final - Sprint 1 (datos): insumos completos (modelo extendido, configuracion, clima y tipo de cambio de Banxico); siguiente: generador de 12 meses",
+  "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
       "Creacion de estructura de carpetas (db, backend, frontend, docs)",
@@ -28,13 +28,13 @@
       "Extensiones del modelo (CC-02) aplicadas en supply_chain_final con db/final/03_extensiones_modelo.sql: cantidad_recibida, orden_id en movimientos, tabla demanda_diaria, coordenadas, precipitacion_mm, fuente en tipo_cambio, vistas de dimensiones, indices de PDR 8.2 y columnas opciones, ahorro_real_mxn, motivo_descarte y estado DESCARTADA en recomendaciones; verificado con db/final/03_verificar_extensiones.sql (36 de 36 pruebas)",
       "backend/etl/datos/config_simulacion.json: 3 almacenes con coordenadas y capacidad, 8 proveedores con perfil de puntualidad, fill rate y precio, surtido con al menos dos fuentes por SKU, demanda base con estacionalidad semanal, politica de inventario, transporte, reglas de clima y 6 eventos inyectados",
       "Token de Banxico SIE obtenido, guardado en backend/.env (ignorado por .gitignore) y verificado con la serie SF43718 (FIX)",
-      "Clima historico diario de Open-Meteo (2025-10-01 a 2026-09-30) descargado con backend/etl/descargar_clima.py para 10 puntos (3 almacenes y 7 puntos de despacho), 365 dias cada uno, en cache local backend/etl/cache/clima (CC-04)"
+      "Clima historico diario de Open-Meteo (2025-10-01 a 2026-09-30) descargado con backend/etl/descargar_clima.py para 10 puntos (3 almacenes y 7 puntos de despacho), 365 dias cada uno, en cache local backend/etl/cache/clima (CC-04)",
+      "Historico FIX USD-MXN de Banxico SIE (serie SF43718) cargado con backend/etl/cargar_banxico.py: 251 dias habiles del 2025-10-01 al 2026-09-30, tasa de 16.87 a 18.62, con fuente BANXICO_SIE (CC-03)"
     ],
     "en_progreso": [
       "Sprint 1 - datos: generador de 12 meses de operacion (proveedores, almacenes, ordenes, envios, movimientos, demanda) con semilla fija, periodo 2025-10-01 a 2026-09-30"
     ],
     "pendiente": [
-      "Sprint 1: cargador del historico diario del tipo de cambio FIX USD-MXN de 12 meses desde Banxico SIE (serie SF43718) en tipo_cambio con fuente BANXICO_SIE",
       "Sprint 1: db/final/validar_kpis.sql para comprobar rangos de los 11 KPIs, stock no negativo, fechas validas y ausencia de caracteres no ASCII",
       "Sprint 1: script de agregacion hacia fact_supply_chain y dim_tiempo (flujo PDR 5.2)",
       "Sprint 2: motor analitico en FastAPI (11 KPIs del PDR, pronostico, anomalias, riesgo de proveedores y recomendaciones con su plan de acciones en las tablas recomendaciones y plan_acciones)",
@@ -50,13 +50,11 @@
       "Manual tecnico y plan de mantenimiento (fases 7 y 8 del cronograma)"
     ]
   },
-"archivos_modificados_recientemente": [
-    "backend/etl/descargar_clima.py",
-    "backend/etl/datos/config_simulacion.json",
-    ".gitignore",
+  "archivos_modificados_recientemente": [
+    "backend/etl/cargar_banxico.py",
+    "backend/etl/cargar_tipo_cambio.py",
     "docs/project_state.json"
   ],
-
   "decisiones_de_diseno": [
     "Arquitectura de 3 capas: PostgreSQL -> FastAPI -> Java/JSP",
     "Infraestructura local a costo $0 (localhost:8080 y localhost:8000)",
@@ -114,7 +112,10 @@
     "Seis eventos inyectados alineados con los casos del Centro de soluciones (alza de precio, retrasos, pico de demanda, faltantes, exceso de inventario y alza de flete) para validar Isolation Forest con verdad conocida",
     "No se activa python.terminal.useEnvFile en VS Code: los scripts cargan .env con python-dotenv y los secretos no se inyectan en todas las terminales",
     "El archivo historico de Open-Meteo (reanalisis ERA5) no reporta codigos de tormenta electrica (95-99) y suaviza extremos; la condicion climatica se clasifica por precipitacion con rangos del Servicio Meteorologico Nacional: LLUVIA desde 1 mm, LLUVIA_FUERTE desde 25 mm y TORMENTA desde 50 mm (lluvia muy fuerte) o con codigo 95-99",
-    "La cache de clima (backend/etl/cache/) no se versiona; se regenera con descargar_clima.py y el script usa solo la biblioteca estandar de Python"
+    "La cache de clima (backend/etl/cache/) no se versiona; se regenera con descargar_clima.py y el script usa solo la biblioteca estandar de Python",
+    "tipo_cambio solo guarda los dias publicados por cada fuente; la capa analitica usa la ultima tasa publicada en o antes de cada fecha (fines de semana y festivos toman el FIX del dia habil anterior)",
+    "cargar_tipo_cambio.py usa ON CONFLICT por par, fecha y fuente en lugar de DELETE por fecha, para no borrar el historico de Banxico SIE",
+    "Los ETL se ejecutan desde backend con el entorno virtual .venv activo y python -m etl.<script>; get_connection devuelve filas como diccionario, por eso las consultas usan alias de columna"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -133,6 +134,10 @@
     "Dashboard mostraba tabla de Almacenes vacia pese a que el archivo dashboard.js en Tomcat ya tenia la funcion cargarAlmacenes - causado por cache del navegador con la version anterior del JS, resuelto con Ctrl+Shift+R (recarga forzada) y agregando cache-busting con timestamp en el script del JSP",
     "dashboard.js tenia dos bloques DOMContentLoaded duplicados (uno con cargarAlertas y otro sin ella) causando doble ejecucion de todas las funciones - resuelto consolidando en un solo bloque DOMContentLoaded al final del archivo",
     "UndefinedTable (no existe la relacion tipo_cambio) al ejecutar el primer ETL - la base supply_chain_final estaba vacia porque los scripts de db/final no se habian creado ni ejecutado; resuelto creando y ejecutando 01_esquema_pdr.sql y 02_centro_soluciones.sql (13 tablas)",
-    "El commit de 02_centro_soluciones.sql quedo con el mensaje del esquema del PDR - corregido con git commit --amend antes de existir un repositorio remoto"
+    "El commit de 02_centro_soluciones.sql quedo con el mensaje del esquema del PDR - corregido con git commit --amend antes de existir un repositorio remoto",
+    "ModuleNotFoundError httpx al ejecutar cargar_banxico - el entorno virtual backend/.venv no estaba activo; resuelto con .\\.venv\\Scripts\\Activate.ps1",
+    "ValueError al desempacar el resumen de cargar_banxico - get_connection devuelve filas como diccionario y las columnas MIN y MAX repetidas se sobrescribian; resuelto con alias de columna",
+    ".gitignore sin salto de linea final: Add-Content pego backend/etl/cache/ a la regla docs/*MVP* y dejo ambas sin efecto; resuelto separando las lineas y verificando con git check-ignore",
+    "Al reemplazar fase_actual en project_state.json se borro la linea backlog y el JSON quedo invalido; resuelto restaurando la linea y validando con python json.load"
   ]
 }
