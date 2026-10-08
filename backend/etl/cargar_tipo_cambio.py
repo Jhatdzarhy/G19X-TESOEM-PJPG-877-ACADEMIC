@@ -23,6 +23,8 @@ def obtener_tasas():
 
 
 def guardar(tasas, dia):
+    # CC-02 y CC-03: cada fila lleva su fuente; ON CONFLICT reemplaza solo la tasa
+    # de ExchangeRate-API del mismo dia, sin borrar el historico de Banxico SIE.
     filas = [
         ("USD", "MXN", tasas["MXN"]),
         ("USD", "CNY", tasas["CNY"]),
@@ -32,11 +34,12 @@ def guardar(tasas, dia):
     try:
         with conn:
             with conn.cursor() as cur:
-                cur.execute("DELETE FROM tipo_cambio WHERE fecha = %s", (dia,))
                 for origen, destino, tasa in filas:
                     cur.execute(
-                        "INSERT INTO tipo_cambio (moneda_origen, moneda_destino, tasa, fecha) "
-                        "VALUES (%s, %s, %s, %s)",
+                        "INSERT INTO tipo_cambio (moneda_origen, moneda_destino, tasa, fecha, fuente) "
+                        "VALUES (%s, %s, %s, %s, 'EXCHANGERATE_API') "
+                        "ON CONFLICT ON CONSTRAINT uq_tipo_cambio_par_fecha_fuente "
+                        "DO UPDATE SET tasa = EXCLUDED.tasa",
                         (origen, destino, round(tasa, 6), dia),
                     )
     finally:
