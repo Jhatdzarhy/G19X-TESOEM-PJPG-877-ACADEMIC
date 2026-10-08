@@ -1,0 +1,683 @@
+{
+ "_meta": {
+  "descripcion": "Eventos inyectados con verdad conocida para validar la deteccion de anomalias (CC-07).",
+  "semilla": 20260930,
+  "generado": "2026-10-08"
+ },
+ "eventos": [
+  {
+   "clave": "EV01_ALZA_PRECIO_NORTE",
+   "tipo": "ALZA_PRECIO",
+   "proveedor": "NORTE",
+   "skus": [
+    "LAP-APP-APP-078",
+    "LAP-ASU-ASU-079",
+    "SMA-APP-IPH-121",
+    "SMA-APP-IPH-122"
+   ],
+   "inicio": "2026-07-01",
+   "fin": "2026-09-30",
+   "magnitud": 0.068,
+   "forma": "GRADUAL",
+   "orden_id": [
+    307,
+    315,
+    317,
+    319,
+    322,
+    325,
+    348,
+    352,
+    353,
+    355,
+    356,
+    360,
+    363,
+    368,
+    388,
+    391,
+    393
+   ],
+   "envio_id": [
+    307,
+    315,
+    317,
+    319,
+    322,
+    325,
+    348,
+    352,
+    353,
+    355,
+    356,
+    360,
+    363,
+    368,
+    388,
+    391,
+    393
+   ],
+   "detalle_id": [
+    312,
+    320,
+    322,
+    324,
+    327,
+    330,
+    353,
+    357,
+    358,
+    360,
+    361,
+    365,
+    368,
+    369,
+    374,
+    394,
+    397,
+    399
+   ],
+   "demanda_afectada": []
+  },
+  {
+   "clave": "EV02_RETRASOS_DELTA",
+   "tipo": "DETERIORO_PUNTUALIDAD",
+   "proveedor": "DELTA",
+   "inicio": "2026-09-01",
+   "fin": "2026-09-30",
+   "prob_a_tiempo": 0.5,
+   "retraso_dias": [
+    2,
+    5
+   ],
+   "orden_id": [
+    384,
+    387,
+    394
+   ],
+   "envio_id": [
+    384,
+    387,
+    394
+   ],
+   "detalle_id": [],
+   "demanda_afectada": []
+  },
+  {
+   "clave": "EV03_PICO_LAPTOP_MTY",
+   "tipo": "PICO_DEMANDA",
+   "almacen": "MTY",
+   "skus": [
+    "LAP-APP-APP-078"
+   ],
+   "inicio": "2026-09-08",
+   "fin": "2026-09-30",
+   "magnitud": 0.22,
+   "forma": "ESCALON",
+   "orden_id": [],
+   "envio_id": [],
+   "detalle_id": [],
+   "demanda_afectada": [
+    [
+     "2026-09-08",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-09",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-10",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-11",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-12",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-13",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-14",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-15",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-16",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-17",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-18",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-19",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-20",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-21",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-22",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-23",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-24",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-25",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-26",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-27",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-28",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-29",
+     "MTY",
+     "LAP-APP-APP-078"
+    ],
+    [
+     "2026-09-30",
+     "MTY",
+     "LAP-APP-APP-078"
+    ]
+   ]
+  },
+  {
+   "clave": "EV04_FALTANTES_PACIFICO",
+   "tipo": "BAJA_FILL_RATE",
+   "proveedor": "PACIFICO",
+   "inicio": "2026-03-01",
+   "fin": "2026-04-30",
+   "fill_rate_medio": 0.8,
+   "orden_id": [
+    171,
+    209
+   ],
+   "envio_id": [
+    171,
+    209
+   ],
+   "detalle_id": [
+    175,
+    214
+   ],
+   "demanda_afectada": []
+  },
+  {
+   "clave": "EV05_CAIDA_AIRPODS_CDMX",
+   "tipo": "CAIDA_DEMANDA",
+   "almacen": "CDMX",
+   "skus": [
+    "MOB-APP-APP-100"
+   ],
+   "inicio": "2026-07-15",
+   "fin": "2026-09-30",
+   "magnitud": -0.4,
+   "forma": "ESCALON",
+   "orden_id": [],
+   "envio_id": [],
+   "detalle_id": [],
+   "demanda_afectada": [
+    [
+     "2026-07-15",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-16",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-17",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-18",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-19",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-20",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-21",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-22",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-23",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-24",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-25",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-26",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-27",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-28",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-29",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-30",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-07-31",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-01",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-02",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-03",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-04",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-05",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-06",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-07",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-08",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-09",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-10",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-11",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-12",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-13",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-14",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-15",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-16",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-17",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-18",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-19",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-20",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-21",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-22",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-23",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-24",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-25",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-26",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-27",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-28",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-29",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-30",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-08-31",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-01",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-02",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-03",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-04",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-05",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-06",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-07",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-08",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-09",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-10",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-11",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-12",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-13",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-14",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-15",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-16",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-17",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-18",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-19",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-20",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-21",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-22",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-23",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-24",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-25",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-26",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-27",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-28",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-29",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ],
+    [
+     "2026-09-30",
+     "CDMX",
+     "MOB-APP-APP-100"
+    ]
+   ]
+  },
+  {
+   "clave": "EV06_FLETE_FRONTERA",
+   "tipo": "ALZA_FLETE",
+   "proveedor": "FRONTERA",
+   "inicio": "2026-01-12",
+   "fin": "2026-03-15",
+   "magnitud": 0.35,
+   "orden_id": [
+    156
+   ],
+   "envio_id": [
+    156
+   ],
+   "detalle_id": [],
+   "demanda_afectada": []
+  }
+ ]
+}
