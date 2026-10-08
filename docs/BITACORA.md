@@ -4,6 +4,10 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-07 20:09 | 2643d96 | docs: registrar implementacion de CC-02 y extensiones del modelo en project_state.json |
+| 2026-10-07 20:03 | 7a1bc6e | chore(db): script de verificacion de las extensiones del modelo con 36 pruebas |
+| 2026-10-07 20:03 | 76ec29c | feat(db): extensiones del modelo para trazabilidad de KPIs y Centro de soluciones (CC-02) |
+| 2026-10-07 19:20 | 19cd38c | docs: actualizar BITACORA.md - ajustes de aprobaciones y control de cambios |
 | 2026-10-07 19:19 | ae2728d | docs: referir la acreditacion del proyecto al Asesor en project_state.json |
 | 2026-10-07 19:17 | 387d9f2 | docs(db): corregir en el script 02 quien aprobo el Centro de soluciones |
 | 2026-10-07 19:12 | 4979b21 | docs: corregir CC-01 segun el esquema real y ampliar CC-02 con columnas del Centro de soluciones |
