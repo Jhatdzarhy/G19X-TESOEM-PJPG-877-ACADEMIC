@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
-  "fecha_actualizacion": "2026-10-07",
-  "fase_actual": "Proyecto final - Sprint 1 (datos): insumos completos (modelo extendido, configuracion, clima y tipo de cambio de Banxico); siguiente: generador de 12 meses",
+  "fecha_actualizacion": "2026-10-08",
+  "fase_actual": "Proyecto final - Sprint 1 (datos) cerrado: 12 meses simulados, 23 de 23 validaciones y modelo estrella poblado; siguiente: Sprint 2, motor analitico en FastAPI",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -29,15 +29,16 @@
       "backend/etl/datos/config_simulacion.json: 3 almacenes con coordenadas y capacidad, 8 proveedores con perfil de puntualidad, fill rate y precio, surtido con al menos dos fuentes por SKU, demanda base con estacionalidad semanal, politica de inventario, transporte, reglas de clima y 6 eventos inyectados",
       "Token de Banxico SIE obtenido, guardado en backend/.env (ignorado por .gitignore) y verificado con la serie SF43718 (FIX)",
       "Clima historico diario de Open-Meteo (2025-10-01 a 2026-09-30) descargado con backend/etl/descargar_clima.py para 10 puntos (3 almacenes y 7 puntos de despacho), 365 dias cada uno, en cache local backend/etl/cache/clima (CC-04)",
-      "Historico FIX USD-MXN de Banxico SIE (serie SF43718) cargado con backend/etl/cargar_banxico.py: 251 dias habiles del 2025-10-01 al 2026-09-30, tasa de 16.87 a 18.62, con fuente BANXICO_SIE (CC-03)"
+      "Historico FIX USD-MXN de Banxico SIE (serie SF43718) cargado con backend/etl/cargar_banxico.py: 251 dias habiles del 2025-10-01 al 2026-09-30, tasa de 16.87 a 18.62, con fuente BANXICO_SIE (CC-03)",
+      "Generador de 12 meses (backend/etl/generar_operacion.py): 395 ordenes, 401 renglones, 13140 registros de demanda diaria, clima real por envio y 6 eventos inyectados con verdad conocida en backend/etl/datos/eventos_inyectados.json; semilla fija e idempotente",
+      "Validacion de datos y KPIs (db/final/validar_kpis.sql): 10 pruebas de integridad y 13 calculos de los 11 KPIs del PDR, 23 de 23 correctas; OTIF 80.42%, Fill Rate de servicio 97.34%, lead time 8.34 dias, impacto de tipo de cambio -3.67%",
+      "Modelo estrella poblado con db/final/04_agregacion_fact.sql: dim_tiempo (365 dias) y fact_supply_chain (389 renglones recibidos, montos en MXN al FIX de cada orden), mediante la funcion refrescar_modelo_estrella()",
+      "CC-15 registrado en docs/CONTROL_DE_CAMBIOS.md (definicion operativa de cuatro KPIs); CC-03 y CC-04 marcados como implementados"
     ],
     "en_progreso": [
-      "Sprint 1 - datos: generador de 12 meses de operacion (proveedores, almacenes, ordenes, envios, movimientos, demanda) con semilla fija, periodo 2025-10-01 a 2026-09-30"
+      "Sprint 2: motor analitico en FastAPI (11 KPIs, Holt-Winters con MAPE, Isolation Forest, indice de riesgo y motor de recomendaciones)"
     ],
     "pendiente": [
-      "Sprint 1: db/final/validar_kpis.sql para comprobar rangos de los 11 KPIs, stock no negativo, fechas validas y ausencia de caracteres no ASCII",
-      "Sprint 1: script de agregacion hacia fact_supply_chain y dim_tiempo (flujo PDR 5.2)",
-      "Sprint 2: motor analitico en FastAPI (11 KPIs del PDR, pronostico, anomalias, riesgo de proveedores y recomendaciones con su plan de acciones en las tablas recomendaciones y plan_acciones)",
       "Sprint 3: capa de Servlets de Java como controladores que consumen FastAPI, con sesion y roles (PDR seccion 4); el navegador deja de llamar directo a FastAPI",
       "Sprint 4: vistas JSP del diseno final (Resumen ejecutivo compacto y Centro de soluciones) con Bootstrap 5 y Chart.js",
       "Sprint 4 o 5: simulador de eventos y actualizacion en vivo (consulta periodica para KPIs y Server-Sent Events para actividad y alertas, a traves de los Servlets)",
@@ -51,8 +52,12 @@
     ]
   },
   "archivos_modificados_recientemente": [
-    "backend/etl/cargar_banxico.py",
-    "backend/etl/cargar_tipo_cambio.py",
+    "backend/etl/generar_operacion.py",
+    "backend/etl/datos/config_simulacion.json",
+    "backend/etl/datos/eventos_inyectados.json",
+    "db/final/validar_kpis.sql",
+    "db/final/04_agregacion_fact.sql",
+    "docs/CONTROL_DE_CAMBIOS.md",
     "docs/project_state.json"
   ],
   "decisiones_de_diseno": [
@@ -107,7 +112,7 @@
     "Actualizacion en vivo con tecnologias del PDR: consulta periodica cada 30 a 60 segundos para KPIs y Server-Sent Events desde Servlets asincronos para actividad y alertas; LISTEN/NOTIFY de PostgreSQL como mejora posterior",
     "El script 03 es aditivo, idempotente y transaccional; reglas de integridad en la base: descarte con motivo obligatorio, ahorro real solo en ATENDIDA, opciones como arreglo JSON con la opcion elegida marcada con elegida true, SALIDA sin orden_id y entregadas no mayores que solicitadas",
     "tipo_cambio.fuente con valores EXCHANGERATE_API (por defecto, para no romper el ETL existente) y BANXICO_SIE; unicidad por par, fecha y fuente con NULLS NOT DISTINCT; los cargadores usaran ON CONFLICT",
-    "Capacidad de almacenes calibrada con volumen_por_sku.json para una utilizacion promedio de 75% (CDMX 120 m3), 82% (Monterrey 75 m3) y 70% (Guadalajara 70 m3); las cifras son pequenas porque los volumenes de DummyJSON son datos de muestra",
+    "Capacidad de almacenes: CDMX 120 m3, Monterrey 75 m3 y Guadalajara 70 m3, calibrada con volumen_por_sku.json; las cifras son pequenas porque los volumenes de DummyJSON son datos de muestra",
     "Proveedores ficticios con perfiles distintos; los internacionales despachan por Manzanillo, Lazaro Cardenas o Nuevo Laredo y el clima de la ruta se evalua en ese punto y en el almacen de destino",
     "Seis eventos inyectados alineados con los casos del Centro de soluciones (alza de precio, retrasos, pico de demanda, faltantes, exceso de inventario y alza de flete) para validar Isolation Forest con verdad conocida",
     "No se activa python.terminal.useEnvFile en VS Code: los scripts cargan .env con python-dotenv y los secretos no se inyectan en todas las terminales",
@@ -115,7 +120,12 @@
     "La cache de clima (backend/etl/cache/) no se versiona; se regenera con descargar_clima.py y el script usa solo la biblioteca estandar de Python",
     "tipo_cambio solo guarda los dias publicados por cada fuente; la capa analitica usa la ultima tasa publicada en o antes de cada fecha (fines de semana y festivos toman el FIX del dia habil anterior)",
     "cargar_tipo_cambio.py usa ON CONFLICT por par, fecha y fuente en lugar de DELETE por fecha, para no borrar el historico de Banxico SIE",
-    "Los ETL se ejecutan desde backend con el entorno virtual .venv activo y python -m etl.<script>; get_connection devuelve filas como diccionario, por eso las consultas usan alias de columna"
+    "Los ETL se ejecutan desde backend con el entorno virtual .venv activo y python -m etl.<script>; get_connection devuelve filas como diccionario, por eso las consultas usan alias de columna",
+    "Generador: politica de reorden por punto de reorden con consolidacion por proveedor y almacen, limite de capacidad que incluye lo ordenado el mismo dia, faltantes poco frecuentes de 20 a 60% del renglon; la utilizacion real resulta de 57 a 65% en promedio con picos de 88 a 90%",
+    "Eventos inyectados: 23 ordenes anomalas de 395 (6%); Isolation Forest se evalua sobre el conjunto de ordenes y los eventos de demanda (EV03, EV05) sobre la serie diaria, porque EV06 solo afecta 1 orden",
+    "fact_supply_chain con grano de renglon de orden recibido y montos en MXN al FIX vigente de cada orden; nivel_riesgo y score_anomalia los escribe el motor analitico; refrescar_modelo_estrella() permite al simulador en vivo actualizar el modelo",
+    "CC-15: definicion operativa de variacion de costo (contra costo estandar), rotacion y DOH (en valor a costo estandar) e impacto de tipo de cambio (contra el FIX del inicio del periodo)",
+    "Plan sin fines de semana y con alcance completo del PDR: jueves 8 datos y KPIs, viernes 9 modelos de IA y simulador, lunes 12 Servlets, login, roles y Resumen ejecutivo, martes 13 Centro de soluciones y vistas por modulo"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -138,6 +148,7 @@
     "ModuleNotFoundError httpx al ejecutar cargar_banxico - el entorno virtual backend/.venv no estaba activo; resuelto con .\\.venv\\Scripts\\Activate.ps1",
     "ValueError al desempacar el resumen de cargar_banxico - get_connection devuelve filas como diccionario y las columnas MIN y MAX repetidas se sobrescribian; resuelto con alias de columna",
     ".gitignore sin salto de linea final: Add-Content pego backend/etl/cache/ a la regla docs/*MVP* y dejo ambas sin efecto; resuelto separando las lineas y verificando con git check-ignore",
-    "Al reemplazar fase_actual en project_state.json se borro la linea backlog y el JSON quedo invalido; resuelto restaurando la linea y validando con python json.load"
+    "Al reemplazar fase_actual en project_state.json se borro la linea backlog y el JSON quedo invalido; resuelto restaurando la linea y validando con python json.load",
+    "Fechas de eventos inyectados editadas en la linea equivocada (fin antes de inicio): los eventos EV04 y EV06 no se activaban; detectado en git diff antes del commit, corregido y datos regenerados"
   ]
 }
