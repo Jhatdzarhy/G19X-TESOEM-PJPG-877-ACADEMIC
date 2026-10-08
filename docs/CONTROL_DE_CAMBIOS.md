@@ -38,10 +38,10 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 
 ### CC-01. Tablas del Centro de soluciones
 - **Qué dice el PDR:** el Módulo 6 incluye detección de anomalías, pronóstico y scoring de riesgo; el alcance (Sección 2) incluye el apoyo a la toma de decisiones estratégicas.
-- **Cambio:** se agregan las tablas `recomendaciones` (problema, evidencia en JSONB, opciones evaluadas, confianza, impacto en MXN, estado) y `plan_acciones` (acciones, responsable, fecha, ahorro real), en `db/final/02_centro_soluciones.sql`.
+- **Cambio:** se agregan las tablas `recomendaciones` (regla que la originó, módulo, severidad, título, solución recomendada, impacto estimado en MXN, confianza, evidencia en JSONB, entidades relacionadas y estado `NUEVA`, `EN_REVISION` o `ATENDIDA`) y `plan_acciones` (pasos ordenados con responsable, fecha compromiso y estado), en `db/final/02_centro_soluciones.sql`.
 - **Justificación:** el PDR no define dónde se almacenan las recomendaciones ni su seguimiento. Sin estas tablas el apoyo a la decisión no sería trazable ni medible.
 - **Límite respetado:** la IA solo recomienda; no ejecuta compras (Sección 2, fuera de alcance).
-- **Estado:** aprobado por el asesor e implementado.
+- **Estado:** aprobado por el Asesor e implementado.
 
 ### CC-02. Extensiones del modelo de datos
 - **Qué dice el PDR:** el criterio de aceptación de la Sección 12 exige que cada KPI tenga una fuente trazable en el esquema de la Sección 8.
@@ -55,6 +55,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
   - `tipo_cambio.fuente` y restricción única por par de monedas, fecha y fuente
   - vistas `dim_producto`, `dim_proveedor`, `dim_almacen` para completar el modelo estrella de la Sección 8.2
   - índices recomendados en la Sección 8.2
+  - en `recomendaciones`: columnas `opciones` (JSONB), `ahorro_real_mxn` y `motivo_descarte`, y el estado `DESCARTADA`, para comparar opciones, medir el ahorro real y registrar descartes
 - **Justificación:** cumplir el criterio de aceptación de la Sección 12 con relaciones explícitas (llaves foráneas), válidas también con datos reales de un ERP.
 - **Límite respetado:** no se modifica ni elimina ninguna tabla o columna del PDR.
 - **Estado:** aprobado; pendiente de implementar.
