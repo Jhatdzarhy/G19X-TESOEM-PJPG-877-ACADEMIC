@@ -1,6 +1,6 @@
 -- ============================================================
 -- Proyecto final: tablas del Centro de soluciones
--- Cambio aprobado por el lider de proyecto (control de cambios, riesgo R6)
+-- Cambio aprobado por el Asesor (CC-01, control de cambios, riesgo R6)
 -- Requiere haber ejecutado antes 01_esquema_pdr.sql
 -- La IA solo recomienda: no ejecuta compras (alcance del PDR, seccion 2)
 -- ============================================================
