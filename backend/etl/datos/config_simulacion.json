@@ -285,8 +285,8 @@
         "clave": "EV01_ALZA_PRECIO_NORTE",
         "tipo": "ALZA_PRECIO",
         "proveedor": "NORTE",
-        "skus": ["LAP-APP-APP-078", "LAP-ASU-ASU-079"],
-        "inicio": "2026-08-10",
+        "skus": ["LAP-APP-APP-078", "LAP-ASU-ASU-079", "SMA-APP-IPH-121", "SMA-APP-IPH-122"],
+        "inicio": "2026-07-01",
         "fin": "2026-09-30",
         "magnitud": 0.068,
         "forma": "GRADUAL"
@@ -315,7 +315,7 @@
         "tipo": "BAJA_FILL_RATE",
         "proveedor": "PACIFICO",
         "inicio": "2026-03-01",
-        "fin": "2026-03-31",
+        "fin": "2026-04-30",
         "fill_rate_medio": 0.80
       },
       {
@@ -333,7 +333,7 @@
         "tipo": "ALZA_FLETE",
         "proveedor": "FRONTERA",
         "inicio": "2026-01-12",
-        "fin": "2026-01-25",
+        "fin": "2026-03-15",
         "magnitud": 0.35
       }
     ]
