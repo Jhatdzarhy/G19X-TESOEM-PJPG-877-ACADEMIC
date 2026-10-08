@@ -1,8 +1,8 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
   "fecha_actualizacion": "2026-10-07",
-  "fase_actual": "Proyecto final - Sprint 1 (datos): extensiones del modelo (CC-02) aplicadas y verificadas; siguiente: config_simulacion.json, clima de Open-Meteo y historico de Banxico SIE",
-  "backlog": {
+  "fase_actual": "Proyecto final - Sprint 1 (datos): config_simulacion.json listo y token de Banxico SIE verificado; siguiente: descarga de clima historico de Open-Meteo con cache y cargador de Banxico SIE",
+    "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
       "Creacion de estructura de carpetas (db, backend, frontend, docs)",
@@ -25,14 +25,15 @@
       "ETL en Python (backend/etl): tipo de cambio desde ExchangeRate-API (3 pares, tasa del dia) y catalogo de 12 productos desde DummyJSON cargados en supply_chain_final",
       "Revision de consistencia entre PDR, project_state.json y BITACORA.md: identificados huecos de trazabilidad para OTIF y Fill Rate, falta de historico de tipo de cambio y limite de estacionalidad de Holt-Winters con 12 meses",
       "Maqueta visual de la version definitiva: Resumen ejecutivo compacto y vista del Centro de soluciones (referencia de diseno, no codigo)",
-      "Extensiones del modelo (CC-02) aplicadas en supply_chain_final con db/final/03_extensiones_modelo.sql: cantidad_recibida, orden_id en movimientos, tabla demanda_diaria, coordenadas, precipitacion_mm, fuente en tipo_cambio, vistas de dimensiones, indices de PDR 8.2 y columnas opciones, ahorro_real_mxn, motivo_descarte y estado DESCARTADA en recomendaciones; verificado con db/final/03_verificar_extensiones.sql (36 de 36 pruebas)"
+      "Extensiones del modelo (CC-02) aplicadas en supply_chain_final con db/final/03_extensiones_modelo.sql: cantidad_recibida, orden_id en movimientos, tabla demanda_diaria, coordenadas, precipitacion_mm, fuente en tipo_cambio, vistas de dimensiones, indices de PDR 8.2 y columnas opciones, ahorro_real_mxn, motivo_descarte y estado DESCARTADA en recomendaciones; verificado con db/final/03_verificar_extensiones.sql (36 de 36 pruebas)",
+      "backend/etl/datos/config_simulacion.json: 3 almacenes con coordenadas y capacidad, 8 proveedores con perfil de puntualidad, fill rate y precio, surtido con al menos dos fuentes por SKU, demanda base con estacionalidad semanal, politica de inventario, transporte, reglas de clima y 6 eventos inyectados",
+      "Token de Banxico SIE obtenido, guardado en backend/.env (ignorado por .gitignore) y verificado con la serie SF43718 (FIX)"
     ],
     "en_progreso": [
       "Sprint 1 - datos: generador de 12 meses de operacion (proveedores, almacenes, ordenes, envios, movimientos, demanda) con semilla fija, periodo 2025-10-01 a 2026-09-30"
     ],
     "pendiente": [
-      "Sprint 1: solicitar token gratuito de Banxico SIE, guardarlo en .env y cargar el historico diario del tipo de cambio FIX USD-MXN de 12 meses en tipo_cambio",
-      "Sprint 1: backend/etl/datos/config_simulacion.json con perfiles de proveedores, almacenes con capacidad y coordenadas, proveedor principal y demanda base por SKU",
+      "Sprint 1: cargador del historico diario del tipo de cambio FIX USD-MXN de 12 meses desde Banxico SIE (serie SF43718) en tipo_cambio con fuente BANXICO_SIE",
       "Sprint 1: clima historico con Open-Meteo (API de archivo) con cache local, descargado antes del generador para que los retrasos dependan del clima real; guardado en envios.condicion_climatica",
       "Sprint 1: db/final/validar_kpis.sql para comprobar rangos de los 11 KPIs, stock no negativo, fechas validas y ausencia de caracteres no ASCII",
       "Sprint 1: script de agregacion hacia fact_supply_chain y dim_tiempo (flujo PDR 5.2)",
@@ -50,12 +51,10 @@
     ]
   },
 "archivos_modificados_recientemente": [
-    "db/final/03_extensiones_modelo.sql",
-    "db/final/03_verificar_extensiones.sql",
-    "docs/CONTROL_DE_CAMBIOS.md",
+    "backend/etl/datos/config_simulacion.json",
     "docs/project_state.json"
   ],
-  
+
   "decisiones_de_diseno": [
     "Arquitectura de 3 capas: PostgreSQL -> FastAPI -> Java/JSP",
     "Infraestructura local a costo $0 (localhost:8080 y localhost:8000)",
@@ -107,7 +106,11 @@
     "El clima historico de Open-Meteo se descarga antes del generador; el generador lo usa para aumentar la probabilidad de retraso en dias de lluvia fuerte o tormenta y escribe envios.condicion_climatica en el mismo paso, para que la relacion entre clima y puntualidad sea real",
     "Actualizacion en vivo con tecnologias del PDR: consulta periodica cada 30 a 60 segundos para KPIs y Server-Sent Events desde Servlets asincronos para actividad y alertas; LISTEN/NOTIFY de PostgreSQL como mejora posterior",
     "El script 03 es aditivo, idempotente y transaccional; reglas de integridad en la base: descarte con motivo obligatorio, ahorro real solo en ATENDIDA, opciones como arreglo JSON con la opcion elegida marcada con elegida true, SALIDA sin orden_id y entregadas no mayores que solicitadas",
-    "tipo_cambio.fuente con valores EXCHANGERATE_API (por defecto, para no romper el ETL existente) y BANXICO_SIE; unicidad por par, fecha y fuente con NULLS NOT DISTINCT; los cargadores usaran ON CONFLICT"
+    "tipo_cambio.fuente con valores EXCHANGERATE_API (por defecto, para no romper el ETL existente) y BANXICO_SIE; unicidad por par, fecha y fuente con NULLS NOT DISTINCT; los cargadores usaran ON CONFLICT",
+    "Capacidad de almacenes calibrada con volumen_por_sku.json para una utilizacion promedio de 75% (CDMX 120 m3), 82% (Monterrey 75 m3) y 70% (Guadalajara 70 m3); las cifras son pequenas porque los volumenes de DummyJSON son datos de muestra",
+    "Proveedores ficticios con perfiles distintos; los internacionales despachan por Manzanillo, Lazaro Cardenas o Nuevo Laredo y el clima de la ruta se evalua en ese punto y en el almacen de destino",
+    "Seis eventos inyectados alineados con los casos del Centro de soluciones (alza de precio, retrasos, pico de demanda, faltantes, exceso de inventario y alza de flete) para validar Isolation Forest con verdad conocida",
+    "No se activa python.terminal.useEnvFile en VS Code: los scripts cargan .env con python-dotenv y los secretos no se inyectan en todas las terminales"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
