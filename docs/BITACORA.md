@@ -4,6 +4,10 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-07 19:19 | ae2728d | docs: referir la acreditacion del proyecto al Asesor en project_state.json |
+| 2026-10-07 19:17 | 387d9f2 | docs(db): corregir en el script 02 quien aprobo el Centro de soluciones |
+| 2026-10-07 19:12 | 4979b21 | docs: corregir CC-01 segun el esquema real y ampliar CC-02 con columnas del Centro de soluciones |
+| 2026-10-07 18:52 | 0b8cd45 | docs: actualizar BITACORA.md - cierre de planeacion del proyecto final |
 | 2026-10-07 18:51 | 65de168 | chore: excluir documentos de diseno y entregables del repositorio publico |
 | 2026-10-07 18:49 | a981d93 | docs: registrar decisiones del Sprint 1, diseno compacto y extension de entrega al 16 de octubre |
 | 2026-10-07 18:49 | 7c2b130 | docs: crear registro de control de cambios respecto al PDR (CC-01 a CC-14) |
