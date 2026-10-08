@@ -58,7 +58,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
   - en `recomendaciones`: columnas `opciones` (JSONB), `ahorro_real_mxn` y `motivo_descarte`, y el estado `DESCARTADA`, para comparar opciones, medir el ahorro real y registrar descartes
 - **Justificación:** cumplir el criterio de aceptación de la Sección 12 con relaciones explícitas (llaves foráneas), válidas también con datos reales de un ERP.
 - **Límite respetado:** no se modifica ni elimina ninguna tabla o columna del PDR.
-- **Estado:** aprobado; pendiente de implementar.
+- **Estado:** aprobado e implementado (`db/final/03_extensiones_modelo.sql`; verificación en `db/final/03_verificar_extensiones.sql`, 36 de 36 pruebas).
 
 ### CC-03. Banxico SIE como fuente del histórico de tipo de cambio
 - **Qué dice el PDR:** la Sección 4 define ExchangeRate-API para el tipo de cambio; la Sección 7 define el KPI de Impacto de Tipo de Cambio.

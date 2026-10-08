@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
   "fecha_actualizacion": "2026-10-07",
-  "fase_actual": "Proyecto final - Sprint 1 (datos): siguiente tarea es el generador de 12 meses; decisiones de datos cerradas (extensiones del modelo, Banxico SIE, clima antes del generador) y registradas en docs/CONTROL_DE_CAMBIOS.md; siguiente: crear y ejecutar db/final/03_extensiones_modelo.sql",
+  "fase_actual": "Proyecto final - Sprint 1 (datos): extensiones del modelo (CC-02) aplicadas y verificadas; siguiente: config_simulacion.json, clima de Open-Meteo y historico de Banxico SIE",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -24,20 +24,19 @@
       "Base supply_chain_final creada con 13 tablas: esquema del PDR (db/final/01_esquema_pdr.sql, 11 tablas) y Centro de soluciones (db/final/02_centro_soluciones.sql, tablas recomendaciones y plan_acciones)",
       "ETL en Python (backend/etl): tipo de cambio desde ExchangeRate-API (3 pares, tasa del dia) y catalogo de 12 productos desde DummyJSON cargados en supply_chain_final",
       "Revision de consistencia entre PDR, project_state.json y BITACORA.md: identificados huecos de trazabilidad para OTIF y Fill Rate, falta de historico de tipo de cambio y limite de estacionalidad de Holt-Winters con 12 meses",
-      "Maqueta visual de la version definitiva: Resumen ejecutivo compacto y vista del Centro de soluciones (referencia de diseno, no codigo)"
+      "Maqueta visual de la version definitiva: Resumen ejecutivo compacto y vista del Centro de soluciones (referencia de diseno, no codigo)",
+      "Extensiones del modelo (CC-02) aplicadas en supply_chain_final con db/final/03_extensiones_modelo.sql: cantidad_recibida, orden_id en movimientos, tabla demanda_diaria, coordenadas, precipitacion_mm, fuente en tipo_cambio, vistas de dimensiones, indices de PDR 8.2 y columnas opciones, ahorro_real_mxn, motivo_descarte y estado DESCARTADA en recomendaciones; verificado con db/final/03_verificar_extensiones.sql (36 de 36 pruebas)"
     ],
     "en_progreso": [
       "Sprint 1 - datos: generador de 12 meses de operacion (proveedores, almacenes, ordenes, envios, movimientos, demanda) con semilla fija, periodo 2025-10-01 a 2026-09-30"
     ],
     "pendiente": [
-      "Sprint 1: crear y ejecutar db/final/03_extensiones_modelo.sql",
       "Sprint 1: solicitar token gratuito de Banxico SIE, guardarlo en .env y cargar el historico diario del tipo de cambio FIX USD-MXN de 12 meses en tipo_cambio",
       "Sprint 1: backend/etl/datos/config_simulacion.json con perfiles de proveedores, almacenes con capacidad y coordenadas, proveedor principal y demanda base por SKU",
       "Sprint 1: clima historico con Open-Meteo (API de archivo) con cache local, descargado antes del generador para que los retrasos dependan del clima real; guardado en envios.condicion_climatica",
       "Sprint 1: db/final/validar_kpis.sql para comprobar rangos de los 11 KPIs, stock no negativo, fechas validas y ausencia de caracteres no ASCII",
       "Sprint 1: script de agregacion hacia fact_supply_chain y dim_tiempo (flujo PDR 5.2)",
       "Sprint 2: motor analitico en FastAPI (11 KPIs del PDR, pronostico, anomalias, riesgo de proveedores y recomendaciones con su plan de acciones en las tablas recomendaciones y plan_acciones)",
-      "Sprint 2: verificar que plan_acciones permita registrar el ahorro real medido para la comparacion de ahorro real contra proyectado",
       "Sprint 3: capa de Servlets de Java como controladores que consumen FastAPI, con sesion y roles (PDR seccion 4); el navegador deja de llamar directo a FastAPI",
       "Sprint 4: vistas JSP del diseno final (Resumen ejecutivo compacto y Centro de soluciones) con Bootstrap 5 y Chart.js",
       "Sprint 4 o 5: simulador de eventos y actualizacion en vivo (consulta periodica para KPIs y Server-Sent Events para actividad y alertas, a traves de los Servlets)",
@@ -50,14 +49,13 @@
       "Manual tecnico y plan de mantenimiento (fases 7 y 8 del cronograma)"
     ]
   },
-  "archivos_modificados_recientemente": [
-    "db/final/01_esquema_pdr.sql",
-    "db/final/02_centro_soluciones.sql",
-    "backend/etl/cargar_tipo_cambio.py",
-    "backend/etl/cargar_productos.py",
-    "backend/etl/datos/volumen_por_sku.json",
+"archivos_modificados_recientemente": [
+    "db/final/03_extensiones_modelo.sql",
+    "db/final/03_verificar_extensiones.sql",
+    "docs/CONTROL_DE_CAMBIOS.md",
     "docs/project_state.json"
   ],
+  
   "decisiones_de_diseno": [
     "Arquitectura de 3 capas: PostgreSQL -> FastAPI -> Java/JSP",
     "Infraestructura local a costo $0 (localhost:8080 y localhost:8000)",
@@ -107,7 +105,9 @@
     "El PDR v1.0 no se modifica. Toda extension, precision o interpretacion del PDR se registra en docs/CONTROL_DE_CAMBIOS.md (control de cambios formal, riesgo R6) con su justificacion y la seccion del PDR que la sustenta; las decisiones tecnicas siguen registrandose en project_state.json",
     "Historico de tipo de cambio de 12 meses desde Banxico SIE (tipo de cambio FIX, fuente oficial, token en .env que nunca se sube); ExchangeRate-API se mantiene como fuente de la tasa diaria segun el PDR; cada registro de tipo_cambio guarda su fuente",
     "El clima historico de Open-Meteo se descarga antes del generador; el generador lo usa para aumentar la probabilidad de retraso en dias de lluvia fuerte o tormenta y escribe envios.condicion_climatica en el mismo paso, para que la relacion entre clima y puntualidad sea real",
-    "Actualizacion en vivo con tecnologias del PDR: consulta periodica cada 30 a 60 segundos para KPIs y Server-Sent Events desde Servlets asincronos para actividad y alertas; LISTEN/NOTIFY de PostgreSQL como mejora posterior"
+    "Actualizacion en vivo con tecnologias del PDR: consulta periodica cada 30 a 60 segundos para KPIs y Server-Sent Events desde Servlets asincronos para actividad y alertas; LISTEN/NOTIFY de PostgreSQL como mejora posterior",
+    "El script 03 es aditivo, idempotente y transaccional; reglas de integridad en la base: descarte con motivo obligatorio, ahorro real solo en ATENDIDA, opciones como arreglo JSON con la opcion elegida marcada con elegida true, SALIDA sin orden_id y entregadas no mayores que solicitadas",
+    "tipo_cambio.fuente con valores EXCHANGERATE_API (por defecto, para no romper el ETL existente) y BANXICO_SIE; unicidad por par, fecha y fuente con NULLS NOT DISTINCT; los cargadores usaran ON CONFLICT"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
