@@ -4,6 +4,16 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-07 22:03 | a6a6866 | docs: registrar historico de Banxico SIE y correccion del ETL de tipo de cambio en project_state.json |
+| 2026-10-07 22:01 | 077e082 | fix(etl): tipo de cambio diario con ON CONFLICT por fuente para no borrar el historico de Banxico |
+| 2026-10-07 21:55 | c8a72b1 | feat(etl): carga del historico FIX USD-MXN desde Banxico SIE con fuente BANXICO_SIE (CC-03) |
+| 2026-10-07 20:51 | 1b2b186 | docs: registrar descarga de clima historico y umbrales del SMN en project_state.json |
+| 2026-10-07 20:49 | 9702928 | chore: excluir la cache de clima del repositorio |
+| 2026-10-07 20:49 | 53fd851 | feat(etl): descarga de clima historico de Open-Meteo con cache local (CC-04) |
+| 2026-10-07 20:48 | 16fc636 | fix(etl): umbrales de lluvia segun el SMN y tormenta por precipitacion en config_simulacion.json |
+| 2026-10-07 20:34 | bc4d49c | docs: registrar config_simulacion.json y token de Banxico SIE en project_state.json |
+| 2026-10-07 20:25 | 8442c67 | feat(etl): parametros del generador de 12 meses en config_simulacion.json |
+| 2026-10-07 20:09 | 1b44021 | docs: actualizar BITACORA.md - extensiones del modelo CC-02 aplicadas |
 | 2026-10-07 20:09 | 2643d96 | docs: registrar implementacion de CC-02 y extensiones del modelo en project_state.json |
 | 2026-10-07 20:03 | 7a1bc6e | chore(db): script de verificacion de las extensiones del modelo con 36 pruebas |
 | 2026-10-07 20:03 | 76ec29c | feat(db): extensiones del modelo para trazabilidad de KPIs y Centro de soluciones (CC-02) |
