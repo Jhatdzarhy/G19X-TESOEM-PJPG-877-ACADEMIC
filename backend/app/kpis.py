@@ -14,8 +14,8 @@ Definiciones:
     tipo de cambio); tipo de cambio FIX vigente de Banxico SIE (CC-03).
   - Metas y umbrales de estado en METAS (CC-16). Estados: EN_META, ATENCION, CRITICO,
     INFORMATIVO (sin meta) y SIN_DATOS.
-  - Indice de riesgo y MAPE los calcula el motor de IA (CC-07); aqui se devuelven como
-    SIN_DATOS hasta que existan sus resultados.
+  - Indice de riesgo y MAPE los calcula en lote el motor de IA (paquete analitica, CC-07);
+    aqui solo se leen sus resultados (SIN_DATOS si todavia no ha corrido).
 
 Rendimiento: 5 consultas agregadas por dia para todo el rango; las ventanas se suman en
 Python, sin una consulta por punto de la serie.
@@ -265,6 +265,21 @@ def _contexto(dias):
     return corte, ins
 
 
+def _resultados_modelos():
+    """MAPE (analitica.pronostico) e indice de riesgo de la red (analitica.riesgo).
+    None si el modelo correspondiente no ha corrido."""
+    from app.riesgo_api import indice_red
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT MAX(mape) AS mape FROM forecast_demanda WHERE producto_id IS NULL")
+            fila = cur.fetchone()
+    finally:
+        conn.close()
+    mape = fila["mape"] if fila else None
+    return {"mape": None if mape is None else float(mape) * 100, "riesgo": indice_red()}
+
+
 def _meta_respuesta(corte, dias):
     return {
         "fecha_corte": corte.isoformat(),
@@ -281,6 +296,7 @@ def _meta_respuesta(corte, dias):
 def kpis(dias: int = Query(30, ge=7, le=180, description="Largo de la ventana en dias")):
     corte, ins = _contexto(dias)
     k = _calcular(ins, corte - timedelta(days=dias - 1), corte)
+    modelos = _resultados_modelos()
     lista = [
         _kpi("lead_time", "Lead time de proveedor", "Compras", k["lead_time"], "dias",
              ["ordenes_compra"]),
@@ -300,10 +316,12 @@ def kpis(dias: int = Query(30, ge=7, le=180, description="Largo de la ventana en
              ["movimientos_inventario", "almacenes", "volumen_por_sku.json"], decimales=1,
              detalle={n: {"promedio": _r(v["promedio"], 1), "al_corte": _r(v["al_corte"], 1)}
                       for n, v in k["utilizacion_por_almacen"].items()}),
-        _kpi("riesgo_proveedores", "Indice de riesgo de proveedor", "Proveedores", None, "0 a 100",
-             ["fact_supply_chain"], detalle="Lo calcula el motor de IA (CC-07)"),
-        _kpi("mape", "Precision del pronostico (MAPE)", "IA / Predictivo", None, "%",
-             ["forecast_demanda"], detalle="Lo calcula el motor de IA (CC-07)"),
+        _kpi("riesgo_proveedores", "Indice de riesgo de proveedor", "Proveedores", modelos["riesgo"], "0 a 100",
+             ["envios", "fact_supply_chain"], decimales=1,
+             detalle="Promedio de la red ponderado por compras; ventana de 90 dias (CC-07)"),
+        _kpi("mape", "Precision del pronostico (MAPE)", "IA / Predictivo", modelos["mape"], "%",
+             ["forecast_demanda"], decimales=1,
+             detalle="Holt-Winters semanal, validacion con los ultimos 28 dias (CC-07)"),
         _kpi("impacto_tc", "Impacto de tipo de cambio", "Financiero", k["impacto_tc_mxn"], "MXN",
              ["ordenes_compra", "tipo_cambio (Banxico SIE)"], origen="SIMULADO Y REAL", decimales=0,
              detalle={"variacion_pct": _r(k["impacto_tc_pct"]), "fix_inicio": _r(k["fix_inicio"], 4),
