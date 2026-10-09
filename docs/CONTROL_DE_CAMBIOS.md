@@ -32,6 +32,9 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 | CC-13 | 2026-10-07 | 4.3 | Precisión | Versiones exactas instaladas |
 | CC-14 | 2026-10-07 | 10 | Adición | Extensión de la fecha de entrega y reprogramación del cierre |
 | CC-15 | 2026-10-08 | 7 | Interpretación | Definición operativa de Variación de costo, Rotación, Días de inventario e Impacto de tipo de cambio |
+| CC-16 | 2026-10-08 | 7, CC-10 | Precisión | Metas y umbrales de estado de los KPIs |
+| CC-17 | 2026-10-08 | 2, 4, 6 (Módulo 6) | Adición | Asistente conversacional de IA de solo lectura |
+| CC-18 | 2026-10-08 | 4, 4.3, 7, CC-07, CC-08 | Precisión | Isolation Forest con implementación propia en numpy |
 
 ---
 
@@ -97,12 +100,16 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
   - Índice de riesgo de proveedor como score compuesto 0 a 100.
   - Motor de recomendaciones que compara el costo total esperado de cada opción.
 - **Justificación:** 12 meses de datos no permiten estimar estacionalidad anual (requiere al menos dos ciclos). La validación contra eventos conocidos da una medida objetiva del modelo.
-- **Estado:** aprobado; pendiente de implementar (Sprint 2).
+- **Estado:** aprobado; en implementación (Sprint 2):
+  - Pronóstico Holt-Winters implementado (`backend/analitica/pronostico.py`): MAPE total de 3.3 % en los últimos 28 días.
+  - Índice de riesgo de proveedor implementado (`backend/analitica/riesgo.py`): retrasos 45 %, cumplimiento 30 % y concentración 25 %, ventana de 90 días; índice de la red de 30.2 al 30 de septiembre de 2026.
+  - Isolation Forest implementado y validado contra los eventos inyectados (`backend/analitica/anomalias.py`, evidencia en `backend/analitica/evaluacion_anomalias.json`), con implementación propia (CC-18).
+  - Motor de recomendaciones: pendiente.
 
 ### CC-08. Librerías de Python
 - **Cambio:** pandas, statsmodels y scikit-learn, con versiones exactas fijadas en `requirements.txt`.
 - **Justificación:** necesarias para los modelos de CC-07; pertenecen a la capa Python del PDR (Sección 4). La Sección 4.3 pide fijar versiones en `requirements.txt`.
-- **Estado:** aprobado.
+- **Estado:** aprobado; scikit-learn se retiró por CC-18. Quedan pandas, statsmodels y numpy.
 
 ### CC-09. Actualización en tiempo real
 - **Qué dice el PDR:** la Sección 2 promete indicadores ejecutivos en tiempo real, sin definir el mecanismo.
@@ -162,4 +169,48 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
   - **Impacto de tipo de cambio:** compras valuadas al tipo de cambio FIX vigente en la fecha de cada orden, menos las mismas compras valuadas al FIX del inicio del periodo, en MXN. Fines de semana y festivos toman el FIX del día hábil anterior.
 - **Justificación:** sin una base fija, cada KPI admite varios cálculos con resultados distintos. Fijarla hace los indicadores reproducibles y verificables con SQL (criterio de aceptación de la Sección 12).
 - **Verificación:** `db/final/validar_kpis.sql` calcula los 11 KPIs y 10 pruebas de integridad sobre los datos simulados: 23 de 23 correctas.
+- **Estado:** Aprobado e implementado.
+
+### CC-16. Metas y umbrales de estado de los KPIs
+- **Qué dice el PDR:** la Sección 7 define los KPIs y sus fórmulas, pero no sus metas ni cuándo un indicador está en atención o en estado crítico. La maqueta aprobada (CC-10) muestra metas sin umbral crítico.
+- **Cambio:** cada KPI con meta tiene un umbral crítico y un sentido (mayor es mejor o menor es mejor). El estado se calcula así:
+
+| KPI | Meta | Crítico |
+|---|---|---|
+| OTIF | ≥ 90 % | < 80 % |
+| Entregas a tiempo | ≥ 90 % | < 85 % |
+| Lead time de proveedor | ≤ 7 días | > 9 días |
+| Variación de costo de compra | ≤ 2 % | > 5 % |
+| Nivel de servicio (Fill Rate) | ≥ 95 % | < 90 % |
+| Rotación de inventario | ≥ 6 veces al año | < 4 veces al año |
+| Utilización de almacén | ≤ 85 % | > 95 % |
+| Precisión del pronóstico (MAPE) | ≤ 15 % | > 25 % |
+| Índice de riesgo de proveedor | ≤ 40 | > 60 |
+
+  - Estados: `EN_META` (cumple la meta), `ATENCION` (entre la meta y el umbral crítico), `CRITICO` (pasa el umbral crítico), `INFORMATIVO` (KPI sin meta: días de inventario, costo de transporte por unidad e impacto de tipo de cambio) y `SIN_DATOS`.
+  - Los niveles del índice de riesgo por proveedor usan los mismos cortes: BAJO hasta 40, MEDIO hasta 60 y ALTO arriba de 60.
+- **Justificación:** sin umbrales, el Resumen ejecutivo no puede decir qué estación está en riesgo ni ordenar qué atender. Fijarlos en un solo lugar hace los estados reproducibles y defendibles.
+- **Estado:** Aprobado e implementado (`backend/app/kpis.py`, diccionario `METAS`; endpoints `/api/v1/kpis` y `/api/v1/estaciones`).
+
+### CC-17. Asistente conversacional de IA
+- **Qué dice el PDR:** el Módulo 6 (Sección 6) incluye la inteligencia artificial del dashboard y el alcance (Sección 2) incluye el apoyo a la toma de decisiones estratégicas. El PDR no define una interfaz conversacional ni un proveedor de modelos de lenguaje; la Sección 4 lista las APIs externas permitidas y la Sección 4.1 fija costo $0.
+- **Cambio:** se agrega un asistente de chat dentro del Módulo 6, a partir de la demostración de Edgar Loeffelmann (copiloto del ERP Arkos):
+  - **Solo lectura:** responde preguntas, explica KPIs y recomendaciones; nunca ejecuta compras ni cambia estados.
+  - **Cifras trazables:** cada cifra sale de una consulta a los endpoints del motor analítico mediante llamadas a herramientas (*tool calling*), nunca de la memoria del modelo; cada respuesta cita la fecha de corte de los datos.
+  - **Acceso:** solo a través de los Servlets, con sesión y rol, como el resto del tráfico (Sección 4).
+  - **Modelos gratuitos, en orden:** Z.AI GLM-4.7-Flash; respaldo GLM-4.5-Flash; respaldo local Ollama con un modelo de 7 a 8 mil millones de parámetros. Las llamadas se serializan (el plan gratuito admite una a la vez), se reintentan ante el error 429 y cada respuesta indica qué modelo la generó.
+  - **Historial:** tablas nuevas `asistente_conversaciones` y `asistente_mensajes`, ligadas al usuario.
+  - **Interfaz:** preguntas sugeridas, historial de conversaciones, modelo que respondió y el aviso "La IA puede equivocarse; verifica las cifras en el dashboard".
+- **Seguridad:** la llave `ZAI_API_KEY` solo en `backend/.env` (no se versiona); respuestas escapadas antes de mostrarse (XSS); límite de mensajes por minuto.
+- **Justificación:** amplía el apoyo a la decisión del Módulo 6 sin salir del alcance (la IA recomienda y explica, no ejecuta) y mantiene el costo $0 de la Sección 4.1.
+- **Verificación inicial:** llave de Z.AI probada; GLM-4.7-Flash respondió con `finish_reason` `tool_calls` solicitando la herramienta `consultar_kpis`.
+- **Límite respetado:** no se usan modelos de pago (GLM-5.3-Flash es de pago y se descarta).
+- **Estado:** Aprobado; backend pendiente de implementar (Sprint 2), Servlet el 12 de octubre y vista el 13 de octubre.
+
+### CC-18. Isolation Forest con implementación propia en numpy
+- **Qué dice el PDR:** la Sección 4 define Python para la capa analítica y la Sección 4.3 pide fijar versiones; CC-07 define Isolation Forest para la detección de anomalías y CC-08 lo asigna a scikit-learn.
+- **Cambio:** Isolation Forest se implementa con numpy en `backend/analitica/iforest.py`, según el algoritmo original de Liu, Ting y Zhou (2008, IEEE ICDM): submuestras de 256 registros, cortes aleatorios, altura límite ceil(log2(256)) y score 2^(-E[h(x)]/c(n)). scikit-learn, joblib y threadpoolctl se retiran de `requirements.txt`. El modelo, sus variables, la contaminación, la semilla y la validación contra los eventos inyectados no cambian.
+- **Justificación:** el Control inteligente de aplicaciones de Windows bloqueó de forma intermitente la carga de las bibliotecas compiladas de scikit-learn 1.9.1 (`ImportError` en `_cd_fast`, 8 de octubre de 2026), lo que hace que el modelo no sea confiable en el equipo de desarrollo ni en la demostración. Desactivar esa protección reduciría la seguridad del equipo y no siempre es reversible.
+- **Verificación:** sobre una réplica de los datos de desarrollo y con 10 semillas, ambas implementaciones (la propia y la de scikit-learn) coinciden en el ordenamiento de los scores (correlación de Spearman de 0.994) y en la F1 promedio (0.379).
+- **Resultado con los datos del proyecto:** compras, 383 órdenes y 20 anómalas reales: precisión 25 %, exhaustividad 30 %, F1 0.27; la mayoría de las alertas son faltantes normales del simulador que no forman parte de la verdad conocida. Demanda: caída de AirPods en CDMX detectada a los 3 días; el pico de laptops en Monterrey (+22 % sobre unas 5 unidades diarias) no se distingue del ruido y lo cubrirá la proyección de quiebre del motor de recomendaciones.
 - **Estado:** Aprobado e implementado.
