@@ -4,6 +4,14 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-08 23:34 | 96be447 | docs(estado): actualizar project_state con KPIs, pronostico, riesgo y anomalias del Sprint 2 |
+| 2026-10-08 23:33 | c56c4a0 | docs(control-cambios): registrar CC-16 metas de KPIs, CC-17 asistente de IA y CC-18 Isolation Forest propio |
+| 2026-10-08 23:27 | dd83ad8 | chore(backend): retirar scikit-learn de requirements por bloqueo de Control inteligente de aplicaciones (CC-18) |
+| 2026-10-08 23:26 | 5bbeabf | feat(analitica): indice de riesgo de proveedores e Isolation Forest validado contra eventos inyectados (CC-07, CC-18) |
+| 2026-10-08 23:04 | bd7e3cb | feat(analitica): pronostico de demanda Holt-Winters semanal con MAPE y endpoint /pronostico (CC-07) |
+| 2026-10-08 22:57 | 812fbc8 | chore(deps): fijar pandas, statsmodels y scikit-learn en requirements.txt en ASCII (CC-08) |
+| 2026-10-08 22:55 | 20ddfa5 | feat(api): 11 KPIs del PDR y estaciones del Resumen ejecutivo con metas y umbrales (CC-16) |
+| 2026-10-08 15:25 | d3d7d86 | docs: actualizar BITACORA.md - cierre del Sprint 1 |
 | 2026-10-08 15:24 | 29fe151 | docs: cierre del Sprint 1 en project_state.json |
 | 2026-10-08 14:39 | e2e62c6 | docs: registrar CC-15 y marcar CC-03 y CC-04 como implementados |
 | 2026-10-08 14:15 | 75bb2ba | feat(db): agregacion a fact_supply_chain y dim_tiempo con funcion refrescar_modelo_estrella |
