@@ -35,6 +35,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 | CC-16 | 2026-10-08 | 7, CC-10 | Precisión | Metas y umbrales de estado de los KPIs |
 | CC-17 | 2026-10-08 | 2, 4, 6 (Módulo 6) | Adición | Asistente conversacional de IA de solo lectura |
 | CC-18 | 2026-10-08 | 4, 4.3, 7, CC-07, CC-08 | Precisión | Isolation Forest con implementación propia en numpy |
+| CC-19 | 2026-10-12 | 6 (Módulo 6), CC-07 | Precisión | Supuestos económicos del motor de recomendaciones |
 
 ---
 
@@ -100,11 +101,11 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
   - Índice de riesgo de proveedor como score compuesto 0 a 100.
   - Motor de recomendaciones que compara el costo total esperado de cada opción.
 - **Justificación:** 12 meses de datos no permiten estimar estacionalidad anual (requiere al menos dos ciclos). La validación contra eventos conocidos da una medida objetiva del modelo.
-- **Estado:** aprobado; en implementación (Sprint 2):
+- **Estado:** aprobado e implementado (Sprint 2):
   - Pronóstico Holt-Winters implementado (`backend/analitica/pronostico.py`): MAPE total de 3.3 % en los últimos 28 días.
   - Índice de riesgo de proveedor implementado (`backend/analitica/riesgo.py`): retrasos 45 %, cumplimiento 30 % y concentración 25 %, ventana de 90 días; índice de la red de 30.2 al 30 de septiembre de 2026.
   - Isolation Forest implementado y validado contra los eventos inyectados (`backend/analitica/anomalias.py`, evidencia en `backend/analitica/evaluacion_anomalias.json`), con implementación propia (CC-18).
-  - Motor de recomendaciones: pendiente.
+  - Motor de recomendaciones implementado (`backend/analitica/recomendaciones.py`): seis reglas (quiebre proyectado, exceso de inventario, retrasos de proveedor, alza de precio, clima en ruta y concentración de gasto) que comparan opciones por costo total esperado con los supuestos de CC-19; al 30 de septiembre de 2026 abrió 4 casos con 351,723 MXN en juego. Endpoints del Centro de soluciones en `backend/app/recomendaciones_api.py`.
 
 ### CC-08. Librerías de Python
 - **Cambio:** pandas, statsmodels y scikit-learn, con versiones exactas fijadas en `requirements.txt`.
@@ -205,7 +206,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 - **Justificación:** amplía el apoyo a la decisión del Módulo 6 sin salir del alcance (la IA recomienda y explica, no ejecuta) y mantiene el costo $0 de la Sección 4.1.
 - **Verificación inicial:** llave de Z.AI probada; GLM-4.7-Flash respondió con `finish_reason` `tool_calls` solicitando la herramienta `consultar_kpis`.
 - **Límite respetado:** no se usan modelos de pago (GLM-5.3-Flash es de pago y se descarta).
-- **Estado:** Aprobado; backend pendiente de implementar (Sprint 2), Servlet el 12 de octubre y vista el 13 de octubre.
+- **Estado:** Aprobado; backend implementado (`backend/app/asistente_api.py`, historial en `db/final/05_asistente.sql`). Verificado con Z.AI el 12 de octubre de 2026: la respuesta usó 3 herramientas y sus cifras coinciden con los endpoints; ante la saturación de GLM-4.7-Flash (código 1305) el reintento y el respaldo GLM-4.5-Flash respondieron. Las llamadas usan `urllib` de la biblioteca estándar, sin dependencias nuevas. Servlet y vista pendientes (13 de octubre).
 
 ### CC-18. Isolation Forest con implementación propia en numpy
 - **Qué dice el PDR:** la Sección 4 define Python para la capa analítica y la Sección 4.3 pide fijar versiones; CC-07 define Isolation Forest para la detección de anomalías y CC-08 lo asigna a scikit-learn.
@@ -214,3 +215,27 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 - **Verificación:** sobre una réplica de los datos de desarrollo y con 10 semillas, ambas implementaciones (la propia y la de scikit-learn) coinciden en el ordenamiento de los scores (correlación de Spearman de 0.994) y en la F1 promedio (0.379).
 - **Resultado con los datos del proyecto:** compras, 383 órdenes y 20 anómalas reales: precisión 25 %, exhaustividad 30 %, F1 0.27; la mayoría de las alertas son faltantes normales del simulador que no forman parte de la verdad conocida. Demanda: caída de AirPods en CDMX detectada a los 3 días; el pico de laptops en Monterrey (+22 % sobre unas 5 unidades diarias) no se distingue del ruido y lo cubrirá la proyección de quiebre del motor de recomendaciones.
 - **Estado:** Aprobado e implementado.
+
+### CC-19. Supuestos económicos del motor de recomendaciones
+- **Qué dice el PDR:** el Módulo 6 (Sección 6) incluye el apoyo a la toma de decisiones y CC-07 define que el motor compara el costo total esperado de cada opción, pero ninguno fija los parámetros económicos para calcularlo.
+- **Cambio:** el diccionario `SUPUESTOS` de `backend/analitica/recomendaciones.py` fija los parámetros. Cada recomendación guarda en su evidencia los valores con que se calculó, para que sea auditable:
+
+| Supuesto | Valor | Sustento |
+|---|---|---|
+| Margen bruto para valuar la venta perdida | 30 % | Promedio entre electrónica (margen bajo) y hogar o muebles (alto); conservador, porque no cuenta la pérdida del cliente |
+| Costo de mantener inventario | 25 % anual | Rango de referencia en gestión de inventarios: 20 a 30 % (capital, espacio, seguro y obsolescencia) |
+| Flete exprés | 1.8 veces el normal | Sobrecosto típico de un envío urgente: 1.5 a 2.5 veces |
+| Horizonte | 14 días | Mismo horizonte del pronóstico Holt-Winters |
+| Cobertura mínima del almacén que transfiere | 30 días | Cubre el stock de seguridad (12 días) más el tiempo de reabastecimiento; evita que la transferencia cause otro quiebre |
+| Umbral de exceso de inventario | 75 días | 1.5 veces la cobertura objetivo de la política de inventario (50 días) |
+| Puntualidad mínima de proveedor | 85 % en 30 días | Mismo umbral crítico de entregas a tiempo (CC-16) |
+| Alza de precio relevante | 3 % | Fuera de la variación normal de precios del simulador (1 a 1.5 %) |
+| Concentración de gasto | 35 % | Las guías de compras marcan riesgo entre 30 y 40 % del gasto con un solo proveedor |
+| Probabilidad de éxito al negociar | 50 % | Supuesto neutral sin historial de negociaciones; se calibra con datos reales |
+| Impacto mínimo para abrir un caso | 5,000 MXN | Umbral de materialidad para no llenar el Centro de soluciones de asuntos menores |
+
+  - Regla de decisión: costo total esperado = costo directo de la opción + probabilidad de falla × costo de la falla. Se recomienda la opción de menor costo; el impacto es el costo de no actuar menos el de la opción recomendada. Si no actuar es lo más barato, no se abre caso.
+  - Severidad CRITICO si el impacto es de 100,000 MXN o más, o si el quiebre ocurre en 3 días o menos; ATENCION en los demás casos.
+- **Justificación:** sin parámetros fijos, el costo total esperado no es reproducible ni defendible. Son valores de referencia estándar y explícitos, que se pueden ajustar con datos reales de un ERP sin cambiar el código del motor.
+- **Límite respetado:** la IA solo recomienda (Sección 2); las decisiones (aprobar, descartar con motivo, cerrar con ahorro real) las registra una persona desde el Centro de soluciones, con historial en la evidencia.
+- **Estado:** Aprobado e implementado (commits 39dd581 y 51ce12e).
