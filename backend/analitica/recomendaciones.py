@@ -51,7 +51,7 @@ SUPUESTOS = {
     "horizonte_dias": 14,                  # mismo horizonte del pronostico
     "cobertura_minima_origen_dias": 30,    # un almacen solo transfiere lo que exceda esta cobertura
     "exceso_cobertura_dias": 75,           # 1.5 veces la cobertura objetivo de la politica (50 dias)
-    "umbral_puntualidad_30d": 0.80,        # entregas a tiempo de 30 dias (CC-16: critico bajo 85)
+    "umbral_puntualidad_30d": 0.85,        # mismo umbral critico de entregas a tiempo (CC-16)
     "minimo_envios_30d": 3,
     "umbral_alza_precio": 0.03,            # 3% sobre la mediana de los 90 dias previos
     "umbral_concentracion": 0.35,          # 35% del gasto de 90 dias en un proveedor
