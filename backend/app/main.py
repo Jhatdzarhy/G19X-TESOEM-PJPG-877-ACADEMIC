@@ -9,6 +9,7 @@ app = FastAPI(
 )
 
 app.include_router(kpis.router)
+app.include_router(pronostico_api.router)
 app.include_router(riesgo_api.router)
 app.include_router(recomendaciones_api.router)
 app.include_router(asistente_api.router)
