@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
-  "fecha_actualizacion": "2026-10-12",
-  "fase_actual": "Proyecto final - Sprint 2 (motor analitico) casi cerrado: KPIs, pronostico, riesgo, anomalias, motor de recomendaciones con Centro de soluciones y backend del asistente de IA listos y verificados; falta el simulador en vivo (bloque E); siguiente: Sprint 3, Servlets, login y vistas JSP",
+  "fecha_actualizacion": "2026-10-13",
+  "fase_actual": "Proyecto final - Sprint 3 (capa web Java): login, sesion, roles y canal interno Tomcat-FastAPI listos y verificados en el Tomcat real (CC-20, CC-21); siguiente: Resumen ejecutivo con Servlets de lectura, luego Centro de soluciones y vista del asistente de IA",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -50,31 +50,53 @@
       "Backend del asistente de IA (backend/app/asistente_api.py): 7 herramientas de solo lectura sobre los endpoints del motor, glosario de KPIs y metas, proveedores Z.AI GLM-4.7-Flash, GLM-4.5-Flash y Ollama con reintento y respaldo, llamadas serializadas, limite de 8 mensajes por minuto, historial por usuario en ASCII y campo verificado (commit ffa87d9)",
       "Asistente verificado con Z.AI: respuesta con 3 herramientas y cifras iguales a los endpoints (351,723 MXN en juego, lead time 10.9 dias CRITICO, OTIF 83.9% ATENCION); ante la saturacion de GLM-4.7-Flash (codigo 1305) respondieron el reintento y el respaldo GLM-4.5-Flash",
       "CC-19 aprobado: supuestos economicos del motor de recomendaciones; umbral de puntualidad de proveedores alineado a 85% con el critico de entregas a tiempo de CC-16 (commit 51ce12e)",
-      "CC-19 registrado en docs/CONTROL_DE_CAMBIOS.md; CC-07 y CC-17 actualizados"
+      "CC-19 registrado en docs/CONTROL_DE_CAMBIOS.md; CC-07 y CC-17 actualizados",
+      "Router de pronostico registrado en backend/app/main.py: se importaba pero no se incluia y GET /api/v1/pronostico respondia 404 (commit 62ec3c7)",
+      "Tabla usuarios (db/final/06_usuarios.sql, CC-20): hash PBKDF2-HMAC-SHA256, rol EJECUTIVO, OPERACIONES o ADMIN, bloqueo por intentos fallidos y restricciones de formato en ASCII; aditivo, idempotente y transaccional (commit 1a63606)",
+      "backend/app/seguridad.py: hash PBKDF2-HMAC-SHA256 con 600,000 iteraciones, sal de 16 bytes y normalizacion NFKC; politica de contrasena de 15 a 128 caracteres sin el nombre de usuario; verificacion del token interno X-Token-Interno con falla cerrada 503 (CC-20, CC-21; commit a4c58d7)",
+      "Endpoint POST /api/v1/auth/login (backend/app/auth_api.py, CC-20): 200 con usuario, nombre y rol; 401 con el mismo mensaje para usuario inexistente o contrasena incorrecta y tiempo igualado con hash de relleno; 429 con Retry-After al quinto intento fallido por 15 minutos (commit 8cb62e8)",
+      "API analitica cerrada al canal interno (CC-21): toda ruta exige X-Token-Interno, sin CORS, solo 127.0.0.1; retirados los endpoints /kpis/ del MVP de main.py (commit 5e92d9a)",
+      "Scripts de administracion en backend/admin (python -m admin.<script>): token_interno.py escribe el token en backend/.env y en setenv.bat de Tomcat sin mostrarlo; crear_usuario.py da de alta, restablece o desactiva usuarios con contrasena oculta; verificar_seguridad.py corre 21 pruebas (commits 9cfc459, b41395f y 71e56a6)",
+      "Verificacion de seguridad de la API en el equipo de desarrollo: 21 de 21 pruebas correctas con 18 rutas (token, CORS, rutas del MVP, login, bloqueo y hash)",
+      "Usuarios creados: gerencia (EJECUTIVO, Gerencia general), operaciones (OPERACIONES, Supervisor de operaciones) y admin (ADMIN, Administrador del sistema); contrasenas solo en el gestor de contrasenas de la desarrolladora",
+      "Capa web Java sin dependencias externas en frontend/src (paquete mx.com.develop.supplychain): FastApiCliente (java.net.http con token interno y solo rutas /api/v1/), Json (lectura y escritura propias), Html (escapado), UsuarioSesion, SeguridadFiltro, LoginServlet, LogoutServlet y PaginaServlet (commits 254748d, c952f3b, fc07180, 228c352 y a047974)",
+      "frontend/build.ps1: compila con el javac del JDK 21 de JAVA_HOME (--release 21, -Xlint:all) contra servlet-api.jar de Tomcat y despliega con robocopy /MIR en webapps/supplychain; 8 clases sin advertencias (commit ad066b5)",
+      "Seguridad web (CC-20): filtro unico con sesion obligatoria, token CSRF por sesion en todo POST, CSP sin scripts en linea, X-Frame-Options DENY, nosniff y no-store; sesion de 30 minutos con cookie HttpOnly y SameSite=Strict, solo por cookie y sin persistir en disco; cambio de identificador de sesion al entrar; JSP en WEB-INF inaccesibles por URL; paginas de error sin trazas",
+      "Login, logout y vista temporal del Resumen verificados en el Tomcat real (localhost:8080/supplychain): redireccion al login sin sesion, login correcto con nombre y rol, mensaje generico con contrasena incorrecta y cierre de sesion",
+      "dashboard.js del MVP retirado de proyecto-final porque llamaba directo a FastAPI (commit e813407); frontend/build/ excluido en .gitignore (commit 147c648)"
     ],
     "en_progreso": [
-      "Sprint 2, bloque E: simulador en vivo (CC-09) que inserta operacion cada 10 a 30 segundos, refresca el modelo estrella y alimenta la franja en vivo"
+      "Sprint 3: Resumen ejecutivo (Estado de la cadena, Que atender hoy, Demanda y pronostico) con Servlets de lectura en lista blanca, plantilla JSP comun y Chart.js"
     ],
     "pendiente": [
-      "Martes 13: Servlets de Java que consumen FastAPI (KPIs, estaciones, pronostico, recomendaciones y asistente), login con contrasenas cifradas (riesgo R7), roles, vista JSP del Resumen ejecutivo, Centro de soluciones y vista del asistente de IA",
-      "Miercoles 14 en la manana: simulador en vivo (bloque E), Server-Sent Events, vistas de los 8 modulos sobre una plantilla JSP comun y franja en vivo; congelar funcionalidad",
-      "Miercoles 14 en la tarde: QA (Fase 6)",
+      "Martes 13: Servlet de lectura con lista blanca de rutas de FastAPI, plantilla JSP comun (cabecera, menu y pie), vista JSP del Resumen ejecutivo, Centro de soluciones (pestanas, evidencia, opciones, plan y decisiones humanas con control de rol) y vista del asistente de IA",
+      "Martes 13: Servlets POST de decision (rol EJECUTIVO), paso del plan hecho (EJECUTIVO y OPERACIONES) y mensaje al asistente, con usuario y rol tomados de la sesion",
+      "Revisar accion_hecha en backend/app/recomendaciones_api.py: no registra que usuario marco el paso del plan; agregar el usuario de la sesion para la trazabilidad",
+      "Miercoles 14 en la manana: simulador en vivo (Sprint 2, bloque E, CC-09), Server-Sent Events, vistas de los 8 modulos sobre la plantilla JSP comun y franja en vivo; congelar funcionalidad",
+      "Miercoles 14 en la tarde: QA (Fase 6), incluyendo python -m admin.verificar_seguridad y las pruebas de login en el navegador",
       "Jueves 15: manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR (Fases 7 y 8)",
       "Viernes 16: entrega y cierre (Fases 9 y 10)",
       "Vista del asistente: escapar la respuesta (XSS) antes de convertir solo negritas y listas de Markdown; mostrar siempre el campo aviso, el modelo que respondio y la fecha de corte",
       "Opcional: instalar Ollama con un modelo de 7 a 8 mil millones de parametros como respaldo local del asistente",
-      "Seguridad: escapar datos antes de insertarlos en la pagina (XSS, OWASP) y contrasenas cifradas (riesgo R7)",
-      "Fijar la version exacta de Chart.js en la URL del CDN (PDR seccion 4.3)",
+      "Fijar la version exacta de Chart.js y Bootstrap 5.3.8 en la URL del CDN con hash de integridad SRI (PDR seccion 4.3)",
       "README.md en la rama proyecto-final y backend/.env.example sin contrasenas ni llaves",
       "Push inicial a GitHub (ramas master y proyecto-final, etiqueta mvp-v1.0) cuando el proyecto final este mas avanzado, previa verificacion de que no hay .env, contrasenas, llaves ni documentos no publicables en el historial"
     ]
   },
   "archivos_modificados_recientemente": [
-    "backend/analitica/recomendaciones.py",
-    "backend/app/recomendaciones_api.py",
-    "backend/app/asistente_api.py",
+    "db/final/06_usuarios.sql",
+    "backend/app/seguridad.py",
+    "backend/app/auth_api.py",
     "backend/app/main.py",
-    "db/final/05_asistente.sql",
+    "backend/admin/token_interno.py",
+    "backend/admin/crear_usuario.py",
+    "backend/admin/verificar_seguridad.py",
+    "frontend/build.ps1",
+    "frontend/src/mx/com/develop/supplychain",
+    "frontend/webapp/WEB-INF/web.xml",
+    "frontend/webapp/META-INF/context.xml",
+    "frontend/webapp/WEB-INF/jsp",
+    "frontend/webapp/css/app.css",
     "docs/CONTROL_DE_CAMBIOS.md",
     "docs/project_state.json"
   ],
@@ -164,7 +186,27 @@
     "Pestanas del Centro de soluciones: Abiertas = NUEVA, En curso = EN_REVISION, Resueltas = ATENDIDA y DESCARTADA",
     "Los endpoints de decision los llama el Servlet con el usuario y el rol de la sesion; el asistente de IA no tiene herramientas de escritura",
     "Asistente: cada falla de proveedor se registra en la consola de FastAPI con el codigo y el tiempo, nunca con la llave; el texto de la respuesta se guarda en ASCII (CC-11) y en vivo conserva la ortografia",
-    "Asistente: el campo verificado indica si la respuesta uso herramientas; la vista muestra siempre el aviso de que la IA puede equivocarse y que los datos operativos son simulados"
+    "Asistente: el campo verificado indica si la respuesta uso herramientas; la vista muestra siempre el aviso de que la IA puede equivocarse y que los datos operativos son simulados",
+    "CC-20: la contrasena se verifica en FastAPI (unica capa con acceso a la base; verificarla en Java exigiria el JAR de JDBC); Java maneja la sesion, los roles y el control de acceso",
+    "CC-20: hash PBKDF2-HMAC-SHA256 con 600,000 iteraciones (recomendacion de OWASP), sal aleatoria de 16 bytes y formato pbkdf2_sha256$iteraciones$sal$hash; si cambian las iteraciones el hash se actualiza en el siguiente login correcto",
+    "CC-20: contrasena de 15 a 128 caracteres sin reglas de composicion (se recomiendan frases); se evaluo 12 (OWASP ASVS) y se decidio mantener 15",
+    "CC-20: roles por funcion: EJECUTIVO decide (aprueba, descarta con motivo y cierra con ahorro real), OPERACIONES ejecuta (marca pasos del plan) y ADMIN administra usuarios; los tres ven el dashboard y usan el asistente",
+    "CC-20: bloqueo de 15 minutos al quinto intento fallido consecutivo; mismo mensaje y mismo tiempo de respuesta para usuario inexistente y contrasena incorrecta, para no revelar que usuarios existen",
+    "CC-21: el navegador solo habla con Tomcat; FastAPI escucha solo en 127.0.0.1, sin CORS, y toda ruta exige la cabecera X-Token-Interno; sin token configurado responde 503 a todo (falla cerrada)",
+    "CC-21: el token interno vive en backend/.env y en C:\\tomcat\\apache-tomcat-10.1.60\\bin\\setenv.bat (SC_TOKEN_INTERNO y SC_FASTAPI_URL=http://127.0.0.1:8000), ambos fuera del repositorio; se genera y rota con python -m admin.token_interno sin mostrarlo",
+    "CC-21: se usa 127.0.0.1 y no localhost en SC_FASTAPI_URL para que Java no intente ::1 (IPv6) cuando uvicorn escucha solo en IPv4",
+    "CC-21: los Servlets construyen los cuerpos POST con campos validados y con usuario y rol de la sesion; el navegador nunca envia usuario ni rol",
+    "Endpoints /kpis/ del MVP retirados de main.py en proyecto-final porque sus formulas y umbrales (OTIF con 70%, riesgo con formula simple) contradicen CC-15, CC-16 y CC-07; se conservan en la etiqueta mvp-v1.0",
+    "Scripts de administracion en backend/admin (python -m admin.<script>), separados de la API (backend/app), de los ETL (backend/etl) y de los modelos (backend/analitica)",
+    "Capa web sin Maven ni JAR externos: javac del JDK 21 contra servlet-api.jar de Tomcat, HttpClient del JDK para FastAPI y lector JSON propio; despliegue con frontend/build.ps1",
+    "Paquete Java mx.com.develop.supplychain (dominio develop.com.mx de la empresa) con subpaquetes web, filtro, servicio y util",
+    "La JSP pinta solo el armazon (menu, usuario, rol y token CSRF); los datos los pide el navegador a los Servlets de /api/ y se insertan con textContent; las JSP viven en WEB-INF/jsp y no se pueden abrir por URL",
+    "Escapado en JSP con la funcion EL propia sc:esc (WEB-INF/sc.tld y mx.com.develop.supplychain.util.Html), porque Tomcat no incluye JSTL y EL no escapa por si solo",
+    "UsuarioSesion es una clase con getters y no un record porque EL 5.0 de Tomcat 10.1 solo lee propiedades getX(); los records se leen desde EL 6.0 (Tomcat 11)",
+    "Filtro unico de seguridad (SeguridadFiltro) declarado en web.xml para fijar su orden; los Servlets se declaran con @WebServlet; los roles los revisa cada Servlet porque dependen de la accion",
+    "CSP: default-src self; scripts y estilos solo propios y de cdn.jsdelivr.net (Bootstrap y Chart.js); fuentes de Google Fonts; sin scripts ni estilos en linea; frame-ancestors none",
+    "La cookie de sesion no lleva Secure porque el entorno es HTTP local; en un despliegue real se requiere HTTPS y cookie Secure (registrado como limite en CC-20)",
+    "Los textos de la interfaz en Java y JSP se escriben con acentos directamente en UTF-8 (javac -encoding UTF-8 y pageEncoding UTF-8); no se usan secuencias de escape unicode en el codigo fuente"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -198,6 +240,14 @@
     "ModuleNotFoundError psycopg2 al correr el motor en una ventana nueva: el entorno virtual no estaba activo; resuelto con .\\backend\\.venv\\Scripts\\Activate.ps1",
     "Al pegar en PowerShell el indicador '(.venv) PS C:\\...>' junto con el comando aparece 'Token PS inesperado'; se escribe solo el comando",
     "Comentario duplicado en el umbral de puntualidad detectado en git diff --staged antes del commit; corregido y confirmado como commit normal (no --amend, porque el ultimo commit era el del asistente)",
-    "Z.AI GLM-4.7-Flash respondio 429 codigo 1305 (servicio saturado); el asistente reintento y uso el respaldo GLM-4.5-Flash como estaba disenado"
+    "Z.AI GLM-4.7-Flash respondio 429 codigo 1305 (servicio saturado); el asistente reintento y uso el respaldo GLM-4.5-Flash como estaba disenado",
+    "GET /api/v1/pronostico respondia 404: main.py importaba pronostico_api pero no registraba su router; resuelto con app.include_router(pronostico_api.router) (commit 62ec3c7)",
+    "psql no encontro db/final/06_usuarios.sql porque el archivo aun no se habia creado; se verifica con Get-ChildItem antes de ejecutar un script",
+    "Al escribir rutas completas en el cuadro Nuevo archivo de VS Code se crearon carpetas anidadas (backend/backend/admin/backend/app) y auth_api.py quedo como carpeta; resuelto borrando backend/backend y creando los archivos con New-Item desde la raiz",
+    "auth_api.py quedo vacio (0 bytes) al pegar el contenido en otra pestana; detectado con Get-ChildItem | Select-Object Name, Length y corregido",
+    "ModuleNotFoundError admin al correr python -m admin.verificar_seguridad desde la raiz; los scripts de backend se ejecutan desde la carpeta backend",
+    "PropertyNotFoundException 'Property [csrf] not found on type UsuarioSesion' en la prueba previa: EL de Tomcat 10.1 no lee los componentes de un record; UsuarioSesion se reescribio como clase con getters antes de entregarse",
+    "shutdown.bat mostro 'Could not contact [localhost:8005]' porque Tomcat no estaba corriendo; es esperado y no requiere accion",
+    "git rm de dashboard.js fallo con pathspec porque la eliminacion ya estaba preparada; confirmado con git status --short (D) y se hizo el commit directamente"
   ]
 }
