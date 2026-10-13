@@ -13,3 +13,5 @@ docs/*MVP*
 backend/etl/cache/
 
 frontend/build/
+
+.vscode/
