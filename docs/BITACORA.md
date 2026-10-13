@@ -4,6 +4,25 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-13 01:52 | 64f44dc | docs(estado): actualizar project_state con login, roles, canal interno y capa web Java del Sprint 3 |
+| 2026-10-13 01:51 | bc84bc9 | docs(control-cambios): registrar CC-20 usuarios, autenticacion y roles y CC-21 canal interno Tomcat-FastAPI |
+| 2026-10-13 01:41 | a047974 | feat(frontend): vista temporal del Resumen ejecutivo protegida por sesion |
+| 2026-10-13 01:41 | 228c352 | feat(frontend): login y logout contra FastAPI con cambio de sesion y bloqueo visible (CC-20) |
+| 2026-10-13 01:41 | fc07180 | feat(frontend): filtro de seguridad con sesion obligatoria, CSRF, CSP y cookie SameSite (CC-20) |
+| 2026-10-13 01:41 | c952f3b | feat(frontend): escapado HTML y funcion EL sc:esc para las JSP (XSS, riesgo R7) |
+| 2026-10-13 01:40 | 254748d | feat(frontend): cliente REST interno hacia FastAPI con token interno y JSON sin bibliotecas (CC-21) |
+| 2026-10-13 01:40 | ad066b5 | feat(frontend): script de compilacion con JDK 21 y despliegue en Tomcat sin dependencias externas |
+| 2026-10-13 01:40 | 147c648 | chore: excluir frontend/build del repositorio |
+| 2026-10-13 01:39 | e813407 | chore(frontend): retirar dashboard.js del MVP que llamaba directo a FastAPI (CC-21) |
+| 2026-10-13 01:05 | 71e56a6 | feat(admin): verificacion de seguridad de la API con 21 pruebas de token y login (CC-20, CC-21) |
+| 2026-10-13 01:04 | b41395f | feat(admin): alta, restablecimiento y baja de usuarios con contrasena oculta (CC-20) |
+| 2026-10-13 01:04 | 9cfc459 | feat(admin): script del token interno en backend/.env y setenv.bat de Tomcat sin mostrarlo (CC-21) |
+| 2026-10-13 01:04 | 5e92d9a | feat(api): exigir token interno en todas las rutas y retirar CORS y endpoints del MVP (CC-21) |
+| 2026-10-13 01:04 | 8cb62e8 | feat(api): endpoint /api/v1/auth/login con bloqueo tras 5 intentos fallidos (CC-20) |
+| 2026-10-13 01:04 | a4c58d7 | feat(api): hash PBKDF2 de contrasenas y verificacion del token interno Tomcat-FastAPI (CC-20, CC-21) |
+| 2026-10-13 01:04 | 1a63606 | feat(db): tabla usuarios con hash PBKDF2, roles y bloqueo por intentos fallidos (CC-20) |
+| 2026-10-13 00:38 | 62ec3c7 | fix(api): registrar el router de pronostico en main.py; /api/v1/pronostico respondia 404 |
+| 2026-10-13 00:05 | 954f8fd | docs(bitacora): regenerar desde git log al cierre del 12 de octubre |
 | 2026-10-13 00:04 | d9429df | docs(estado): actualizar project_state con motor de recomendaciones y backend del asistente |
 | 2026-10-13 00:04 | 4e33070 | docs(control-cambios): registrar CC-19 supuestos economicos del motor y actualizar CC-07 y CC-17 |
 | 2026-10-12 23:56 | 51ce12e | fix(analitica): alinear el umbral de puntualidad de proveedores con el critico de entregas a tiempo (CC-16, CC-19) |
