@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import get_connection
-from app import kpis, pronostico_api, riesgo_api
+from app import kpis, pronostico_api, recomendaciones_api, riesgo_api
 
 app = FastAPI(
     title="Supply Chain Dashboard - Analytics API",
@@ -10,6 +10,7 @@ app = FastAPI(
 
 app.include_router(kpis.router)
 app.include_router(riesgo_api.router)
+app.include_router(recomendaciones_api.router)
 
 app.add_middleware(
     CORSMiddleware,
