@@ -11,3 +11,5 @@ target/
 docs/PDR*
 docs/*MVP*
 backend/etl/cache/
+
+frontend/build/
