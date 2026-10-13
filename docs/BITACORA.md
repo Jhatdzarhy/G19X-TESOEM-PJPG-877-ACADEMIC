@@ -4,6 +4,12 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-13 00:04 | d9429df | docs(estado): actualizar project_state con motor de recomendaciones y backend del asistente |
+| 2026-10-13 00:04 | 4e33070 | docs(control-cambios): registrar CC-19 supuestos economicos del motor y actualizar CC-07 y CC-17 |
+| 2026-10-12 23:56 | 51ce12e | fix(analitica): alinear el umbral de puntualidad de proveedores con el critico de entregas a tiempo (CC-16, CC-19) |
+| 2026-10-12 23:43 | ffa87d9 | feat(asistente): backend del asistente de IA de solo lectura con herramientas, respaldo de modelos e historial (CC-17) |
+| 2026-10-12 20:29 | 39dd581 | feat(analitica): motor de recomendaciones por costo total esperado y endpoints del Centro de soluciones (CC-07, CC-19) |
+| 2026-10-08 23:34 | f016ee0 | docs(bitacora): regenerar desde git log al cierre del 8 de octubre |
 | 2026-10-08 23:34 | 96be447 | docs(estado): actualizar project_state con KPIs, pronostico, riesgo y anomalias del Sprint 2 |
 | 2026-10-08 23:33 | c56c4a0 | docs(control-cambios): registrar CC-16 metas de KPIs, CC-17 asistente de IA y CC-18 Isolation Forest propio |
 | 2026-10-08 23:27 | dd83ad8 | chore(backend): retirar scikit-learn de requirements por bloqueo de Control inteligente de aplicaciones (CC-18) |
