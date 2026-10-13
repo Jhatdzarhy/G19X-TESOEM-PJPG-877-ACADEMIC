@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Contexto de Tomcat para /supplychain (CC-20, control de cambios).
+  - reloadable: recarga las clases al desplegar de nuevo (entorno de desarrollo).
+  - SameSite=Strict: la cookie de sesion no viaja en peticiones desde otros sitios (CSRF).
+  - Manager sin pathname: las sesiones no se guardan en disco al reiniciar Tomcat.
+-->
+<Context reloadable="true" useHttpOnly="true">
+    <CookieProcessor sameSiteCookies="strict" />
+    <Manager pathname="" />
+</Context>
