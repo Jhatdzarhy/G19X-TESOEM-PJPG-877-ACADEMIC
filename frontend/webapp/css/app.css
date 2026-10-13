@@ -1,0 +1,190 @@
+/*
+ * Estilos del Dashboard Ejecutivo de Supply Chain (diseno CC-10).
+ * Azul #1A56A8 solo para datos; rojo, ambar y verde solo para estados, siempre
+ * acompanados de texto o icono. Tipografia Barlow y Barlow Condensed.
+ */
+:root {
+    --fondo: #eef1f5;
+    --superficie: #ffffff;
+    --borde: #dde2ea;
+    --texto: #111827;
+    --texto-suave: #5b6474;
+    --menu-fondo: #0f172a;
+    --menu-texto: #cbd5e1;
+    --menu-activo: #1e293b;
+    --accion: #0f172a;
+    --dato: #1a56a8;
+    --estado-critico: #b42318;
+    --estado-critico-fondo: #fdecea;
+    --estado-atencion: #b54708;
+    --estado-atencion-fondo: #fef3e2;
+    --estado-ok: #067647;
+    --estado-ok-fondo: #e7f6ec;
+    --info: #1e3a5f;
+    --info-fondo: #e8eef7;
+    --radio: 10px;
+    --fuente: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --fuente-titulo: "Barlow Condensed", "Barlow", system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+    font-family: var(--fuente);
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--texto);
+    background: var(--fondo);
+}
+
+[hidden] { display: none !important; }
+
+.marca-titulo {
+    display: block;
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+}
+
+.marca-sub {
+    display: block;
+    font-size: 12px;
+    color: var(--texto-suave);
+}
+
+/* ------------------------------------------------------------ avisos */
+.aviso {
+    margin: 0 0 16px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+.aviso-info { background: var(--info-fondo); color: var(--info); }
+.aviso-error { background: var(--estado-critico-fondo); color: var(--estado-critico); font-weight: 500; }
+
+/* ------------------------------------------------------------ botones */
+.boton {
+    display: inline-block;
+    font: inherit;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+.boton-principal { background: var(--accion); color: #fff; }
+.boton-principal:hover { background: #1e293b; }
+.boton-secundario { background: transparent; color: var(--menu-texto); border-color: #334155; }
+.boton-secundario:hover { background: var(--menu-activo); color: #fff; }
+.boton:focus-visible, input:focus-visible, a:focus-visible {
+    outline: 3px solid #93b4e3;
+    outline-offset: 2px;
+}
+
+.enlace { color: var(--dato); font-weight: 600; }
+
+/* ------------------------------------------------------------ login */
+.pagina-login {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+}
+
+.login {
+    width: 100%;
+    max-width: 380px;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 32px 28px 24px;
+}
+
+.login-marca { margin-bottom: 24px; }
+
+.login-titulo {
+    font-family: var(--fuente-titulo);
+    font-weight: 600;
+    font-size: 26px;
+    margin: 0 0 16px;
+}
+
+.login-form { display: grid; gap: 6px; }
+
+.login-form label {
+    font-weight: 600;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.login-form input {
+    font: inherit;
+    padding: 10px 12px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--texto);
+}
+
+.login-form .boton { margin-top: 18px; width: 100%; }
+
+.login-nota {
+    margin: 20px 0 0;
+    font-size: 12px;
+    color: var(--texto-suave);
+}
+
+/* ------------------------------------------------------------ aplicacion */
+.pagina-app {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+}
+
+.menu {
+    background: var(--menu-fondo);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 14px;
+}
+.menu .marca-sub { color: var(--menu-texto); }
+.menu-marca { padding: 0 6px 18px; border-bottom: 1px solid #1e293b; }
+
+.menu-enlaces { display: grid; gap: 2px; margin-top: 16px; }
+.menu-enlaces a {
+    color: var(--menu-texto);
+    text-decoration: none;
+    padding: 9px 10px;
+    border-radius: 8px;
+}
+.menu-enlaces a:hover, .menu-enlaces a.activo { background: var(--menu-activo); color: #fff; }
+
+.menu-usuario {
+    margin-top: auto;
+    padding: 16px 6px 0;
+    border-top: 1px solid #1e293b;
+    display: grid;
+    gap: 2px;
+}
+.menu-usuario-nombre { font-weight: 600; }
+.menu-usuario-rol { font-size: 13px; color: var(--menu-texto); margin-bottom: 10px; }
+
+.contenido { padding: 24px 28px; min-width: 0; }
+
+.titulo-vista {
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: 32px;
+    margin: 0 0 16px;
+}
+
+@media (max-width: 800px) {
+    .pagina-app { grid-template-columns: 1fr; }
+    .menu { padding: 14px 16px; }
+    .menu-usuario { margin-top: 12px; }
+    .contenido { padding: 20px 16px; }
+}
