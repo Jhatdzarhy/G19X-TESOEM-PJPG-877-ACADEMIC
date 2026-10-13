@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
-  "fecha_actualizacion": "2026-10-08",
-  "fase_actual": "Proyecto final - Sprint 2 (motor analitico) en curso: KPIs, estaciones, pronostico Holt-Winters, indice de riesgo e Isolation Forest listos en FastAPI; siguiente: motor de recomendaciones con plan de acciones (bloque C), backend del asistente de IA (bloque D) y simulador en vivo (bloque E)",
+  "fecha_actualizacion": "2026-10-12",
+  "fase_actual": "Proyecto final - Sprint 2 (motor analitico) casi cerrado: KPIs, pronostico, riesgo, anomalias, motor de recomendaciones con Centro de soluciones y backend del asistente de IA listos y verificados; falta el simulador en vivo (bloque E); siguiente: Sprint 3, Servlets, login y vistas JSP",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -43,20 +43,26 @@
       "Isolation Forest validado contra eventos inyectados (backend/analitica/anomalias.py, implementacion propia en backend/analitica/iforest.py por CC-18): compras precision 25%, recall 30%, F1 0.27; EV05 detectado a los 3 dias, EV03 no detectable; escribe fact_supply_chain.score_anomalia; evidencia en backend/analitica/evaluacion_anomalias.json; endpoints /api/v1/anomalias y /api/v1/anomalias/evaluacion (commit 5bbeabf)",
       "KPIs de riesgo de proveedores y MAPE conectados a los resultados de los modelos en /api/v1/kpis: 30.2 y 3.3%, ambos EN_META",
       "scikit-learn, joblib y threadpoolctl retirados del entorno y de requirements.txt (CC-18, commit dd83ad8)",
-      "CC-16, CC-17 y CC-18 registrados en docs/CONTROL_DE_CAMBIOS.md; CC-07 y CC-08 actualizados"
+      "CC-16, CC-17 y CC-18 registrados en docs/CONTROL_DE_CAMBIOS.md; CC-07 y CC-08 actualizados",
+      "Motor de recomendaciones (backend/analitica/recomendaciones.py): seis reglas (quiebre proyectado, exceso de inventario, retrasos de proveedor, alza de precio, clima en ruta y concentracion de gasto) con opciones comparadas por costo total esperado en MXN, confianza, evidencia JSONB y plan_acciones; al 2026-09-30 abrio 4 casos con 351,723 MXN en juego (commit 39dd581)",
+      "Endpoints del Centro de soluciones (backend/app/recomendaciones_api.py): lista por pestana con resumen (abiertas, criticas, impacto en juego, ahorro real contra proyectado, tiempo de decision), atender-hoy (top 5), detalle, decision humana (APROBAR con opcion, DESCARTAR con motivo, CERRAR con ahorro real) y paso del plan hecho; verificado el rechazo 422 de un descarte sin motivo (commit 39dd581)",
+      "Historial del asistente: db/final/05_asistente.sql con asistente_conversaciones y asistente_mensajes (aditivo e idempotente)",
+      "Backend del asistente de IA (backend/app/asistente_api.py): 7 herramientas de solo lectura sobre los endpoints del motor, glosario de KPIs y metas, proveedores Z.AI GLM-4.7-Flash, GLM-4.5-Flash y Ollama con reintento y respaldo, llamadas serializadas, limite de 8 mensajes por minuto, historial por usuario en ASCII y campo verificado (commit ffa87d9)",
+      "Asistente verificado con Z.AI: respuesta con 3 herramientas y cifras iguales a los endpoints (351,723 MXN en juego, lead time 10.9 dias CRITICO, OTIF 83.9% ATENCION); ante la saturacion de GLM-4.7-Flash (codigo 1305) respondieron el reintento y el respaldo GLM-4.5-Flash",
+      "CC-19 aprobado: supuestos economicos del motor de recomendaciones; umbral de puntualidad de proveedores alineado a 85% con el critico de entregas a tiempo de CC-16 (commit 51ce12e)",
+      "CC-19 registrado en docs/CONTROL_DE_CAMBIOS.md; CC-07 y CC-17 actualizados"
     ],
     "en_progreso": [
-      "Sprint 2, bloque C: motor de recomendaciones (backend/analitica/recomendaciones.py) con reglas de quiebre proyectado por almacen y SKU (usa el pronostico; cubre EV03), retrasos y riesgo de proveedor, alza de precio (anomalias), clima en ruta, exceso de inventario y concentracion de gasto; opciones comparadas por costo total esperado en MXN, confianza, evidencia JSONB y plan_acciones; endpoints de lista, detalle y cambio de estado humano (NUEVA, EN_REVISION, ATENDIDA, DESCARTADA con motivo)"
+      "Sprint 2, bloque E: simulador en vivo (CC-09) que inserta operacion cada 10 a 30 segundos, refresca el modelo estrella y alimenta la franja en vivo"
     ],
     "pendiente": [
-      "Sprint 2, bloque D: backend del asistente de IA (CC-17): script SQL de asistente_conversaciones y asistente_mensajes, endpoint con herramientas de solo lectura sobre los endpoints del motor, glosario de KPIs, respaldo de proveedor, reintento ante 429 y serializacion de llamadas",
-      "Sprint 2, bloque E: simulador en vivo (CC-09) que inserta operacion cada 10 a 30 segundos y refresca el modelo estrella",
-      "Opcional: instalar Ollama con un modelo de 7 a 8 mil millones de parametros como respaldo local del asistente",
-      "Lunes 12: Servlets de Java que consumen FastAPI (incluido el del asistente), login con contrasenas cifradas (riesgo R7), roles, Server-Sent Events y vista JSP del Resumen ejecutivo",
-      "Martes 13: Centro de soluciones, vista del asistente de IA, vistas de los 8 modulos sobre una plantilla JSP comun y franja en vivo; congelar funcionalidad al final del dia",
-      "Miercoles 14: QA (Fase 6)",
+      "Martes 13: Servlets de Java que consumen FastAPI (KPIs, estaciones, pronostico, recomendaciones y asistente), login con contrasenas cifradas (riesgo R7), roles, vista JSP del Resumen ejecutivo, Centro de soluciones y vista del asistente de IA",
+      "Miercoles 14 en la manana: simulador en vivo (bloque E), Server-Sent Events, vistas de los 8 modulos sobre una plantilla JSP comun y franja en vivo; congelar funcionalidad",
+      "Miercoles 14 en la tarde: QA (Fase 6)",
       "Jueves 15: manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR (Fases 7 y 8)",
       "Viernes 16: entrega y cierre (Fases 9 y 10)",
+      "Vista del asistente: escapar la respuesta (XSS) antes de convertir solo negritas y listas de Markdown; mostrar siempre el campo aviso, el modelo que respondio y la fecha de corte",
+      "Opcional: instalar Ollama con un modelo de 7 a 8 mil millones de parametros como respaldo local del asistente",
       "Seguridad: escapar datos antes de insertarlos en la pagina (XSS, OWASP) y contrasenas cifradas (riesgo R7)",
       "Fijar la version exacta de Chart.js en la URL del CDN (PDR seccion 4.3)",
       "README.md en la rama proyecto-final y backend/.env.example sin contrasenas ni llaves",
@@ -64,17 +70,11 @@
     ]
   },
   "archivos_modificados_recientemente": [
-    "backend/app/kpis.py",
-    "backend/app/pronostico_api.py",
-    "backend/app/riesgo_api.py",
+    "backend/analitica/recomendaciones.py",
+    "backend/app/recomendaciones_api.py",
+    "backend/app/asistente_api.py",
     "backend/app/main.py",
-    "backend/analitica/__init__.py",
-    "backend/analitica/pronostico.py",
-    "backend/analitica/riesgo.py",
-    "backend/analitica/anomalias.py",
-    "backend/analitica/iforest.py",
-    "backend/analitica/evaluacion_anomalias.json",
-    "backend/requirements.txt",
+    "db/final/05_asistente.sql",
     "docs/CONTROL_DE_CAMBIOS.md",
     "docs/project_state.json"
   ],
@@ -151,8 +151,20 @@
     "Isolation Forest de compras sobre variables relativas a lo normal de cada combinacion (log de precio, lead time y flete relativos, y faltante), contaminacion 6%, semilla 20260930; evaluado por orden contra eventos_inyectados.json",
     "Isolation Forest de demanda sobre el cociente de medias 7/28 dias relativo a la red (descuenta Buen Fin y Navidad), contaminacion 1%; cada evento se evalua por deteccion y dias hasta detectar en sus primeros 35 dias, mas falsas alarmas por semana",
     "Las metricas de anomalias se reportan tal como salen, sin ajustar el modelo para mejorar la F1: los falsos positivos de compras son faltantes normales del simulador; el pico de demanda pequeno (EV03) lo cubre la proyeccion de quiebre del motor de recomendaciones",
-    "Asistente de IA (CC-17): proveedor Z.AI por API compatible con OpenAI (https://api.z.ai/api/paas/v4/) mediante httpx; orden GLM-4.7-Flash, GLM-4.5-Flash, Ollama local; concurrencia 1 en el plan gratuito; no se usan modelos de pago",
-    "No se desactiva el Control inteligente de aplicaciones de Windows: es una proteccion del equipo y desactivarla no siempre es reversible; se elimina la dependencia que bloqueaba (CC-18)"
+    "Asistente de IA (CC-17): proveedor Z.AI por API compatible con OpenAI (https://api.z.ai/api/paas/v4/) mediante urllib de la biblioteca estandar (sin dependencias nuevas); orden GLM-4.7-Flash, GLM-4.5-Flash, Ollama local; concurrencia 1 en el plan gratuito; no se usan modelos de pago",
+    "No se desactiva el Control inteligente de aplicaciones de Windows: es una proteccion del equipo y desactivarla no siempre es reversible; se elimina la dependencia que bloqueaba (CC-18)",
+    "Motor de recomendaciones: costo total esperado = costo directo + probabilidad de falla x costo de la falla; se recomienda la opcion mas barata y el impacto es lo que se evita contra no actuar; si no actuar es lo mas barato o el impacto es menor a 5,000 MXN no se abre caso (sin ruido en el Centro de soluciones)",
+    "Severidad de una recomendacion: CRITICO si el impacto es de 100,000 MXN o mas o si el quiebre ocurre en 3 dias o menos; ATENCION en los demas casos",
+    "Quiebre proyectado: demanda del pronostico Holt-Winters por SKU repartida por la participacion del almacen en los ultimos 28 dias (capta picos regionales como EV03), mas llegadas en transito con el retraso esperado del proveedor",
+    "Opciones de quiebre: transferencia desde el almacen con mas cobertura sobrante (conserva al menos 30 dias), orden urgente con flete expres al proveedor mas rapido del surtido, o esperar; el flete se calcula con la misma regla de transporte del simulador",
+    "Retrasos de proveedor: la venta perdida durante los retrasos se mide en demanda_diaria; si los retrasos no causaron venta perdida (stock de seguridad suficiente) el motor no abre caso, aunque la puntualidad este baja",
+    "Opciones guardadas con recomendada (decision del motor) y elegida (decision humana); el historial de decisiones (usuario, fecha, opcion, motivo, ahorro real) se guarda en evidencia.historial",
+    "Fechas de deteccion y de compromiso del plan en tiempo real (las decisiones humanas ocurren hoy); la fecha de corte de los datos queda en la evidencia",
+    "El motor reemplaza solo las recomendaciones NUEVA; no duplica casos en curso ni los cerrados o descartados en los ultimos 7 dias",
+    "Pestanas del Centro de soluciones: Abiertas = NUEVA, En curso = EN_REVISION, Resueltas = ATENDIDA y DESCARTADA",
+    "Los endpoints de decision los llama el Servlet con el usuario y el rol de la sesion; el asistente de IA no tiene herramientas de escritura",
+    "Asistente: cada falla de proveedor se registra en la consola de FastAPI con el codigo y el tiempo, nunca con la llave; el texto de la respuesta se guarda en ASCII (CC-11) y en vivo conserva la ortografia",
+    "Asistente: el campo verificado indica si la respuesta uso herramientas; la vista muestra siempre el aviso de que la IA puede equivocarse y que los datos operativos son simulados"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -181,6 +193,11 @@
     "Z.AI respondio 429 por el limite de concurrencia del plan gratuito; el asistente serializara las llamadas y reintentara",
     "git diff mostro 'Binary files differ' en requirements.txt porque el archivo anterior estaba en UTF-16; regenerado en ASCII con pip freeze | Set-Content -Encoding ascii",
     "La terminal quedo atrapada en el paginador de git; se usa git --no-pager o se sale con q",
-    "ImportError 'DLL load failed while importing _cd_fast' al importar scikit-learn: el Control inteligente de aplicaciones de Windows bloqueo de forma intermitente sus bibliotecas compiladas; resuelto con Isolation Forest propio en numpy y retiro de scikit-learn (CC-18)"
+    "ImportError 'DLL load failed while importing _cd_fast' al importar scikit-learn: el Control inteligente de aplicaciones de Windows bloqueo de forma intermitente sus bibliotecas compiladas; resuelto con Isolation Forest propio en numpy y retiro de scikit-learn (CC-18)",
+    "psql no encontraba db/final/05_asistente.sql7: se escribio un 7 de mas al final del nombre; resuelto copiando el comando exacto",
+    "ModuleNotFoundError psycopg2 al correr el motor en una ventana nueva: el entorno virtual no estaba activo; resuelto con .\\backend\\.venv\\Scripts\\Activate.ps1",
+    "Al pegar en PowerShell el indicador '(.venv) PS C:\\...>' junto con el comando aparece 'Token PS inesperado'; se escribe solo el comando",
+    "Comentario duplicado en el umbral de puntualidad detectado en git diff --staged antes del commit; corregido y confirmado como commit normal (no --amend, porque el ultimo commit era el del asistente)",
+    "Z.AI GLM-4.7-Flash respondio 429 codigo 1305 (servicio saturado); el asistente reintento y uso el respaldo GLM-4.5-Flash como estaba disenado"
   ]
 }
