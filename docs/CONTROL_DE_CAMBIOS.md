@@ -36,6 +36,8 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 | CC-17 | 2026-10-08 | 2, 4, 6 (Módulo 6) | Adición | Asistente conversacional de IA de solo lectura |
 | CC-18 | 2026-10-08 | 4, 4.3, 7, CC-07, CC-08 | Precisión | Isolation Forest con implementación propia en numpy |
 | CC-19 | 2026-10-12 | 6 (Módulo 6), CC-07 | Precisión | Supuestos económicos del motor de recomendaciones |
+| CC-20 | 2026-10-13 | 5.1, 6 (Módulo 8), 9 (R7) | Adición y precisión | Usuarios, autenticación y roles |
+| CC-21 | 2026-10-13 | 4.1, 5.2, 5.3 | Precisión | Canal interno Tomcat-FastAPI |
 
 ---
 
@@ -239,3 +241,30 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 - **Justificación:** sin parámetros fijos, el costo total esperado no es reproducible ni defendible. Son valores de referencia estándar y explícitos, que se pueden ajustar con datos reales de un ERP sin cambiar el código del motor.
 - **Límite respetado:** la IA solo recomienda (Sección 2); las decisiones (aprobar, descartar con motivo, cerrar con ahorro real) las registra una persona desde el Centro de soluciones, con historial en la evidencia.
 - **Estado:** Aprobado e implementado (commits 39dd581 y 51ce12e).
+
+### CC-20. Usuarios, autenticación y roles
+- **Qué dice el PDR:** la Sección 5.1 ubica "Autenticación y Roles" en la capa de aplicación Java; el Módulo 8 (Sección 6) incluye la gestión de usuarios, roles y permisos; el riesgo R7 (Sección 9) exige cifrado de contraseñas y control de sesiones en Tomcat. El PDR no define la tabla de usuarios, el algoritmo de cifrado ni los roles.
+- **Cambio:**
+  - **Tabla `usuarios`** (`db/final/06_usuarios.sql`, aditiva e idempotente): usuario, nombre, rol, hash de la contraseña, activo, intentos fallidos, bloqueo temporal, último acceso y fecha de registro, con restricciones de formato y texto en ASCII (CC-11).
+  - **Contraseñas:** solo se guarda su hash PBKDF2-HMAC-SHA256 con 600,000 iteraciones (recomendación de OWASP), sal aleatoria de 16 bytes y normalización NFKC, con la biblioteca estándar de Python. Política: de 15 a 128 caracteres, sin reglas de composición y sin contener el nombre de usuario.
+  - **Verificación en FastAPI:** `POST /api/v1/auth/login` (`backend/app/auth_api.py`) es la única capa con acceso a la base; verificarla en Java exigiría el controlador JDBC como biblioteca externa. Responde con usuario, nombre y rol; con el mismo mensaje y el mismo tiempo de respuesta si el usuario no existe o la contraseña es incorrecta; y bloquea la cuenta 15 minutos al quinto intento fallido consecutivo (429 con `Retry-After`).
+  - **Sesión y control de acceso en Java (Tomcat):** filtro único de seguridad; cambio del identificador de sesión al entrar; sesión de 30 minutos solo por cookie, con `HttpOnly` y `SameSite=Strict`, sin persistir en disco; token CSRF por sesión en todo POST; política de seguridad de contenido sin scripts en línea; vistas JSP en `WEB-INF`, inaccesibles por URL; páginas de error sin trazas.
+  - **Roles por función:** EJECUTIVO decide sobre las recomendaciones (aprueba, descarta con motivo y cierra con ahorro real); OPERACIONES marca como hechos los pasos del plan; ADMIN administra usuarios. Los tres consultan el dashboard y usan el asistente.
+  - **Administración:** `python -m admin.crear_usuario` da de alta, restablece o desactiva usuarios con la contraseña oculta. Usuarios iniciales: `gerencia` (EJECUTIVO), `operaciones` (OPERACIONES) y `admin` (ADMIN); sus contraseñas no se guardan en el repositorio ni en la documentación.
+- **Justificación:** mitiga el riesgo R7 con prácticas reconocidas (OWASP) y separa responsabilidades: quien decide, quien ejecuta y quien administra. Mantiene el costo $0 y la regla de no agregar bibliotecas externas.
+- **Límite:** el entorno es HTTP local, por lo que la cookie de sesión no lleva el atributo `Secure`; un despliegue real requiere HTTPS y cookie `Secure`. La IA no obtiene permisos de escritura por este cambio (Sección 2).
+- **Verificación:** `python -m admin.verificar_seguridad` (21 de 21 pruebas en el equipo de desarrollo: hash, login correcto, contraseña incorrecta, usuario inexistente, bloqueo y respuesta sin hash). En Tomcat 10.1.60: redirección al login sin sesión, login correcto con nombre y rol, mensaje genérico con contraseña incorrecta y cierre de sesión.
+- **Estado:** Aprobado e implementado (commits 1a63606, a4c58d7, 8cb62e8, b41395f, 71e56a6, fc07180 y 228c352).
+
+### CC-21. Canal interno Tomcat-FastAPI
+- **Qué dice el PDR:** la Sección 5.3 define una API REST interna entre Java y FastAPI; la Sección 5.2 (paso 5) indica que el backend Java consulta los resultados por REST interno; la Sección 4.1 fija ambos servicios en la máquina local. El PDR no define cómo se protege ese canal, y el MVP permitía que el navegador llamara directo a FastAPI.
+- **Cambio:**
+  - **El navegador solo habla con Tomcat.** FastAPI escucha únicamente en 127.0.0.1, sin CORS, y toda ruta exige la cabecera `X-Token-Interno` (`backend/app/seguridad.py`). Sin token configurado responde 503 a todo (falla cerrada).
+  - **Token interno:** se guarda en `backend/.env` y en `setenv.bat` de Tomcat (`SC_TOKEN_INTERNO` y `SC_FASTAPI_URL=http://127.0.0.1:8000`), ambos fuera del repositorio. Se genera y rota con `python -m admin.token_interno`, que nunca lo muestra.
+  - **Cliente Java:** `FastApiCliente` usa el `HttpClient` del JDK, solo acepta rutas bajo `/api/v1/` y lee las respuestas con un lector JSON propio, sin bibliotecas externas.
+  - **Usuario y rol desde la sesión:** en las llamadas que escriben (decisiones, pasos del plan y mensajes al asistente), el Servlet arma el cuerpo con campos validados y toma usuario y rol de la sesión; el navegador nunca los envía.
+  - **Retiro de código del MVP en la rama `proyecto-final`:** los endpoints `/kpis/...` de `main.py`, cuyas fórmulas y umbrales contradicen CC-15, CC-16 y CC-07, y `dashboard.js`, que llamaba directo a FastAPI. Ambos se conservan en la etiqueta `mvp-v1.0`.
+  - **Corrección asociada:** el router de pronóstico se importaba pero no se registraba en `main.py`; `GET /api/v1/pronostico` respondía 404.
+- **Justificación:** cumple el patrón de la Sección 5.3 con un único punto de entrada protegido por sesión y rol, y evita que alguien en el equipo use FastAPI para leer datos o registrar decisiones a nombre de otro usuario.
+- **Verificación:** `python -m admin.verificar_seguridad`: todas las rutas exigen el token, sin token o con token incorrecto se rechaza con 401, con token responden los seis routers, sin cabecera `Access-Control-Allow-Origin` y sin rutas del MVP (21 de 21, 18 rutas).
+- **Estado:** Aprobado e implementado (commits 62ec3c7, a4c58d7, 5e92d9a, 9cfc459, e813407 y 254748d). Los Servlets de lectura con lista blanca de rutas se implementan con el Resumen ejecutivo (Sprint 3).
