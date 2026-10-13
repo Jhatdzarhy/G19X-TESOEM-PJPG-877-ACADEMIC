@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Funciones EL propias del dashboard. sc:esc escapa texto para HTML (OWASP, XSS). -->
+<taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-jsptaglibrary_3_0.xsd"
+        version="3.0">
+    <tlib-version>1.0</tlib-version>
+    <short-name>sc</short-name>
+    <uri>https://develop.com.mx/supplychain/funciones</uri>
+    <function>
+        <name>esc</name>
+        <function-class>mx.com.develop.supplychain.util.Html</function-class>
+        <function-signature>java.lang.String esc(java.lang.Object)</function-signature>
+    </function>
+</taglib>
