@@ -1,43 +1,80 @@
 <%--
-  Resumen ejecutivo - VISTA TEMPORAL del bloque de login (Sprint 3).
-  Comprueba sesion, rol y cierre de sesion. Se reemplaza por la vista completa
-  (Estado de la cadena, Que atender hoy, Demanda y pronostico; CC-10).
+  Resumen ejecutivo (diseno CC-10): Estado de la cadena, Que atender hoy y
+  Demanda y pronostico. La JSP solo pinta la estructura; js/resumen.js pide los
+  datos a /api/ (ApiLecturaServlet, CC-21) y los inserta con textContent.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="sc" uri="/WEB-INF/sc.tld" %>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="${sc:esc(usuario.csrf)}">
-    <title>Resumen ejecutivo · Supply Chain</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/app.css">
-</head>
-<body class="pagina-app">
-<aside class="menu">
-    <div class="menu-marca">
-        <span class="marca-titulo">SUPPLY CHAIN</span>
-        <span class="marca-sub">PluriOne · Dashboard ejecutivo</span>
+<%@ include file="/WEB-INF/jsp/fragmentos/cabecera.jspf" %>
+
+<header class="vista-encabezado">
+    <div>
+        <h1 class="titulo-vista">Resumen ejecutivo</h1>
+        <p class="vista-sub" id="resumen-periodo">Cargando datos…</p>
     </div>
-    <nav class="menu-enlaces" aria-label="Módulos">
-        <a class="activo" href="${pageContext.request.contextPath}/resumen" aria-current="page">Resumen ejecutivo</a>
-    </nav>
-    <div class="menu-usuario">
-        <span class="menu-usuario-nombre">${sc:esc(usuario.nombre)}</span>
-        <span class="menu-usuario-rol">Rol: ${sc:esc(usuario.rolVisible)}</span>
-        <form method="post" action="${pageContext.request.contextPath}/logout">
-            <input type="hidden" name="_csrf" value="${sc:esc(usuario.csrf)}">
-            <button type="submit" class="boton boton-secundario">Cerrar sesión</button>
-        </form>
+    <div class="vista-frescura">
+        <span class="etiqueta-origen">Datos simulados</span>
+        <span id="resumen-actualizado" class="texto-suave"></span>
     </div>
-</aside>
-<main class="contenido">
-    <h1 class="titulo-vista">Resumen ejecutivo</h1>
-    <p class="aviso aviso-info">Sesión iniciada como ${sc:esc(usuario.usuario)}. El Resumen ejecutivo se conecta en el siguiente bloque.</p>
-</main>
-</body>
-</html>
+</header>
+
+<p class="aviso aviso-error" id="resumen-error" role="alert" hidden></p>
+
+<section class="tarjeta" aria-labelledby="titulo-estado">
+    <div class="tarjeta-encabezado">
+        <div>
+            <h2 id="titulo-estado" class="tarjeta-titulo">Estado de la cadena</h2>
+            <p class="tarjeta-sub">Indicador principal de cada estación contra su meta · últimos 30 días</p>
+        </div>
+        <div class="leyenda" aria-hidden="true">
+            <span class="leyenda-item"><span class="leyenda-linea"></span>Real</span>
+            <span class="leyenda-item"><span class="leyenda-linea leyenda-meta"></span>Meta</span>
+        </div>
+    </div>
+    <div class="estaciones" id="estaciones" aria-live="polite"></div>
+</section>
+
+<div class="row g-3 mt-0">
+    <div class="col-12 col-xl-5">
+        <section class="tarjeta h-100" aria-labelledby="titulo-atender">
+            <div class="tarjeta-encabezado">
+                <div>
+                    <h2 id="titulo-atender" class="tarjeta-titulo">Qué atender hoy</h2>
+                    <p class="tarjeta-sub">Prioridad por impacto esperado en MXN · recomendaciones de la IA</p>
+                </div>
+                <span class="contador" id="atender-contador"></span>
+            </div>
+            <ol class="atender" id="atender"></ol>
+            <p class="texto-suave" id="atender-vacio" hidden>No hay recomendaciones abiertas.</p>
+        </section>
+    </div>
+    <div class="col-12 col-xl-7">
+        <section class="tarjeta h-100" aria-labelledby="titulo-demanda">
+            <div class="tarjeta-encabezado">
+                <div>
+                    <h2 id="titulo-demanda" class="tarjeta-titulo">Demanda y pronóstico</h2>
+                    <p class="tarjeta-sub" id="demanda-sub">Unidades diarias, todos los SKU</p>
+                </div>
+                <dl class="cifras">
+                    <div><dt>Próximos 14 días</dt><dd id="demanda-total">–</dd></div>
+                    <div><dt>MAPE</dt><dd id="demanda-mape">–</dd></div>
+                </dl>
+            </div>
+            <div class="grafica-demanda">
+                <canvas id="grafica-demanda" role="img" aria-label="Demanda real de los últimos 28 días y pronóstico de 14 días con intervalo de 90 %"></canvas>
+            </div>
+            <div class="leyenda leyenda-pie">
+                <span class="leyenda-item"><span class="leyenda-linea"></span>Real</span>
+                <span class="leyenda-item"><span class="leyenda-linea leyenda-pronostico"></span>Pronóstico</span>
+                <span class="leyenda-item"><span class="leyenda-banda"></span>Intervalo 90 %</span>
+                <span class="leyenda-nota" id="demanda-variacion"></span>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"
+        integrity="sha256-SERKgtTty1vsDxll+qzd4Y2cF9swY9BCq62i9wXJ9Uo=" crossorigin="anonymous"></script>
+<script src="${pageContext.request.contextPath}/js/comun.js?v=${sc:esc(version)}"></script>
+<script src="${pageContext.request.contextPath}/js/resumen.js?v=${sc:esc(version)}"></script>
+
+<%@ include file="/WEB-INF/jsp/fragmentos/pie.jspf" %>

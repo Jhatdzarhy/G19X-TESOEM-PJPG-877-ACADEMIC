@@ -188,3 +188,179 @@ body {
     .menu-usuario { margin-top: 12px; }
     .contenido { padding: 20px 16px; }
 }
+
+/* ------------------------------------------------------------ vistas (CC-10) */
+.menu-pendiente {
+    color: #64748b;
+    padding: 9px 10px;
+    border-radius: 8px;
+    cursor: not-allowed;
+}
+
+.texto-suave { color: var(--texto-suave); font-size: 13px; }
+
+.vista-encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.vista-encabezado .titulo-vista { margin-bottom: 2px; }
+.vista-sub { margin: 0; color: var(--texto-suave); }
+.vista-frescura { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.etiqueta-origen {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #efe9fb;
+    color: #5b3fa3;
+}
+
+.tarjeta {
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+}
+.tarjeta-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+.tarjeta-titulo {
+    font-family: var(--fuente-titulo);
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin: 0;
+}
+.tarjeta-sub { margin: 2px 0 0; color: var(--texto-suave); font-size: 13px; }
+
+/* Leyendas: la linea punteada es la meta; el texto nunca usa el color del dato */
+.leyenda { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--texto-suave); }
+.leyenda-pie { margin-top: 10px; align-items: center; }
+.leyenda-item { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.leyenda-linea { width: 22px; border-top: 2px solid var(--dato); }
+.leyenda-meta { border-top: 2px dashed #8a94a6; }
+.leyenda-pronostico { border-top: 2px dashed var(--dato); }
+.leyenda-banda { width: 22px; height: 10px; background: rgba(26, 86, 168, 0.12); border-radius: 2px; }
+.leyenda-nota { margin-left: auto; }
+
+/* Insignias de estado: icono + texto + color (nunca solo color) */
+.insignia {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+.insignia-icono { font-size: 11px; line-height: 1; }
+.estado-ok { background: var(--estado-ok-fondo); color: var(--estado-ok); }
+.estado-atencion { background: var(--estado-atencion-fondo); color: var(--estado-atencion); }
+.estado-critico { background: var(--estado-critico-fondo); color: var(--estado-critico); }
+.estado-neutro { background: #eef1f5; color: var(--texto-suave); }
+
+/* Estado de la cadena: cinco estaciones */
+.estaciones {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+}
+.estacion {
+    border: 1px solid var(--borde);
+    border-top-width: 4px;
+    border-radius: var(--radio);
+    padding: 12px 14px;
+    min-width: 0;
+    background: var(--superficie);
+}
+.estacion.estacion-estado-ok { border-top-color: var(--estado-ok); }
+.estacion.estacion-estado-atencion { border-top-color: var(--estado-atencion); }
+.estacion.estacion-estado-critico { border-top-color: var(--estado-critico); }
+.estacion.estacion-estado-neutro { border-top-color: #cbd2dc; }
+.estacion-cabeza { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
+.estacion-nombre {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0;
+}
+.estacion-valor { margin: 8px 0 0; line-height: 1; }
+.estacion-numero { font-family: var(--fuente-titulo); font-weight: 700; font-size: 36px; }
+.estacion-unidad { font-family: var(--fuente-titulo); font-weight: 600; font-size: 20px; margin-left: 2px; }
+.estacion-meta { margin: 4px 0 6px; font-size: 13px; color: var(--texto-suave); }
+.estacion-detalle { margin: 4px 0 0; font-size: 12.5px; color: var(--texto-suave); }
+
+.minigrafica { display: block; width: 100%; height: 48px; }
+.minigrafica-real { fill: none; stroke: var(--dato); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.minigrafica-meta { stroke: #8a94a6; stroke-width: 1.5; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+.minigrafica-punto { fill: var(--dato); }
+
+/* Que atender hoy */
+.contador {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #eef1f5;
+    color: var(--texto-suave);
+    white-space: nowrap;
+}
+.atender { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.atender-item { border: 1px solid var(--borde); border-left-width: 4px; border-radius: 8px; }
+.atender-item.atender-estado-critico { border-left-color: var(--estado-critico); }
+.atender-item.atender-estado-atencion { border-left-color: var(--estado-atencion); }
+.atender-enlace {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 10px;
+    align-items: start;
+    padding: 10px 12px;
+    color: inherit;
+    text-decoration: none;
+}
+.atender-enlace:hover { background: #f6f8fb; }
+.atender-rango { font-family: var(--fuente-titulo); font-weight: 700; font-size: 22px; color: var(--texto-suave); }
+.atender-texto { display: grid; gap: 2px; min-width: 0; }
+.atender-titulo { font-weight: 600; }
+.atender-sub { font-size: 12.5px; color: var(--texto-suave); }
+.atender-impacto { display: grid; justify-items: end; gap: 4px; }
+.atender-monto { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Demanda y pronostico */
+.cifras { display: flex; gap: 20px; margin: 0; }
+.cifras div { text-align: right; }
+.cifras dt { font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--texto-suave); }
+.cifras dd { margin: 0; font-family: var(--fuente-titulo); font-weight: 700; font-size: 26px; }
+.grafica-demanda { position: relative; height: 260px; }
+
+.pie {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--borde);
+    font-size: 12px;
+    color: var(--texto-suave);
+}
+.pie a { color: var(--texto-suave); }
+
+@media (max-width: 1280px) {
+    .estaciones { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+    .estaciones { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tarjeta-encabezado { flex-direction: column; }
+    .cifras div { text-align: left; }
+    .leyenda-nota { margin-left: 0; }
+}
