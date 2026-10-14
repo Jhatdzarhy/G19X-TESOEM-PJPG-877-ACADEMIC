@@ -63,7 +63,11 @@
       "frontend/build.ps1: compila con el javac del JDK 21 de JAVA_HOME (--release 21, -Xlint:all) contra servlet-api.jar de Tomcat y despliega con robocopy /MIR en webapps/supplychain; 8 clases sin advertencias (commit ad066b5)",
       "Seguridad web (CC-20): filtro unico con sesion obligatoria, token CSRF por sesion en todo POST, CSP sin scripts en linea, X-Frame-Options DENY, nosniff y no-store; sesion de 30 minutos con cookie HttpOnly y SameSite=Strict, solo por cookie y sin persistir en disco; cambio de identificador de sesion al entrar; JSP en WEB-INF inaccesibles por URL; paginas de error sin trazas",
       "Login, logout y vista temporal del Resumen verificados en el Tomcat real (localhost:8080/supplychain): redireccion al login sin sesion, login correcto con nombre y rol, mensaje generico con contrasena incorrecta y cierre de sesion",
-      "dashboard.js del MVP retirado de proyecto-final porque llamaba directo a FastAPI (commit e813407); frontend/build/ excluido en .gitignore (commit 147c648)"
+      "dashboard.js del MVP retirado de proyecto-final porque llamaba directo a FastAPI (commit e813407); frontend/build/ excluido en .gitignore (commit 147c648)",
+      "Resumen ejecutivo verificado en el Tomcat real: Estado de la cadena con 5 estaciones (minigrafica SVG de 30 dias, meta punteada, estado con icono y texto), Que atender hoy con 4 prioridades por impacto en MXN enlazadas al Centro de soluciones, y Demanda y pronostico con Chart.js 4.5.1 (28 dias reales, 14 de pronostico e intervalo de 90%); actualizacion cada 60 segundos con la pestana visible",
+      "ApiLecturaServlet (/api/*): solo GET y solo 13 rutas en lista blanca; parametros reconstruidos con validacion (producto_id entero, vista abiertas, en_curso o resueltas); usuario de la sesion en las conversaciones del asistente; 26 de 26 pruebas en la verificacion previa",
+      "Plantilla JSP comun (fragmentos/cabecera.jspf y pie.jspf) con menu de los 8 modulos del PDR, Administracion solo para ADMIN y pie con atribuciones de Open-Meteo, ExchangeRate-API, Banxico SIE y DummyJSON",
+      "Bootstrap 5.3.8 y Chart.js 4.5.1 fijados en la URL de jsDelivr con hash de integridad SHA-256 (PDR seccion 4.3)"
     ],
     "en_progreso": [
       "Sprint 3: Resumen ejecutivo (Estado de la cadena, Que atender hoy, Demanda y pronostico) con Servlets de lectura en lista blanca, plantilla JSP comun y Chart.js"
@@ -78,7 +82,6 @@
       "Viernes 16: entrega y cierre (Fases 9 y 10)",
       "Vista del asistente: escapar la respuesta (XSS) antes de convertir solo negritas y listas de Markdown; mostrar siempre el campo aviso, el modelo que respondio y la fecha de corte",
       "Opcional: instalar Ollama con un modelo de 7 a 8 mil millones de parametros como respaldo local del asistente",
-      "Fijar la version exacta de Chart.js y Bootstrap 5.3.8 en la URL del CDN con hash de integridad SRI (PDR seccion 4.3)",
       "README.md en la rama proyecto-final y backend/.env.example sin contrasenas ni llaves",
       "Push inicial a GitHub (ramas master y proyecto-final, etiqueta mvp-v1.0) cuando el proyecto final este mas avanzado, previa verificacion de que no hay .env, contrasenas, llaves ni documentos no publicables en el historial"
     ]
@@ -206,7 +209,11 @@
     "Filtro unico de seguridad (SeguridadFiltro) declarado en web.xml para fijar su orden; los Servlets se declaran con @WebServlet; los roles los revisa cada Servlet porque dependen de la accion",
     "CSP: default-src self; scripts y estilos solo propios y de cdn.jsdelivr.net (Bootstrap y Chart.js); fuentes de Google Fonts; sin scripts ni estilos en linea; frame-ancestors none",
     "La cookie de sesion no lleva Secure porque el entorno es HTTP local; en un despliegue real se requiere HTTPS y cookie Secure (registrado como limite en CC-20)",
-    "Los textos de la interfaz en Java y JSP se escriben con acentos directamente en UTF-8 (javac -encoding UTF-8 y pageEncoding UTF-8); no se usan secuencias de escape unicode en el codigo fuente"
+    "Los textos de la interfaz en Java y JSP se escriben con acentos directamente en UTF-8 (javac -encoding UTF-8 y pageEncoding UTF-8); no se usan secuencias de escape unicode en el codigo fuente",
+    "Los datos de las vistas se insertan solo con textContent y nodos creados en JavaScript; nunca innerHTML (prevencion de XSS)",
+    "La interfaz restaura los acentos de los textos que la base guarda en ASCII (CC-11) con un diccionario de palabras en js/comun.js",
+    "Minigraficas de las estaciones en SVG propio (sin Chart.js) para que las 5 tarjetas carguen rapido; Chart.js solo en la grafica de demanda",
+    "La version anti-cache de JS y CSS cambia en cada despliegue porque Tomcat recarga PaginaServlet"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
