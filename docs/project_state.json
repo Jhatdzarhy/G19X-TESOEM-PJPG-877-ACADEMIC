@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
   "fecha_actualizacion": "2026-10-13",
-  "fase_actual": "Proyecto final - Sprint 3 (capa web Java): login, sesion, roles y canal interno Tomcat-FastAPI listos y verificados en el Tomcat real (CC-20, CC-21); siguiente: Resumen ejecutivo con Servlets de lectura, luego Centro de soluciones y vista del asistente de IA",
+  "fase_actual": "Proyecto final - Sprint 3 cerrado (capa web Java): login y roles, Resumen ejecutivo, Centro de soluciones con decisiones humanas y Asistente de IA verificados en el Tomcat real con Z.AI; siguiente (miercoles 14): simulador en vivo, Server-Sent Events, vistas de los 8 modulos y franja en vivo; en la tarde QA",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -67,38 +67,39 @@
       "Resumen ejecutivo verificado en el Tomcat real: Estado de la cadena con 5 estaciones (minigrafica SVG de 30 dias, meta punteada, estado con icono y texto), Que atender hoy con 4 prioridades por impacto en MXN enlazadas al Centro de soluciones, y Demanda y pronostico con Chart.js 4.5.1 (28 dias reales, 14 de pronostico e intervalo de 90%); actualizacion cada 60 segundos con la pestana visible",
       "ApiLecturaServlet (/api/*): solo GET y solo 13 rutas en lista blanca; parametros reconstruidos con validacion (producto_id entero, vista abiertas, en_curso o resueltas); usuario de la sesion en las conversaciones del asistente; 26 de 26 pruebas en la verificacion previa",
       "Plantilla JSP comun (fragmentos/cabecera.jspf y pie.jspf) con menu de los 8 modulos del PDR, Administracion solo para ADMIN y pie con atribuciones de Open-Meteo, ExchangeRate-API, Banxico SIE y DummyJSON",
-      "Bootstrap 5.3.8 y Chart.js 4.5.1 fijados en la URL de jsDelivr con hash de integridad SHA-256 (PDR seccion 4.3)"
+      "Bootstrap 5.3.8 y Chart.js 4.5.1 fijados en la URL de jsDelivr con hash de integridad SHA-256 (PDR seccion 4.3)",
+      "Centro de soluciones (soluciones.jsp y soluciones.js): indicadores (abiertas, criticas, impacto en juego, ahorro real contra proyectado, tiempo de decision), pestanas Abiertas, En curso y Resueltas, evidencia en grafica (stock proyectado contra punto de reorden o precio base contra actual con eje en cero) y datos con formato, opciones comparadas por costo total esperado con lo que evitan o cuestan contra no actuar, razones, confianza, supuestos de CC-19, plan de accion, resultado e historial (40 de 40 pruebas en Chromium)",
+      "DecisionServlet (/api/decisiones/*): APROBAR con opcion, DESCARTAR con motivo de 5 a 300 caracteres en ASCII y CERRAR con ahorro real, solo rol EJECUTIVO; paso del plan hecho para EJECUTIVO y OPERACIONES; usuario de la sesion, token CSRF y mensajes de rechazo de FastAPI visibles",
+      "Ciclo completo verificado en la base real: recomendacion 12 (Baseball Ball) aprobada, paso 1 hecho y cerrada con ahorro real de 8,000 MXN contra 8,868.70 proyectado (90.2%); la recomendacion 10 aprobada por error se regreso a NUEVA con una transaccion SQL (estado, opcion elegida, historial y paso del plan)",
+      "AsistenteServlet (/api/asistente/mensajes): mensaje de 1 a 1000 caracteres, conversacion_id entero, usuario y rol de la sesion (los enviados por el navegador se ignoran), espera de 120 segundos y mensajes claros ante limite por minuto, conversacion ajena o falla de los modelos",
+      "Vista del Asistente de IA (asistente.jsp y asistente.js) dentro del modulo de IA con navegacion interna (ia-nav.jspf): preguntas sugeridas, historial de conversaciones, respuesta construida con nodos de texto (negritas, listas, tablas y separadores; nunca innerHTML), y en cada respuesta verificado, modelo, fecha de corte, consultas al motor y aviso (32 de 32 pruebas, incluidas etiquetas img y script mostradas como texto)",
+      "Asistente verificado con Z.AI real en el Tomcat: GLM-4.7-Flash respondio con las cifras vigentes de la base (3 abiertas, 342,853.84 MXN en juego, ahorro real 8,000 MXN, cumplimiento 90.2%, tiempo de decision 0.9 dias); GLM-4.5-Flash respondio en la conversacion anterior",
+      "Configuracion local de VS Code (.vscode/settings.json con frontend/src y servlet-api.jar de Tomcat) excluida del repositorio"
     ],
     "en_progreso": [
-      "Sprint 3: Resumen ejecutivo (Estado de la cadena, Que atender hoy, Demanda y pronostico) con Servlets de lectura en lista blanca, plantilla JSP comun y Chart.js"
+      "Ninguno: Sprint 3 cerrado; el miercoles 14 inicia el simulador en vivo"
     ],
     "pendiente": [
-      "Martes 13: Servlet de lectura con lista blanca de rutas de FastAPI, plantilla JSP comun (cabecera, menu y pie), vista JSP del Resumen ejecutivo, Centro de soluciones (pestanas, evidencia, opciones, plan y decisiones humanas con control de rol) y vista del asistente de IA",
-      "Martes 13: Servlets POST de decision (rol EJECUTIVO), paso del plan hecho (EJECUTIVO y OPERACIONES) y mensaje al asistente, con usuario y rol tomados de la sesion",
-      "Revisar accion_hecha en backend/app/recomendaciones_api.py: no registra que usuario marco el paso del plan; agregar el usuario de la sesion para la trazabilidad",
-      "Miercoles 14 en la manana: simulador en vivo (Sprint 2, bloque E, CC-09), Server-Sent Events, vistas de los 8 modulos sobre la plantilla JSP comun y franja en vivo; congelar funcionalidad",
-      "Miercoles 14 en la tarde: QA (Fase 6), incluyendo python -m admin.verificar_seguridad y las pruebas de login en el navegador",
+            "Miercoles 14 en la manana: simulador en vivo (Sprint 2, bloque E, CC-09), Servlet asincrono con Server-Sent Events, vistas de los 8 modulos sobre la plantilla JSP comun (enlaces de las estaciones del Resumen a su modulo) y franja con el ultimo evento en vivo; congelar funcionalidad",
+      "Miercoles 14 en la tarde: QA (Fase 6): python -m admin.verificar_seguridad, pruebas de login, roles (OPERACIONES sin decisiones), Centro de soluciones y asistente en el navegador, y reporte de evidencia",
+      "Revisar accion_hecha en backend/app/recomendaciones_api.py: no registra que usuario marco el paso del plan; agregar el usuario de la sesion desde DecisionServlet para la trazabilidad",
+      "Estado del asistente: /api/v1/asistente/estado reporta Ollama local como configurado aunque no esta instalado; reportarlo como no disponible si no responde, o instalar Ollama (opcional)",
       "Jueves 15: manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR (Fases 7 y 8)",
       "Viernes 16: entrega y cierre (Fases 9 y 10)",
-      "Vista del asistente: escapar la respuesta (XSS) antes de convertir solo negritas y listas de Markdown; mostrar siempre el campo aviso, el modelo que respondio y la fecha de corte",
       "Opcional: instalar Ollama con un modelo de 7 a 8 mil millones de parametros como respaldo local del asistente",
       "README.md en la rama proyecto-final y backend/.env.example sin contrasenas ni llaves",
-      "Push inicial a GitHub (ramas master y proyecto-final, etiqueta mvp-v1.0) cuando el proyecto final este mas avanzado, previa verificacion de que no hay .env, contrasenas, llaves ni documentos no publicables en el historial"
-    ]
+      "Push inicial a GitHub (ramas master y proyecto-final, etiqueta mvp-v1.0) cuando el proyecto final este mas avanzado, previa verificacion de que no hay .env, contrasenas, llaves ni documentos no publicables en el historial"    ]
   },
   "archivos_modificados_recientemente": [
-    "db/final/06_usuarios.sql",
-    "backend/app/seguridad.py",
-    "backend/app/auth_api.py",
-    "backend/app/main.py",
-    "backend/admin/token_interno.py",
-    "backend/admin/crear_usuario.py",
-    "backend/admin/verificar_seguridad.py",
-    "frontend/build.ps1",
-    "frontend/src/mx/com/develop/supplychain",
-    "frontend/webapp/WEB-INF/web.xml",
-    "frontend/webapp/META-INF/context.xml",
-    "frontend/webapp/WEB-INF/jsp",
+    "frontend/src/mx/com/develop/supplychain/web/ApiLecturaServlet.java",
+    "frontend/src/mx/com/develop/supplychain/web/DecisionServlet.java",
+    "frontend/src/mx/com/develop/supplychain/web/AsistenteServlet.java",
+    "frontend/src/mx/com/develop/supplychain/web/PaginaServlet.java",
+    "frontend/webapp/WEB-INF/jsp/fragmentos",
+    "frontend/webapp/WEB-INF/jsp/resumen.jsp",
+    "frontend/webapp/WEB-INF/jsp/soluciones.jsp",
+    "frontend/webapp/WEB-INF/jsp/asistente.jsp",
+    "frontend/webapp/js",
     "frontend/webapp/css/app.css",
     "docs/CONTROL_DE_CAMBIOS.md",
     "docs/project_state.json"
@@ -212,8 +213,15 @@
     "Los textos de la interfaz en Java y JSP se escriben con acentos directamente en UTF-8 (javac -encoding UTF-8 y pageEncoding UTF-8); no se usan secuencias de escape unicode en el codigo fuente",
     "Los datos de las vistas se insertan solo con textContent y nodos creados en JavaScript; nunca innerHTML (prevencion de XSS)",
     "La interfaz restaura los acentos de los textos que la base guarda en ASCII (CC-11) con un diccionario de palabras en js/comun.js",
-    "Minigraficas de las estaciones en SVG propio (sin Chart.js) para que las 5 tarjetas carguen rapido; Chart.js solo en la grafica de demanda",
-    "La version anti-cache de JS y CSS cambia en cada despliegue porque Tomcat recarga PaginaServlet"
+    "Minigraficas de las estaciones en SVG propio (sin Chart.js) para que las 5 tarjetas carguen rapido; Chart.js solo en las graficas de demanda y evidencia",
+    "La version anti-cache de JS y CSS cambia en cada despliegue porque Tomcat recarga PaginaServlet",
+    "Las graficas de barras empiezan en cero (la de precio del iPhone exageraba 10 veces una alza de 4.2%); la diferencia se explica en la nota de la grafica",
+    "Rutas de escritura separadas de la lectura: /api/decisiones/* (DecisionServlet) y /api/asistente/mensajes (AsistenteServlet) son mas especificas que /api/* (ApiLecturaServlet, solo GET); un GET a una ruta de escritura responde 405",
+    "El rol se valida en cada Servlet de escritura; data-rol en la pagina solo ajusta la interfaz (OPERACIONES ve el Centro de soluciones sin botones de decision y recibe 403 si llama directo)",
+    "Elegir una opcion no guarda nada; solo Aprobar registra la decision; el motivo de descarte se guarda en ASCII (CC-11)",
+    "Respuestas del asistente: se reconocen negritas, listas, tablas y separadores construyendo nodos de texto; mas estricto que escapar y convertir, y cualquier etiqueta HTML del modelo se muestra literal",
+    "Menu lateral fijo (position sticky, alto de la ventana); en pantallas angostas vuelve a quedar arriba del contenido",
+    "Los archivos .jsp y .jspf se entregan como texto en la conversacion porque el visor de adjuntos no los muestra; despues de pegar se verifica el tamano en bytes"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -255,6 +263,14 @@
     "ModuleNotFoundError admin al correr python -m admin.verificar_seguridad desde la raiz; los scripts de backend se ejecutan desde la carpeta backend",
     "PropertyNotFoundException 'Property [csrf] not found on type UsuarioSesion' en la prueba previa: EL de Tomcat 10.1 no lee los componentes de un record; UsuarioSesion se reescribio como clase con getters antes de entregarse",
     "shutdown.bat mostro 'Could not contact [localhost:8005]' porque Tomcat no estaba corriendo; es esperado y no requiere accion",
-    "git rm de dashboard.js fallo con pathspec porque la eliminacion ya estaba preparada; confirmado con git status --short (D) y se hizo el commit directamente"
+    "git rm de dashboard.js fallo con pathspec porque la eliminacion ya estaba preparada; confirmado con git status --short (D) y se hizo el commit directamente",
+        "foreach (...) { } | Out-File da 'No se permiten elementos de canalizacion vacios' en PowerShell 5.1; se usa ForEach-Object",
+    "VS Code marcaba 112 errores en los Servlets porque no conocia frontend/src ni servlet-api.jar; resuelto con .vscode/settings.json y Java: Clean Java Language Server Workspace",
+    "Varios archivos quedaron vacios o incompletos al pegar (resumen.jsp, soluciones.jsp, AsistenteServlet.java, asistente.js); detectado comparando el tamano en bytes y corregido pegando con el boton de copiar del bloque",
+    "La grafica de precio empezaba en 200 USD y exageraba la diferencia; corregido con beginAtZero true",
+    "Una opcion mas cara que no actuar decia 'evita $-8,155'; ahora dice 'cuesta $8,155 mas que no actuar'",
+    "La recomendacion 10 se aprobo por error; se revirtio con una transaccion SQL limitada a recomendacion_id 10 en EN_REVISION",
+    "La barra lateral se desplazaba con el contenido; resuelto con position sticky",
+    "La tabla del asistente se seguia viendo como texto porque Tomcat tenia el asistente.js anterior (13,198 bytes); faltaba ejecutar build.ps1 despues de pegar"
   ]
 }
