@@ -35,9 +35,8 @@
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Logística y transporte</span>
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Almacenes</span>
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Proveedores</span>
-        <a class="${vista == 'soluciones' ? 'activo' : ''}" href="${pageContext.request.contextPath}/soluciones"
-           ${vista == 'soluciones' ? 'aria-current="page"' : ''}>Inteligencia artificial</a>
-        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Alertas ejecutivas</span>
+        <a class="${vista == 'soluciones' || vista == 'asistente' ? 'activo' : ''}" href="${pageContext.request.contextPath}/soluciones"
+           ${vista == 'soluciones' || vista == 'asistente' ? 'aria-current="page"' : ''}>Inteligencia artificial</a>        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Alertas ejecutivas</span>
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente" ${usuario.rol == 'ADMIN' ? '' : 'hidden'}>Administración</span>
     </nav>
     <div class="menu-usuario">

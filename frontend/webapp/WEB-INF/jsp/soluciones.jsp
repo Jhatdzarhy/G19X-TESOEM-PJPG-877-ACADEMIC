@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/fragmentos/cabecera.jspf" %>
+<%@ include file="/WEB-INF/jsp/fragmentos/ia-nav.jspf" %>
 
 <header class="vista-encabezado">
     <div>

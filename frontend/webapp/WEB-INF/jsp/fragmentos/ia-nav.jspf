@@ -1,0 +1,11 @@
+<%--
+  Navegacion interna del modulo de Inteligencia artificial (Modulo 6; CC-10 y CC-17):
+  Centro de soluciones y Asistente de IA. Requiere en request: vista.
+--%>
+<%@ page pageEncoding="UTF-8" %>
+<nav class="ia-nav" aria-label="Inteligencia artificial">
+    <a href="${pageContext.request.contextPath}/soluciones" class="${vista == 'soluciones' ? 'activo' : ''}"
+       ${vista == 'soluciones' ? 'aria-current="page"' : ''}>Centro de soluciones</a>
+    <a href="${pageContext.request.contextPath}/asistente" class="${vista == 'asistente' ? 'activo' : ''}"
+       ${vista == 'asistente' ? 'aria-current="page"' : ''}>Asistente de IA</a>
+</nav>
