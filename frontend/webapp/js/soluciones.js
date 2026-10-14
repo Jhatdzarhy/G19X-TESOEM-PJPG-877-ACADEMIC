@@ -388,9 +388,11 @@
             if (o.riesgo_residual !== null && o.riesgo_residual !== undefined) {
                 cifras.appendChild(document.createTextNode(' · riesgo residual ' + SC.numero(o.riesgo_residual * 100, 0) + ' %'));
             }
-            if (sinAccion && o.clave !== 'SIN_ACCION') {
-                cifras.appendChild(document.createTextNode(' · evita ' +
-                    SC.pesos(sinAccion.costo_total_esperado_mxn - o.costo_total_esperado_mxn) + ' contra no actuar'));
+                        if (sinAccion && o.clave !== 'SIN_ACCION') {
+                var diferencia = sinAccion.costo_total_esperado_mxn - o.costo_total_esperado_mxn;
+                cifras.appendChild(document.createTextNode(diferencia >= 0
+                    ? ' · evita ' + SC.pesos(diferencia) + ' contra no actuar'
+                    : ' · cuesta ' + SC.pesos(-diferencia) + ' más que no actuar'));
             }
             li.appendChild(cifras);
             ul.appendChild(li);
