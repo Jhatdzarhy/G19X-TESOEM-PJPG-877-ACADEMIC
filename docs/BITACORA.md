@@ -4,6 +4,18 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-13 23:34 | c303406 | docs(estado): cerrar Sprint 3 con Resumen ejecutivo, Centro de soluciones y asistente verificados |
+| 2026-10-13 23:21 | dd1fc0f | fix(frontend): mostrar cuanto cuesta de mas una opcion contra no actuar en lugar de un ahorro negativo |
+| 2026-10-13 23:21 | 8fe366f | feat(frontend): vista de chat del asistente con historial, respuesta construida con nodos de texto y modelo, fecha de corte y aviso visibles (CC-17) |
+| 2026-10-13 23:21 | 4558e78 | feat(frontend): Servlet del asistente de IA con usuario y rol de la sesion y validacion del mensaje (CC-17, CC-21) |
+| 2026-10-13 22:36 | dde2f41 | feat(frontend): Centro de soluciones con pestanas, evidencia, opciones por costo total esperado, plan y decisiones (CC-10, CC-19); menu lateral fijo |
+| 2026-10-13 22:36 | 05e98ee | feat(frontend): Servlet de decisiones humanas con rol, CSRF y usuario de la sesion (CC-20, CC-21) |
+| 2026-10-13 21:27 | ed0a0cd | docs(estado): registrar el Resumen ejecutivo y el Servlet de lectura del Sprint 3 |
+| 2026-10-13 21:24 | 03318f7 | feat(frontend): Resumen ejecutivo con Estado de la cadena, Que atender hoy y Demanda y pronostico (CC-10) |
+| 2026-10-13 21:24 | 7239d1e | feat(frontend): plantilla JSP comun con menu de los 8 modulos, pie con atribuciones y version anti-cache |
+| 2026-10-13 21:23 | 4a2be78 | feat(frontend): Servlet de lectura con lista blanca de rutas y parametros validados hacia FastAPI (CC-21) |
+| 2026-10-13 01:56 | 980b88b | chore: excluir la configuracion local de VS Code del repositorio |
+| 2026-10-13 01:52 | f593136 | docs(bitacora): regenerar desde git log al cierre del bloque de login del 13 de octubre |
 | 2026-10-13 01:52 | 64f44dc | docs(estado): actualizar project_state con login, roles, canal interno y capa web Java del Sprint 3 |
 | 2026-10-13 01:51 | bc84bc9 | docs(control-cambios): registrar CC-20 usuarios, autenticacion y roles y CC-21 canal interno Tomcat-FastAPI |
 | 2026-10-13 01:41 | a047974 | feat(frontend): vista temporal del Resumen ejecutivo protegida por sesion |
