@@ -1,0 +1,14 @@
+<%--
+  Pie comun: fuentes de datos y atribuciones de las APIs (diseno CC-10).
+  Cierra el contenido abierto en cabecera.jspf.
+--%>
+<%@ page pageEncoding="UTF-8" %>
+    <footer class="pie">
+        <p>Datos operativos simulados; no provienen de un ERP real.
+           Clima: <a href="https://open-meteo.com/" rel="noopener noreferrer" target="_blank">Open-Meteo.com</a> (CC BY 4.0).
+           Tipo de cambio: Banxico SIE (FIX) y <a href="https://www.exchangerate-api.com" rel="noopener noreferrer" target="_blank">Rates By Exchange Rate API</a>.
+           Catálogo: <a href="https://dummyjson.com/" rel="noopener noreferrer" target="_blank">DummyJSON</a>.</p>
+    </footer>
+</main>
+</body>
+</html>

@@ -19,19 +19,24 @@ import java.util.Map;
 @WebServlet({"/resumen"})
 public class PaginaServlet extends HttpServlet {
 
-    /** Ruta publica de la vista y su JSP. Se agregan las demas vistas en cada bloque. */
-    private static final Map<String, String> VISTAS = Map.of(
-            "/resumen", "resumen");
+    /** Ruta publica de la vista: nombre de la JSP y titulo de la pagina. Se agregan vistas en cada bloque. */
+    private static final Map<String, String[]> VISTAS = Map.of(
+            "/resumen", new String[] {"resumen", "Resumen ejecutivo"});
+
+    /** Cambia en cada despliegue (Tomcat recarga la clase) para que el navegador no use JS o CSS viejos. */
+    private static final String VERSION = Long.toString(System.currentTimeMillis(), 36);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        String vista = VISTAS.get(req.getServletPath());
+        String[] vista = VISTAS.get(req.getServletPath());
         if (vista == null) {
             res.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        req.setAttribute("vista", vista);
+        req.setAttribute("vista", vista[0]);
+        req.setAttribute("titulo", vista[1]);
+        req.setAttribute("version", VERSION);
         req.setAttribute("usuario", req.getSession().getAttribute(UsuarioSesion.ATRIBUTO));
-        req.getRequestDispatcher("/WEB-INF/jsp/" + vista + ".jsp").forward(req, res);
+        req.getRequestDispatcher("/WEB-INF/jsp/" + vista[0] + ".jsp").forward(req, res);
     }
 }
