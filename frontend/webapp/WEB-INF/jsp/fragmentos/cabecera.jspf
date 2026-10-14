@@ -2,6 +2,7 @@
   Cabecera comun de las vistas del dashboard (diseno CC-10).
   Abre el documento, pinta el menu lateral con los 8 modulos del PDR y abre el
   contenido. Requiere en request: vista, titulo y usuario (PaginaServlet).
+  data-rol solo ajusta la interfaz; cada Servlet vuelve a validar el rol.
   Todo dato variable pasa por sc:esc (prevencion de XSS).
 --%>
 <%@ page pageEncoding="UTF-8" %>
@@ -20,7 +21,7 @@
           integrity="sha256-2FMn2Zx6PuH5tdBQDRNwrOo60ts5wWPC9R8jK67b3t4=" crossorigin="anonymous">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/app.css?v=${sc:esc(version)}">
 </head>
-<body class="pagina-app" data-ctx="${sc:esc(pageContext.request.contextPath)}">
+<body class="pagina-app" data-ctx="${sc:esc(pageContext.request.contextPath)}" data-rol="${sc:esc(usuario.rol)}">
 <aside class="menu">
     <div class="menu-marca">
         <span class="marca-titulo">SUPPLY CHAIN</span>
@@ -34,7 +35,8 @@
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Logística y transporte</span>
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Almacenes</span>
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Proveedores</span>
-        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Inteligencia artificial</span>
+        <a class="${vista == 'soluciones' ? 'activo' : ''}" href="${pageContext.request.contextPath}/soluciones"
+           ${vista == 'soluciones' ? 'aria-current="page"' : ''}>Inteligencia artificial</a>
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Alertas ejecutivas</span>
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente" ${usuario.rol == 'ADMIN' ? '' : 'hidden'}>Administración</span>
     </nav>

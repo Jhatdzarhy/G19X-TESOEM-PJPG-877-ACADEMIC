@@ -2,6 +2,7 @@
  * Utilidades comunes del dashboard (diseno CC-10; seguridad CC-20 y CC-21).
  *
  * - api(): pide datos a los Servlets de /api/ (mismo origen, cookie de sesion).
+ * - enviar(): POST JSON con el token CSRF de la sesion.
  *   Nunca llama a FastAPI directamente.
  * - el(): crea elementos con textContent; los datos nunca se insertan como HTML
  *   (prevencion de XSS, OWASP).
@@ -37,6 +38,33 @@
                 if (!r.ok) {
                     throw new ErrorApi(r.status, datos.mensaje ||
                         'El servicio de análisis no está disponible. Intenta de nuevo en unos minutos.');
+                }
+                return datos;
+            });
+        });
+    }
+
+    /** POST JSON a un Servlet de /api/ con el token CSRF de la sesion (CC-20). */
+    function enviar(ruta, cuerpo) {
+        var meta = global.document.querySelector('meta[name="csrf-token"]');
+        return global.fetch(CTX + '/api' + ruta, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': meta ? meta.getAttribute('content') : ''
+            },
+            credentials: 'same-origin',
+            cache: 'no-store',
+            body: JSON.stringify(cuerpo || {})
+        }).then(function (r) {
+            if (r.status === 401) {
+                global.location.assign(CTX + '/login?expirada=1');
+                throw new ErrorApi(401, 'Tu sesión expiró.');
+            }
+            return r.json().catch(function () { return {}; }).then(function (datos) {
+                if (!r.ok) {
+                    throw new ErrorApi(r.status, datos.mensaje || 'No se pudo registrar la decisión.');
                 }
                 return datos;
             });
@@ -104,7 +132,12 @@
         'dias': 'días', 'Dias': 'Días', 'expres': 'exprés', 'Expres': 'Exprés',
         'Mexico': 'México', 'Lazaro': 'Lázaro', 'Cardenas': 'Cárdenas',
         'Concentracion': 'Concentración', 'concentracion': 'concentración',
-        'Precision': 'Precisión', 'precision': 'precisión'
+        'Precision': 'Precisión', 'precision': 'precisión',
+        'opcion': 'opción', 'Opcion': 'Opción', 'atipicas': 'atípicas', 'atipica': 'atípica',
+        'ultimos': 'últimos', 'Ultimos': 'Últimos', 'proximos': 'próximos', 'cotizacion': 'cotización',
+        'automatico': 'automático', 'Atlantico': 'Atlántico', 'exito': 'éxito', 'ordenes': 'órdenes',
+        'transito': 'tránsito', 'metodo': 'método', 'Metodo': 'Método', 'decision': 'decisión',
+        'Decision': 'Decisión', 'politica': 'política', 'Politica': 'Política'
     };
 
     function ortografia(texto) {
@@ -141,7 +174,9 @@
 
     global.SC = {
         CTX: CTX,
+        ROL: cuerpo ? (cuerpo.getAttribute('data-rol') || '') : '',
         api: api,
+        enviar: enviar,
         el: el,
         vaciar: vaciar,
         numero: numero,
