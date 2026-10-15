@@ -4,6 +4,13 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-15 15:48 | 238a7f8 | docs(estado): cerrar la QA de la Fase 6 con 41 de 41 pruebas e iniciar las Fases 7 y 8 |
+| 2026-10-15 15:47 | 1fff90d | docs(control-cambios): registrar en CC-17 los defectos QA-01 y QA-02 corregidos en la QA |
+| 2026-10-15 15:25 | afcc1ef | docs(qa): evidencia de las pruebas de la Fase 6 (capturas y salidas de consola) |
+| 2026-10-15 15:25 | 64648c1 | docs(qa): reporte de pruebas de la Fase 6 con 41 de 41 correctas y los defectos QA-01 y QA-02 corregidos |
+| 2026-10-15 14:36 | 9309c34 | fix(asistente): pedir al modelo estados con palabras y sin emojis, como el diseno de la interfaz (CC-10, CC-17, QA-02) |
+| 2026-10-15 14:34 | 04d14d7 | fix(asistente): limitar la espera por modelo a 35 s y el plazo total a 100 s para que el respaldo responda antes que el Servlet (CC-17, QA-01) |
+| 2026-10-15 01:33 | a8162ee | docs(bitacora): regenerar desde git log con el simulador en vivo y las vistas de los modulos |
 | 2026-10-15 01:32 | 1cc395e | docs(estado): congelar funcionalidad con simulador en vivo, Server-Sent Events y vistas de los 8 modulos |
 | 2026-10-15 01:29 | a57221e | docs(cambios): registrar CC-22, CC-23 y CC-24 y marcar CC-09, CC-17 y CC-21 como implementados |
 | 2026-10-15 01:18 | 17a525c | feat(frontend): cada estacion del Resumen lleva a su modulo (CC-10, CC-24) |
