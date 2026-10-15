@@ -1,0 +1,70 @@
+INDICE DE EVIDENCIA - Fase 6 (QA), Dashboard Ejecutivo de Supply Chain
+Fecha de las pruebas: 14 y 15 de octubre de 2026. Detalle en docs/REPORTE_QA.md.
+Las capturas no contienen cookies de sesion, tokens ni llaves: la cookie de SEG-08 esta enmascarada
+y la captura de cabeceras de la peticion (Request headers) se excluyo a proposito.
+
+Seguridad
+  SEG-01  SEG-01.txt
+  SEG-02  SEG-02.png
+  SEG-03  SEG-03.png
+  SEG-04  SEG-04.png
+  SEG-05  SEG-05.png
+  SEG-06  SEG-06.png
+  SEG-07  SEG-07.png
+  SEG-08  SEG-08.png (valor de la cookie enmascarado)
+  SEG-09  SEG-09.png
+
+Roles
+  ROL-01  ROL-02-ROL-03.txt
+  ROL-02  ROL-02-ROL-03.txt
+  ROL-03  ROL-02-ROL-03.txt, MOD-07-administracion.png
+  ROL-04  ROL-04-SOL-01.png
+  ROL-05  ROL-05.png
+
+Resumen ejecutivo
+  RES-01  RES-01.png
+  RES-02  RES-01.png y MOD-01 a MOD-05
+  RES-03  RES-03-RES-05.png, RES-03b.png
+  RES-04  RES-04.png
+  RES-05  RES-03-RES-05.png
+
+Modulos
+  MOD-01  MOD-01-compras.png
+  MOD-02  MOD-02-inventarios.png, MOD-02b-inventarios.png
+  MOD-03  MOD-03-logistica.png (MOD-03-antes-correccion-clima.png muestra el defecto previo a la congelacion)
+  MOD-04  MOD-04-almacenes.png
+  MOD-05  MOD-05-proveedores.png
+  MOD-06  MOD-06-alertas.png
+  MOD-07  MOD-07-administracion.png
+
+Centro de soluciones
+  SOL-01  ROL-04-SOL-01.png, MOD-centro-soluciones.png
+  SOL-02  SOL-02.png
+  SOL-03  SOL-03a.png (aprobacion), SOL-03b.png (paso del plan), SOL-03c.png (cierre con ahorro real)
+  SOL-04  SOL-04.txt
+
+Asistente de IA
+  IA-01   IA-01-IA-02.png, MOD-asistente.png
+  IA-02   IA-01-IA-02.png
+  IA-03   IA-03-04.png
+  IA-04   IA-03-04.png
+
+Simulador en vivo
+  VIV-01  VIV-01.png, VIV-01-terminal.txt
+  VIV-02  VIV-02.png
+  VIV-03  VIV-03.png
+  VIV-04  VIV-04.png
+  VIV-05  VIV-05.png, VIV-05-terminal.txt
+
+Datos y rendimiento
+  DAT-01  DAT-01.txt (23 de 23 validaciones correctas)
+  DAT-02  DAT-02.png
+
+Defectos corregidos
+  QA-01   QA-01-consultando.png, QA-01-log-fastapi.png, QA-01-02-verificacion.png, QA-01-02-commits.txt
+  QA-02   QA-01-02-verificacion.png, QA-01-02-commits.txt
+
+Observaciones
+  OBS-01  OBS-01-consola-csp.png
+  OBS-02  OBS-02-finish-sse.png
+  OBS-05  OBS-05-detenido.png

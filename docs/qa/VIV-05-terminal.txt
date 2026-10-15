@@ -1,0 +1,7 @@
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard\backend> python -m etl.simulador_vivo --reiniciar
+Reiniciado al 2026-09-30: 0 ordenes en vivo borradas, 1 ordenes regresaron a EN_TRANSITO
+  analitica.pronostico: listo en 3.7 s
+  analitica.riesgo: listo en 1.5 s
+  analitica.recomendaciones: listo en 0.2 s
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard\backend> python -m etl.simulador_vivo --estado
+Simulador sin iniciar. Fecha de corte de los datos: 2026-09-30

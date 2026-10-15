@@ -1,0 +1,24 @@
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard\backend> python -m admin.verificar_seguridad
+Verificacion de seguridad (CC-20, CC-21) contra http://127.0.0.1:8000
+OK     Rutas sin duplicados  (26 rutas)
+OK     Todas las rutas exigen token interno
+OK     Sin endpoints del MVP (/kpis/...)
+OK     Sin CORS: el navegador no llama directo a FastAPI
+OK     Sin token se rechaza con 401  (HTTP 401)
+OK     Token incorrecto se rechaza con 401  (HTTP 401)
+OK     Con token responde /api/v1/kpis  (HTTP 200)
+OK     Con token responde /api/v1/estaciones  (HTTP 200)
+OK     Con token responde /api/v1/pronostico  (HTTP 200)
+OK     Con token responde /api/v1/proveedores/riesgo  (HTTP 200)
+OK     Con token responde /api/v1/recomendaciones/atender-hoy  (HTTP 200)
+OK     Con token responde /api/v1/asistente/sugerencias  (HTTP 200)
+OK     No devuelve Access-Control-Allow-Origin
+OK     La base guarda solo el hash PBKDF2
+OK     Login correcto devuelve usuario, nombre y rol  (HTTP 200)
+OK     La respuesta no incluye el hash
+OK     Contrasena incorrecta devuelve 401  (HTTP 401)
+OK     Usuario inexistente devuelve el mismo 401 y mensaje  (HTTP 401)
+OK     Bloqueo al intento fallido 5 con 429 y Retry-After  (estados [401, 401, 401, 429], Retry-After 900 s)
+OK     Cuenta bloqueada rechaza incluso la contrasena correcta  (HTTP 429)
+OK     Usuario temporal de QA eliminado
+Resultado: 21 de 21 pruebas correctas

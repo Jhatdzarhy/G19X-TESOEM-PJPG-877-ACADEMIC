@@ -1,0 +1,8 @@
+ROL-03. Con la sesion de admin, GET localhost:8080/supplychain/api/admin/usuarios (15-oct 00:57):
+{"usuarios":[{"usuario_id":4,"usuario":"admin","nombre":"Administrador del sistema","rol":"ADMIN","activo":true,"intentos_fallidos":0,"bloqueado_hasta":null,"ultimo_acceso":"2026-10-15T00:55","fecha_registro":"2026-10-13T01:02"},{"usuario_id":2,"usuario":"gerencia","nombre":"Gerencia general","rol":"EJECUTIVO","activo":true,"intentos_fallidos":0,"bloqueado_hasta":null,"ultimo_acceso":"2026-10-15T00:48","fecha_registro":"2026-10-13T01:00"},{"usuario_id":3,"usuario":"operaciones","nombre":"Supervisor de operaciones","rol":"OPERACIONES","activo":true,"intentos_fallidos":0,"bloqueado_hasta":null,"ultimo_acceso":null,"fecha_registro":"2026-10-13T01:01"}],"aviso":"Alta, restablecimiento y baja de usuarios con python -m admin.crear_usuario (CC-20)"}
+Resultado: ningun campo de hash ni contrasena.
+
+ROL-02. Con la sesion de gerencia, la misma URL (15-oct 00:58):
+{"error":"rol_no_autorizado","mensaje":"Solo el rol Administrador puede consultar los usuarios."}
+
+ROL-01. Con la sesion de gerencia, localhost:8080/supplychain/administracion regresa al Resumen (15-oct 00:59); el menu no muestra Administracion.

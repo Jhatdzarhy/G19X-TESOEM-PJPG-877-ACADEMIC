@@ -1,0 +1,10 @@
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard\backend> python -m etl.simulador_vivo --dias 1
+Simulador iniciado en la fecha de corte 2026-09-30: base verificada contra el generador, 12 ordenes en transito
+Dia simulado 2026-10-01: 2 eventos
+  [26] 2026-10-01 12:00 ATENCION Envio ENV-0391 de Norte Electronica llego 2 dias tarde a Almacen CDMX
+  [27] 2026-10-01 18:00 CRITICO  Cierre de ventas: 1,164 de 1,350 unidades entregadas, nivel de servicio 86.2%; 2 combinaciones de almacen y producto sin stock suficiente
+  analitica.pronostico: listo en 3.9 s
+  analitica.riesgo: listo en 1.4 s
+  analitica.recomendaciones: listo en 0.2 s
+  [28] 2026-10-01 18:30 CRITICO  Proveedores: OTIF 79.3% pasa de Atencion a Critico (meta 90.0%)
+Dia 2026-10-01 cerrado.

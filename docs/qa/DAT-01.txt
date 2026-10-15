@@ -1,0 +1,69 @@
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard> $vol = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path "backend\etl\datos\volumen_por_sku.json")))
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard> $vol.Length
+516
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard> psql -U postgres -h localhost -d postgres -P pager=off -v vol_b64=$vol -f db\final\validar_kpis.sql
+Contraseña para usuario postgres:
+
+Ahora está conectado a la base de datos «supply_chain_final» con el usuario «postgres».
+SET
+SET
+BEGIN
+CREATE TABLE
+SELECT 1
+SELECT 12
+SELECT 13140
+SELECT 395
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 3
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+ n  |   bloque   |                               prueba                                |          valor          |            criterio            | resultado
+----+------------+---------------------------------------------------------------------+-------------------------+--------------------------------+-----------
+  1 | Integridad | Stock diario negativo (almacen, producto, dia)                      | 0                       | = 0                            | OK
+  2 | Integridad | Demanda completa: filas de demanda_diaria                           | 13140                   | = dias x almacenes x productos | OK
+  3 | Integridad | Entregado en demanda_diaria igual a SALIDA de inventario            | 0                       | 0 diferencias                  | OK
+  4 | Integridad | Recepciones: ENTRADA por orden igual a cantidad_recibida            | 0                       | 0 diferencias                  | OK
+  5 | Integridad | Recibido mayor que lo ordenado                                      | 0                       | = 0                            | OK
+  6 | Integridad | Fechas incoherentes en ordenes y envios                             | 0                       | = 0                            | OK
+  7 | Integridad | Estatus coherente con la recepcion                                  | 0                       | = 0                            | OK
+  8 | Integridad | Texto fuera de ASCII (CC-11)                                        | 0                       | = 0                            | OK
+  9 | Integridad | Ordenes sin tipo de cambio FIX vigente (CC-03)                      | 0                       | = 0                            | OK
+ 10 | Integridad | Productos sin volumen en volumen_por_sku.json                       | 0                       | = 0                            | OK
+ 11 | KPI        | 01 Lead time de proveedor (dias)                                    | 8.34                    | 3 a 40                         | OK
+ 12 | KPI        | 02 Variacion de costo de compra                                     | -1.17 %                 | -10 % a 15 %                   | OK
+ 13 | KPI        | 03 Rotacion de inventario (veces al ano)                            | 11.53                   | 3 a 30                         | OK
+ 15 | KPI        | 04 Fill Rate de servicio                                            | 97.34 %                 | 85 % a 100 %                   | OK
+ 14 | KPI        | 05 Dias de inventario disponible (DOH)                              | 31.6                    | 10 a 120                       | OK
+ 16 | KPI        | 06 OTIF                                                             | 80.42 %                 | 60 % a 98 %                    | OK
+ 17 | KPI        | 07 Costo de transporte por unidad (MXN)                             | 25.61                   | 5 a 200                        | OK
+ 18 | KPI        | 08 Utilizacion de almacen: Almacen CDMX                             | 56.8 % prom, 88.1 % max | prom 30 % a 95 %, max <= 100 % | OK
+ 20 | KPI        | 08 Utilizacion de almacen: Almacen Guadalajara                      | 63.6 % prom, 90.0 % max | prom 30 % a 95 %, max <= 100 % | OK
+ 19 | KPI        | 08 Utilizacion de almacen: Almacen Monterrey                        | 65.0 % prom, 89.0 % max | prom 30 % a 95 %, max <= 100 % | OK
+ 21 | KPI        | 09 Riesgo de proveedor: proveedores con menos de 5 envios recibidos | 0                       | = 0                            | OK
+ 22 | KPI        | 10 MAPE: productos con serie diaria incompleta                      | 0                       | = 0                            | OK
+ 23 | KPI        | 11 Impacto de tipo de cambio (MXN)                                  | -39,451,090 (-3.67 %)   | -20 % a 20 %                   | OK
+(23 filas)
+
+ ok | revisar | falla | total
+----+---------+-------+-------
+ 23 |       0 |     0 |    23
+(1 fila)
+
+ROLLBACK
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard>

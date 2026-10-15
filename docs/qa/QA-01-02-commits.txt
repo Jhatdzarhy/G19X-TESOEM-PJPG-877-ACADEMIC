@@ -1,0 +1,4 @@
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard> git --no-pager log --oneline -3
+9309c34 (HEAD -> proyecto-final) fix(asistente): pedir al modelo estados con palabras y sin emojis, como el diseno de la interfaz (CC-10, CC-17, QA-02)
+04d14d7 fix(asistente): limitar la espera por modelo a 35 s y el plazo total a 100 s para que el respaldo responda antes que el Servlet (CC-17, QA-01)
+a8162ee docs(bitacora): regenerar desde git log con el simulador en vivo y las vistas de los modulos

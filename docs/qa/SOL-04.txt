@@ -1,0 +1,10 @@
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard> psql -U postgres -d supply_chain_final -c "BEGIN; UPDATE recomendaciones SET estado = 'NUEVA', ahorro_real_mxn = NULL, fecha_cierre = NULL, opciones = (SELECT jsonb_agg(jsonb_set(o, '{elegida}', 'false') ORDER BY i) FROM jsonb_array_elements(opciones) WITH ORDINALITY AS t(o, i)), evidencia = evidencia - 'historial' WHERE recomendacion_id = 35 AND estado = 'ATENDIDA'; UPDATE plan_acciones SET estado = 'PENDIENTE', fecha_cierre = NULL WHERE recomendacion_id = 35; COMMIT;"
+BEGIN
+UPDATE 1
+UPDATE 4
+COMMIT
+(.venv) PS C:\Users\Pamela\Proyectos\supply-chain-dashboard> psql -U postgres -d supply_chain_final -c "SELECT recomendacion_id, estado, ahorro_real_mxn, fecha_cierre, evidencia ? 'historial' AS con_historial, (SELECT COUNT(*) FROM plan_acciones p WHERE p.recomendacion_id = 35 AND p.estado = 'PENDIENTE') AS pasos_pendientes FROM recomendaciones WHERE recomendacion_id = 35;"
+ recomendacion_id | estado | ahorro_real_mxn | fecha_cierre | con_historial | pasos_pendientes
+------------------+--------+-----------------+--------------+---------------+------------------
+               35 | NUEVA  |                 |              | f             |                4
+(1 fila)
