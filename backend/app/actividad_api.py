@@ -3,7 +3,8 @@
 Solo lectura sobre eventos_vivo y simulador_estado. Como el resto de la API, exige
 X-Token-Interno (dependencia global en main.py, CC-21) y solo la consume Tomcat:
   GET /api/v1/actividad/resumen   ultimo evento, eventos del dia simulado y estado del simulador
-  GET /api/v1/actividad           historial, del mas reciente al mas antiguo (vista Ver actividad)
+  GET /api/v1/actividad           historial, del mas reciente al mas antiguo (Ver actividad y
+                                  modulo de Alertas con solo_alertas=true)
   GET /api/v1/actividad/flujo     eventos nuevos en NDJSON para el hilo de Server-Sent Events de
                                   Tomcat; la primera linea trae el ultimo id, una linea por evento
 """
@@ -73,15 +74,20 @@ def actividad_resumen():
 
 
 @router.get("/actividad")
-def actividad(limite: int = Query(50, ge=1, le=200), antes_id: int | None = Query(None, ge=1)):
+def actividad(limite: int = Query(50, ge=1, le=200), antes_id: int | None = Query(None, ge=1),
+              solo_alertas: bool = Query(False, description="Solo eventos en ATENCION o CRITICO (modulo de Alertas)")):
+    condiciones, parametros = [], []
+    if antes_id is not None:
+        condiciones.append("evento_id < %s")
+        parametros.append(antes_id)
+    if solo_alertas:
+        condiciones.append("severidad IN ('ATENCION', 'CRITICO')")
+    donde = (" WHERE " + " AND ".join(condiciones)) if condiciones else ""
     conn = get_connection()
     try:
         with conn.cursor() as cur:
-            if antes_id is None:
-                cur.execute(f"SELECT {COLUMNAS} FROM eventos_vivo ORDER BY evento_id DESC LIMIT %s", (limite,))
-            else:
-                cur.execute(f"SELECT {COLUMNAS} FROM eventos_vivo WHERE evento_id < %s "
-                            f"ORDER BY evento_id DESC LIMIT %s", (antes_id, limite))
+            cur.execute(f"SELECT {COLUMNAS} FROM eventos_vivo{donde} ORDER BY evento_id DESC LIMIT %s",
+                        (*parametros, limite))
             filas = cur.fetchall()
     finally:
         conn.close()

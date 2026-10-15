@@ -10,6 +10,8 @@ cambios, riesgo R6):
 Los endpoints del MVP (/kpis/...) se retiraron de la rama proyecto-final: sus
 formulas y umbrales no coinciden con CC-15 y CC-16. Se conservan en la
 etiqueta mvp-v1.0.
+
+Las vistas por modulo (CC-24) leen el detalle de modulos_api.
 """
 from fastapi import Depends, FastAPI
 
@@ -18,6 +20,7 @@ from app import (
     asistente_api,
     auth_api,
     kpis,
+    modulos_api,
     pronostico_api,
     recomendaciones_api,
     riesgo_api,
@@ -26,7 +29,7 @@ from app.seguridad import verificar_token_interno
 
 app = FastAPI(
     title="Supply Chain Dashboard - Analytics API",
-    version="0.3.0",
+    version="0.4.0",
     dependencies=[Depends(verificar_token_interno)],
 )
 
@@ -37,6 +40,7 @@ app.include_router(riesgo_api.router)
 app.include_router(recomendaciones_api.router)
 app.include_router(asistente_api.router)
 app.include_router(actividad_api.router)
+app.include_router(modulos_api.router)
 
 
 @app.get("/")
