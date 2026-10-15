@@ -61,13 +61,14 @@ _cargar_env()
 
 PROVEEDORES = [
     {"nombre": "Z.AI GLM-4.7-Flash", "url": "https://api.z.ai/api/paas/v4/chat/completions",
-     "modelo": "glm-4.7-flash", "llave": "ZAI_API_KEY", "timeout": 90},
+     "modelo": "glm-4.7-flash", "llave": "ZAI_API_KEY", "timeout": 35},
     {"nombre": "Z.AI GLM-4.5-Flash", "url": "https://api.z.ai/api/paas/v4/chat/completions",
-     "modelo": "glm-4.5-flash", "llave": "ZAI_API_KEY", "timeout": 90},
+     "modelo": "glm-4.5-flash", "llave": "ZAI_API_KEY", "timeout": 35},
     {"nombre": "Ollama local", "url": os.getenv("OLLAMA_URL", "http://localhost:11434/v1/chat/completions"),
-     "modelo": os.getenv("OLLAMA_MODELO", "qwen2.5:7b"), "llave": None, "timeout": 180},
+     "modelo": os.getenv("OLLAMA_MODELO", "qwen2.5:7b"), "llave": None, "timeout": 60},
 ]
 REINTENTOS = 2                 # por proveedor ante 429 o 5xx (espera 3 s y 6 s)
+PLAZO_TOTAL = 100              # s por mensaje; AsistenteServlet espera 120 s (QA-01, CC-17)
 MAX_RONDAS_HERRAMIENTAS = 5
 MENSAJES_POR_MINUTO = 8
 HISTORIAL_MENSAJES = 10        # mensajes previos de la conversacion que se envian al modelo
@@ -235,7 +236,7 @@ class SinModelo(Exception):
     pass
 
 
-def _llamar(proveedor, mensajes, con_herramientas):
+def _llamar(proveedor, mensajes, con_herramientas, restante=None):
     llave = os.getenv(proveedor["llave"]) if proveedor["llave"] else None
     cuerpo = {"model": proveedor["modelo"], "messages": mensajes, "temperature": 0.2}
     if con_herramientas:
@@ -246,12 +247,14 @@ def _llamar(proveedor, mensajes, con_herramientas):
         encabezados["Authorization"] = f"Bearer {llave}"
     peticion = urllib.request.Request(proveedor["url"], data=json.dumps(cuerpo).encode("utf-8"),
                                       headers=encabezados, method="POST")
-    with urllib.request.urlopen(peticion, timeout=proveedor["timeout"]) as resp:
+    espera = proveedor["timeout"] if restante is None else min(proveedor["timeout"], restante)
+    with urllib.request.urlopen(peticion, timeout=espera) as resp:
         return json.loads(resp.read().decode("utf-8"))["choices"][0]["message"]
 
 
-def _completar(mensajes, con_herramientas, inicio=0):
+def _completar(mensajes, con_herramientas, inicio=0, limite=None):
     """Prueba los proveedores en orden desde `inicio`. Devuelve (mensaje, indice del proveedor).
+    `limite` es el instante en que se agota el plazo total del mensaje (QA-01, CC-17).
     Cada falla se registra en la consola de FastAPI (sin la llave) para diagnostico."""
     errores = []
     for i in range(inicio, len(PROVEEDORES)):
@@ -260,10 +263,15 @@ def _completar(mensajes, con_herramientas, inicio=0):
             errores.append(f"{p['nombre']}: sin llave configurada")
             continue
         for intento in range(REINTENTOS + 1):
+            restante = None if limite is None else limite - time.time()
+            if restante is not None and restante < 5:
+                errores.append("plazo total agotado")
+                log.warning("Asistente: plazo total de %s s agotado antes de %s", PLAZO_TOTAL, p["nombre"])
+                raise SinModelo("; ".join(errores))
             inicio_llamada = time.time()
             try:
                 with _candado:
-                    return _llamar(p, mensajes, con_herramientas), i
+                    return _llamar(p, mensajes, con_herramientas, restante), i
             except urllib.error.HTTPError as e:
                 try:
                     detalle = e.read().decode("utf-8", "ignore")[:300]
@@ -356,10 +364,11 @@ def mensaje(p: Pregunta):
                 *previos, {"role": "user", "content": p.mensaje.strip()}]
     usadas, modelos = [], []
     proveedor = 0
+    limite = time.time() + PLAZO_TOTAL
     try:
         for ronda in range(MAX_RONDAS_HERRAMIENTAS + 1):
             con_herramientas = ronda < MAX_RONDAS_HERRAMIENTAS
-            respuesta, proveedor = _completar(mensajes, con_herramientas, proveedor)
+            respuesta, proveedor = _completar(mensajes, con_herramientas, proveedor, limite)
             modelos.append(PROVEEDORES[proveedor]["nombre"])
             llamadas = respuesta.get("tool_calls") or []
             if not llamadas or not con_herramientas:
