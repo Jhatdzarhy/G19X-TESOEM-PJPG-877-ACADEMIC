@@ -38,7 +38,7 @@
     var ESTADOS_REC = {
         NUEVA: 'Abierta', EN_REVISION: 'En curso', ATENDIDA: 'Atendida', DESCARTADA: 'Descartada'
     };
-    var ACCIONES = { APROBAR: 'Aprobó', DESCARTAR: 'Descartó', CERRAR: 'Cerró' };
+    var ACCIONES = { APROBAR: 'Aprobó', DESCARTAR: 'Descartó', CERRAR: 'Cerró', PASO_HECHO: 'Marcó un paso del plan como hecho' };
 
     function humanizar(clave) {
         if (!clave) { return ''; }
@@ -475,6 +475,7 @@
             var partes = [fechaHora(h.fecha), (h.usuario || 'usuario') + ' ' + (ACCIONES[h.accion] ? ACCIONES[h.accion].toLowerCase() : humanizar(h.accion).toLowerCase())];
             if (h.opcion) { partes.push('opción ' + humanizar(h.opcion).toLowerCase()); }
             if (h.motivo) { partes.push('motivo: ' + SC.ortografia(h.motivo)); }
+            if (h.orden_paso) { partes.push('paso ' + h.orden_paso); }
             if (h.ahorro_real_mxn !== null && h.ahorro_real_mxn !== undefined) { partes.push('ahorro real ' + SC.pesos(h.ahorro_real_mxn) + ' MXN'); }
             ol.appendChild(SC.el('li', null, partes.join(' · ')));
         });

@@ -60,7 +60,7 @@ public class DecisionServlet extends HttpServlet {
                 return;
             }
             llamar(res, "/api/v1/recomendaciones/" + paso.group(1) + "/acciones/" + paso.group(2) + "/hecha",
-                    "{}", u, "paso " + paso.group(2) + " de la recomendacion " + paso.group(1));
+                    Json.objeto("usuario", u.getUsuario()), u, "paso " + paso.group(2) + " de la recomendacion " + paso.group(1));
             return;
         }
 

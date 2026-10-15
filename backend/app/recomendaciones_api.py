@@ -221,13 +221,20 @@ def decidir(decision: Decision, rid: int = Path(..., ge=1)):
     return resultado
 
 
+class PasoHecho(BaseModel):
+    usuario: str = Field(..., min_length=1, max_length=60, description="Usuario de la sesion (lo envia el Servlet)")
+
+
 @router.post("/{rid}/acciones/{accion_id}/hecha")
-def accion_hecha(rid: int = Path(..., ge=1), accion_id: int = Path(..., ge=1)):
+def accion_hecha(paso: PasoHecho, rid: int = Path(..., ge=1), accion_id: int = Path(..., ge=1)):
+    """Marca un paso del plan como hecho y deja en el historial quien lo marco (CC-20, CC-21)."""
+    ahora = datetime.now().replace(microsecond=0)
     conn = get_connection()
     try:
         with conn:
             with conn.cursor() as cur:
-                cur.execute("SELECT estado FROM recomendaciones WHERE recomendacion_id = %s", (rid,))
+                cur.execute("SELECT estado, evidencia FROM recomendaciones "
+                            "WHERE recomendacion_id = %s FOR UPDATE", (rid,))
                 r = cur.fetchone()
                 if r is None:
                     raise HTTPException(status_code=404, detail="Recomendacion no encontrada")
@@ -235,9 +242,17 @@ def accion_hecha(rid: int = Path(..., ge=1), accion_id: int = Path(..., ge=1)):
                     raise HTTPException(status_code=409, detail="El plan solo avanza en una recomendacion en curso")
                 cur.execute("""UPDATE plan_acciones SET estado = 'HECHA', fecha_cierre = %s
                                WHERE recomendacion_id = %s AND accion_id = %s AND estado = 'PENDIENTE'
-                               RETURNING accion_id""", (datetime.now().replace(microsecond=0), rid, accion_id))
-                if cur.fetchone() is None:
+                               RETURNING accion_id, orden_paso""", (ahora, rid, accion_id))
+                hecho = cur.fetchone()
+                if hecho is None:
                     raise HTTPException(status_code=404, detail="Paso no encontrado o ya hecho")
+                evidencia = r["evidencia"] or {}
+                historial = list(evidencia.get("historial", []))
+                historial.append({"fecha": ahora.isoformat(), "usuario": _ascii(paso.usuario, 60),
+                                  "accion": "PASO_HECHO", "accion_id": accion_id,
+                                  "orden_paso": hecho["orden_paso"]})
+                cur.execute("UPDATE recomendaciones SET evidencia = %s WHERE recomendacion_id = %s",
+                            (Json({**evidencia, "historial": historial}), rid))
                 resultado = _detalle(cur, rid)
     finally:
         conn.close()
