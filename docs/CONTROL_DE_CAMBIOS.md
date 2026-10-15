@@ -41,6 +41,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 | CC-22 | 2026-10-14 | 2, 5.2, CC-04, CC-09 | Adición y precisión | Reloj simulado del simulador en vivo y bitácora de eventos |
 | CC-23 | 2026-10-14 | 7, CC-16 | Precisión | Estado de un KPI evaluado sobre el valor publicado |
 | CC-24 | 2026-10-15 | 6 (Módulos 1 a 8), CC-10, CC-20 | Precisión e interpretación | Vistas de los módulos y administración de usuarios de solo lectura |
+| CC-25 | 2026-10-15 | 10 (Fase 9), 9 (R4) | Interpretación | Capacitación sin usuarios finales designados: guía de capacitación y formato de acta |
 
 ---
 
@@ -325,3 +326,14 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 - **Justificación:** una sola plantilla da consistencia visual y menor costo de mantenimiento. Las cifras de los módulos coinciden con las del Resumen porque salen de los mismos endpoints. Que la administración web sea de solo lectura evita que una contraseña viaje por el navegador (riesgo R7) sin dejar fuera la consulta de usuarios y roles del Módulo 8.
 - **Verificación:** los 8 módulos revisados en el navegador con los roles EJECUTIVO y ADMIN; un GET a `/api/admin/usuarios` con la sesión de gerencia responde `rol_no_autorizado`; la respuesta de usuarios no contiene hash ni contraseña; `verificar_seguridad` pasó 21 de 21 pruebas con 26 rutas.
 - **Estado:** Aprobado e implementado (commits cf0be66, e7a9c09 y 17a525c).
+
+### CC-25. Capacitación sin usuarios finales designados
+- **Qué dice el PDR:** la Fase 9 de la Sección 10 es "Capacitación a usuarios y entrega final", con el entregable "Acta de capacitación"; el riesgo R4 (Sección 9) se mitiga con sesiones de capacitación.
+- **Situación:** a la fecha de entrega, PluriOne no ha designado usuarios finales del dashboard. La evaluación del proyecto la hace Edgar Loeffelmann revisando el repositorio en GitHub; no hay una sesión de capacitación ni una presentación programada.
+- **Cambio:** la Fase 9 se cumple con un paquete de capacitación listo para usarse cuando se designen usuarios:
+  - `docs/GUIA_CAPACITACION.md`: preparación del instructor, siete módulos por rol (EJECUTIVO, OPERACIONES y ADMIN) con objetivo, ejercicio práctico y criterio de aprendizaje, y cierre que regresa la base al estado validado.
+  - Formato de acta de capacitación al final de la guía, en blanco, para llenarse y firmarse el día de la sesión.
+  - No se elabora un acta con participantes, fechas ni firmas, porque la sesión no ha ocurrido.
+- **Justificación:** registrar una capacitación que no ocurrió restaría confiabilidad a toda la evidencia del proyecto. La guía, junto con el manual técnico (sección 11) y el plan de mantenimiento, deja la capacitación reproducible por cualquier instructor y mantiene la mitigación del riesgo R4.
+- **Límite respetado:** no cambia el alcance ni la funcionalidad congelada; la sesión y el acta firmada quedan pendientes hasta que PluriOne asigne usuarios.
+- **Estado:** Aprobado.
