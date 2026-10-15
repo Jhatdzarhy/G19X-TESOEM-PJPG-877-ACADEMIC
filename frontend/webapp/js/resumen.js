@@ -81,11 +81,22 @@
         return svg;
     }
 
+    /** Modulo al que lleva cada estacion (CC-10 y CC-24), por su clave o por su nombre. */
+    var MODULO_ESTACION = {
+        proveedores: 'proveedores', compras: 'compras', transporte: 'logistica', almacenes: 'almacenes', inventario: 'inventarios'
+    };
+
     function pintarEstaciones(datos) {
         var cont = document.getElementById('estaciones');
         SC.vaciar(cont);
         datos.estaciones.forEach(function (e) {
-            var tarjeta = SC.el('article', 'estacion estacion-' + (SC.ESTADOS[e.estado] || SC.ESTADOS.SIN_DATOS).clase);
+            var modulo = MODULO_ESTACION[String(e.clave || e.nombre || '').toLowerCase()];
+            var clase = 'estacion estacion-' + (SC.ESTADOS[e.estado] || SC.ESTADOS.SIN_DATOS).clase;
+            var tarjeta = SC.el(modulo ? 'a' : 'article', clase);
+            if (modulo) {
+                tarjeta.href = SC.CTX + '/' + modulo;
+                tarjeta.title = 'Ver el módulo de ' + SC.ortografia(e.nombre);
+            }
             var cabeza = SC.el('div', 'estacion-cabeza');
             cabeza.appendChild(SC.el('h3', 'estacion-nombre', e.nombre));
             cabeza.appendChild(SC.insigniaEstado(e.estado));
