@@ -21,10 +21,14 @@ Reglas:
 
 Uso (desde backend, con .venv activo):
   python -m etl.generar_operacion
+  python -m etl.generar_operacion --huella   (solo lectura: simula en memoria e imprime
+                                              un SHA-256 de todas las filas; no escribe nada)
 """
+import hashlib
 import json
 import math
 import random
+import sys
 from collections import defaultdict, deque
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
@@ -452,9 +456,39 @@ def guardar_verdad(g):
     SALIDA_EVENTOS.write_text(json.dumps(salida, ensure_ascii=True, indent=1), encoding="utf-8")
 
 
+def huella(g):
+    """SHA-256 de todas las filas generadas, en orden. Si dos ejecuciones dan la misma
+    huella, los datos son identicos. Verifica que reutilizar estas reglas en el simulador
+    en vivo no cambia los 12 meses validados (CC-09, control de cambios, riesgo R6)."""
+    h = hashlib.sha256()
+    partes = (("ordenes", g.ordenes), ("detalles", g.detalles), ("envios", g.envios),
+              ("movimientos", g.movimientos), ("demanda", g.demanda))
+    for nombre, filas in partes:
+        h.update(nombre.encode("ascii"))
+        for fila in filas:
+            h.update(repr(tuple(fila)).encode("ascii"))
+    for clave in sorted(g.verdad):
+        v = g.verdad[clave]
+        h.update(repr((clave, sorted(v["orden_id"]), sorted(v["detalle_id"]),
+                       sorted(v["envio_id"]), v["demanda"])).encode("ascii"))
+    return h.hexdigest()
+
+
 def main():
     cfg = json.loads(CONFIG.read_text(encoding="utf-8"))
     volumen = json.loads(VOLUMEN.read_text(encoding="utf-8"))
+    if "--huella" in sys.argv[1:]:
+        # Solo lectura: lee el catalogo de productos y no escribe en la base ni en archivos.
+        conn = get_connection()
+        try:
+            with conn.cursor() as cur:
+                productos = leer_productos(cur)
+        finally:
+            conn.close()
+        g = Generador(cfg, productos, volumen).ejecutar()
+        g.resumen()
+        print(f"Huella SHA-256: {huella(g)}")
+        return
     conn = get_connection()
     try:
         with conn:
