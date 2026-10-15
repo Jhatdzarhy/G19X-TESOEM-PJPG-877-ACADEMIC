@@ -237,6 +237,63 @@ class Generador:
         costo *= max(0.7, 1 + self.rng.gauss(0, self.trans["ruido_costo_cv"]))
         return round(costo, 2), claves
 
+    # ----------------------------------------------------------- reorden (compartido con el simulador en vivo)
+    def revisar_inventario(self, stock, transito, historial):
+        """Politica de reorden del dia: devuelve [((proveedor, almacen), [(sku, cantidad)])]
+        consolidado por proveedor y almacen, en orden. La usan el generador de 12 meses y el
+        simulador en vivo (CC-09, control de cambios, riesgo R6). El orden de consumo del
+        generador aleatorio no cambia (verificado con --huella)."""
+        pedidos = defaultdict(list)
+        m3_comprometido = {ak: sum((stock[(ak, s)] + transito[(ak, s)]) * self.volumen[s] for s in self.skus)
+                           for ak in self.alm}
+        for (ak, sku) in stock:
+            dm = sum(historial[(ak, sku)]) / len(historial[(ak, sku)])
+            lt = self.lt_esperado(sku, ak)
+            posicion = stock[(ak, sku)] + transito[(ak, sku)]
+            if posicion >= dm * (lt + self.pol["stock_seguridad_dias"]) or dm <= 0:
+                continue
+            cant = int(math.ceil(dm * (lt + self.pol["cobertura_objetivo_dias"]) - posicion))
+            # limite de capacidad del almacen
+            libre = self.pol["utilizacion_maxima_para_ordenar"] * self.alm[ak]["capacidad_m3"] - m3_comprometido[ak]
+            cant = min(cant, int(max(0.0, libre) / self.volumen[sku]))
+            if cant <= 0:
+                continue
+            m3_comprometido[ak] += cant * self.volumen[sku]
+            pedidos[(self.elegir_proveedor(sku), ak)].append((sku, cant))
+        return sorted(pedidos.items())
+
+    def planear_orden(self, dia, pk, ak, lineas):
+        """Desenlace de una orden emitida el dia: hora, salida, llegada estimada y real,
+        clima de la ruta (CC-04), retraso, flete, precio y cantidad recibida por renglon.
+        No escribe nada; quien llama decide que se guarda (generador o simulador en vivo, CC-09)."""
+        r = self.ruta[(pk, ak)]
+        p = self.prov[pk]
+        ts_orden = datetime.combine(dia, time(self.rng.randint(9, 16), self.rng.choice((0, 15, 30, 45))))
+        salida = dia + timedelta(days=p["dias_preparacion"])
+        llegada_estim = dia + timedelta(days=r["lt"])
+        inicio_terrestre = salida + timedelta(days=p["transito_internacional_dias"])
+        cond, mm = self.clima.peor_en_ruta([r["punto_clima"], "ALM_" + ak], inicio_terrestre, llegada_estim)
+        dias_retraso, claves_ret = self.retraso(dia, pk)
+        imp = self.cfg["clima"]["impacto"].get(cond)
+        if imp and self.rng.random() < imp["prob_retraso_extra"]:
+            dias_retraso += self.rng.randint(*imp["retraso_extra_dias"])
+        hora = time(self.rng.randint(8, 17), 0)
+        llegada_real = datetime.combine(llegada_estim + timedelta(days=dias_retraso), hora)
+        costo_flete, claves_flete = self.flete(dia, pk, ak)
+
+        renglones, claves_lin = [], []
+        for sku, cant in lineas:
+            precio, cp = self.precio(dia, pk, sku)
+            frac, cf = self.cumplimiento(dia, pk)
+            renglones.append({"sku": sku, "cantidad": cant, "precio": precio,
+                              "recibida": int(math.floor(cant * frac)), "claves": cp + cf})
+            claves_lin.extend(cp + cf)
+
+        return {"ts_orden": ts_orden, "salida": salida, "llegada_estim": llegada_estim,
+                "llegada_real": llegada_real, "dias_retraso": dias_retraso,
+                "condicion": cond, "precipitacion_mm": mm, "costo_flete": costo_flete,
+                "lineas": renglones, "claves": claves_ret + claves_flete + claves_lin}
+
     # ----------------------------------------------------------- simulacion
     def ejecutar(self):
         stock = {(ak, s): 0 for ak in self.alm for s in self.skus}
@@ -295,71 +352,39 @@ class Generador:
                 self.utilizacion[ak].append(m3 / a["capacidad_m3"])
 
             # 3. revision de inventario y pedidos consolidados por proveedor y almacen
-            pedidos = defaultdict(list)
-            m3_comprometido = {ak: sum((stock[(ak, s)] + transito[(ak, s)]) * self.volumen[s] for s in self.skus)
-                               for ak in self.alm}
-            for (ak, sku) in stock:
-                dm = sum(historial[(ak, sku)]) / len(historial[(ak, sku)])
-                lt = self.lt_esperado(sku, ak)
-                posicion = stock[(ak, sku)] + transito[(ak, sku)]
-                if posicion >= dm * (lt + self.pol["stock_seguridad_dias"]) or dm <= 0:
-                    continue
-                cant = int(math.ceil(dm * (lt + self.pol["cobertura_objetivo_dias"]) - posicion))
-                # limite de capacidad del almacen
-                libre = self.pol["utilizacion_maxima_para_ordenar"] * self.alm[ak]["capacidad_m3"] - m3_comprometido[ak]
-                cant = min(cant, int(max(0.0, libre) / self.volumen[sku]))
-                if cant <= 0:
-                    continue
-                m3_comprometido[ak] += cant * self.volumen[sku]
-                pedidos[(self.elegir_proveedor(sku), ak)].append((sku, cant))
-
-            for (pk, ak), lineas in sorted(pedidos.items()):
+            for (pk, ak), lineas in self.revisar_inventario(stock, transito, historial):
                 orden_id += 1
-                r = self.ruta[(pk, ak)]
+                plan = self.planear_orden(dia, pk, ak, lineas)
                 p = self.prov[pk]
-                ts_orden = datetime.combine(dia, time(self.rng.randint(9, 16), self.rng.choice((0, 15, 30, 45))))
-                salida = dia + timedelta(days=p["dias_preparacion"])
-                llegada_estim = dia + timedelta(days=r["lt"])
-                inicio_terrestre = salida + timedelta(days=p["transito_internacional_dias"])
-                cond, mm = self.clima.peor_en_ruta([r["punto_clima"], "ALM_" + ak], inicio_terrestre, llegada_estim)
-                dias_retraso, claves_ret = self.retraso(dia, pk)
-                imp = self.cfg["clima"]["impacto"].get(cond)
-                if imp and self.rng.random() < imp["prob_retraso_extra"]:
-                    dias_retraso += self.rng.randint(*imp["retraso_extra_dias"])
-                hora = time(self.rng.randint(8, 17), 0)
-                llegada_real = datetime.combine(llegada_estim + timedelta(days=dias_retraso), hora)
-                costo_flete, claves_flete = self.flete(dia, pk, ak)
+                llegada_real = plan["llegada_real"]
+                recibida_al_corte = llegada_real.date() <= self.fin
 
-                monto, lns, claves_lin = 0.0, [], []
-                for sku, cant in lineas:
+                monto, lns = 0.0, []
+                for ln in plan["lineas"]:
                     det_id += 1
-                    precio, cp = self.precio(dia, pk, sku)
-                    frac, cf = self.cumplimiento(dia, pk)
-                    recibida = int(math.floor(cant * frac))
-                    monto += cant * precio
-                    lns.append({"sku": sku, "cantidad": cant, "recibida": recibida})
-                    transito[(ak, sku)] += cant
-                    self.detalles.append([det_id, orden_id, self.productos[sku]["producto_id"], cant, precio,
-                                          recibida if llegada_real.date() <= self.fin else None])
-                    for c in cp + cf:
+                    monto += ln["cantidad"] * ln["precio"]
+                    lns.append({"sku": ln["sku"], "cantidad": ln["cantidad"], "recibida": ln["recibida"]})
+                    transito[(ak, ln["sku"])] += ln["cantidad"]
+                    self.detalles.append([det_id, orden_id, self.productos[ln["sku"]]["producto_id"], ln["cantidad"],
+                                          ln["precio"], ln["recibida"] if recibida_al_corte else None])
+                    for c in ln["claves"]:
                         self.verdad[c]["detalle_id"].add(det_id)
-                        claves_lin.append(c)
 
-                fila_orden = [orden_id, p["proveedor_id"], ts_orden,
-                              datetime.combine(llegada_estim, time(12, 0)), None, "EN_TRANSITO", round(monto, 2)]
+                fila_orden = [orden_id, p["proveedor_id"], plan["ts_orden"],
+                              datetime.combine(plan["llegada_estim"], time(12, 0)), None, "EN_TRANSITO", round(monto, 2)]
                 self.ordenes.append(fila_orden)
                 envio_id = orden_id
                 self.envios.append((envio_id, orden_id, p["proveedor_id"], self.alm[ak]["almacen_id"],
-                                    datetime.combine(salida, time(7, 0)),
-                                    datetime.combine(llegada_estim, time(12, 0)),
-                                    llegada_real if llegada_real.date() <= self.fin else None,
-                                    costo_flete, cond, mm))
-                for c in claves_ret + claves_flete + claves_lin:
+                                    datetime.combine(plan["salida"], time(7, 0)),
+                                    datetime.combine(plan["llegada_estim"], time(12, 0)),
+                                    llegada_real if recibida_al_corte else None,
+                                    plan["costo_flete"], plan["condicion"], plan["precipitacion_mm"]))
+                for c in plan["claves"]:
                     self.verdad[c]["orden_id"].add(orden_id)
                     self.verdad[c]["envio_id"].add(envio_id)
 
                 orden = {"orden_id": orden_id, "ak": ak, "lineas": lns, "llegada_real": llegada_real, "fila": fila_orden}
-                if llegada_real.date() <= self.fin:
+                if recibida_al_corte:
                     llegadas[llegada_real.date()].append(orden)
             dia += timedelta(days=1)
 
