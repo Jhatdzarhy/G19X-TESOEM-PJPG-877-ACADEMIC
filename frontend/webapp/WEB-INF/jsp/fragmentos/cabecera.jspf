@@ -1,8 +1,8 @@
 <%--
-  Cabecera comun de las vistas del dashboard (diseno CC-10).
-  Abre el documento, pinta el menu lateral con los 8 modulos del PDR y abre el
-  contenido. Requiere en request: vista, titulo y usuario (PaginaServlet).
-  data-rol solo ajusta la interfaz; cada Servlet vuelve a validar el rol.
+  Cabecera comun de las vistas del dashboard (diseno CC-10; vistas por modulo CC-24).
+  Abre el documento, pinta el menu lateral con el Resumen y los 8 modulos del PDR y abre
+  el contenido. Requiere en request: vista, titulo y usuario (PaginaServlet).
+  data-rol solo ajusta la interfaz; cada Servlet vuelve a validar el rol (CC-20).
   Todo dato variable pasa por sc:esc (prevencion de XSS).
 --%>
 <%@ page pageEncoding="UTF-8" %>
@@ -29,15 +29,23 @@
     </div>
     <nav class="menu-enlaces" aria-label="Módulos">
         <a class="${vista == 'resumen' || vista == 'actividad' ? 'activo' : ''}" href="${pageContext.request.contextPath}/resumen"
-           ${vista == 'resumen' ? 'aria-current="page"' : ''}>Resumen ejecutivo</a>
-        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Compras</span>
-        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Inventarios</span>
-        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Logística y transporte</span>
-        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Almacenes</span>
-        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Proveedores</span>
+           ${vista == 'resumen' || vista == 'actividad' ? 'aria-current="page"' : ''}>Resumen ejecutivo</a>
+        <a class="${vista == 'compras' ? 'activo' : ''}" href="${pageContext.request.contextPath}/compras"
+           ${vista == 'compras' ? 'aria-current="page"' : ''}>Compras</a>
+        <a class="${vista == 'inventarios' ? 'activo' : ''}" href="${pageContext.request.contextPath}/inventarios"
+           ${vista == 'inventarios' ? 'aria-current="page"' : ''}>Inventarios</a>
+        <a class="${vista == 'logistica' ? 'activo' : ''}" href="${pageContext.request.contextPath}/logistica"
+           ${vista == 'logistica' ? 'aria-current="page"' : ''}>Logística y transporte</a>
+        <a class="${vista == 'almacenes' ? 'activo' : ''}" href="${pageContext.request.contextPath}/almacenes"
+           ${vista == 'almacenes' ? 'aria-current="page"' : ''}>Almacenes</a>
+        <a class="${vista == 'proveedores' ? 'activo' : ''}" href="${pageContext.request.contextPath}/proveedores"
+           ${vista == 'proveedores' ? 'aria-current="page"' : ''}>Proveedores</a>
         <a class="${vista == 'soluciones' || vista == 'asistente' ? 'activo' : ''}" href="${pageContext.request.contextPath}/soluciones"
-           ${vista == 'soluciones' || vista == 'asistente' ? 'aria-current="page"' : ''}>Inteligencia artificial</a>        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Alertas ejecutivas</span>
-        <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente" ${usuario.rol == 'ADMIN' ? '' : 'hidden'}>Administración</span>
+           ${vista == 'soluciones' || vista == 'asistente' ? 'aria-current="page"' : ''}>Inteligencia artificial</a>
+        <a class="${vista == 'alertas' ? 'activo' : ''}" href="${pageContext.request.contextPath}/alertas"
+           ${vista == 'alertas' ? 'aria-current="page"' : ''}>Alertas ejecutivas</a>
+        <a class="${vista == 'administracion' ? 'activo' : ''}" href="${pageContext.request.contextPath}/administracion"
+           ${vista == 'administracion' ? 'aria-current="page"' : ''} ${usuario.rol == 'ADMIN' ? '' : 'hidden'}>Administración</a>
     </nav>
     <div class="menu-usuario">
         <span class="menu-usuario-nombre">${sc:esc(usuario.nombre)}</span>

@@ -24,7 +24,8 @@ import mx.com.develop.supplychain.servicio.FastApiCliente;
  * /api/v1/&lt;ruta&gt; con el token interno. Solo atiende GET y solo rutas de una lista
  * blanca; los parametros de consulta se reconstruyen con valores validados y nunca
  * se reenvia la consulta original. En las rutas del asistente, el usuario sale de la
- * sesion, asi que nadie puede leer conversaciones ajenas.</p>
+ * sesion, asi que nadie puede leer conversaciones ajenas. Las vistas por modulo (CC-24)
+ * leen /modulos/..., /recomendaciones?modulo= y /actividad?solo_alertas=.</p>
  *
  * <p>La respuesta JSON de FastAPI se reenvia sin modificar; el navegador la inserta
  * con textContent (prevencion de XSS).</p>
@@ -49,15 +50,19 @@ public class ApiLecturaServlet extends HttpServlet {
             regla("^/anomalias$"),
             regla("^/anomalias/evaluacion$"),
             new Regla(Pattern.compile("^/recomendaciones$"),
-                    Map.of("vista", Pattern.compile("^(abiertas|en_curso|resueltas)$")), false),
+                    Map.of("vista", Pattern.compile("^(abiertas|en_curso|resueltas)$"),
+                           "modulo", Pattern.compile("^(COMPRAS|INVENTARIOS|LOGISTICA|ALMACENES|PROVEEDORES)$")), false),
             regla("^/recomendaciones/atender-hoy$"),
             regla("^/recomendaciones/[1-9]\\d{0,8}$"),
             regla("^/asistente/sugerencias$"),
             regla("^/asistente/estado$"),
-            regla("^/actividad/resumen$"),
-            new Regla(Pattern.compile("^/actividad$"), Map.of("limite", Pattern.compile("^([1-9]|[1-9]\\d|1\\d\\d|200)$"), "antes_id", ENTERO), false),
             new Regla(Pattern.compile("^/asistente/conversaciones$"), Map.of(), true),
-            new Regla(Pattern.compile("^/asistente/conversaciones/[1-9]\\d{0,8}$"), Map.of(), true));
+            new Regla(Pattern.compile("^/asistente/conversaciones/[1-9]\\d{0,8}$"), Map.of(), true),
+            regla("^/actividad/resumen$"),
+            new Regla(Pattern.compile("^/actividad$"),
+                    Map.of("limite", Pattern.compile("^([1-9]|[1-9]\\d|1\\d\\d|200)$"), "antes_id", ENTERO,
+                           "solo_alertas", Pattern.compile("^(true|false)$")), false),
+            regla("^/modulos/(compras|inventarios|logistica|almacenes)$"));
 
     private static Regla regla(String expresion) {
         return new Regla(Pattern.compile(expresion), Map.of(), false);
