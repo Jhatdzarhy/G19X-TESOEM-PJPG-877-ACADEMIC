@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
   "fecha_actualizacion": "2026-10-15",
-  "fase_actual": "Proyecto final - QA (Fase 6) cerrada el 15 de octubre con 41 de 41 pruebas correctas y 2 defectos corregidos (QA-01 y QA-02); siguiente (jueves 15): manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR (Fases 7 y 8); entrega el viernes 16 por la manana",
+  "fase_actual": "Proyecto final - Fases 6, 7 y 8 cerradas el 15 de octubre: QA con 41 de 41 pruebas, manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR; siguiente (viernes 16 por la manana): acta de capacitacion (Fase 9), informe final (Fase 10), README y entrega",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -98,14 +98,17 @@
       "QA-01: el asistente se quedaba en Consultando cuando Z.AI se saturaba (TimeoutError a 90 s y 429 codigo 1302); espera maxima de 35 s por modelo y plazo total de 100 s por mensaje, menor que los 120 s del AsistenteServlet (commit 04d14d7)",
       "QA-02: el prompt del asistente pide estados con palabras (En meta, Atencion, Critico, Informativo) y sin emojis (commit 9309c34)",
       "Durante la QA: validar_kpis.sql 23 de 23 correctas, verificar_seguridad 21 de 21 con 26 rutas, ciclo de decision con los tres roles en la recomendacion 35 (revertido con SQL), simulador dia 1 determinista y reinicio exacto; Resumen sin cache en 515 ms",
-      "CC-17 actualizado en docs/CONTROL_DE_CAMBIOS.md con QA-01 y QA-02"
+      "CC-17 actualizado en docs/CONTROL_DE_CAMBIOS.md con QA-01 y QA-02",
+      "docs/MANUAL_TECNICO.md (Fase 7): arquitectura, estructura del repositorio, requisitos, configuracion con nombres de variables sin valores, instalacion desde cero en orden, operacion diaria, simulador, catalogo de rutas de Tomcat y de las 26 rutas de FastAPI, seguridad, modelo de datos, modelos analiticos, guia de uso por rol y limitaciones (commit 5b32aa1)",
+      "docs/PLAN_MANTENIMIENTO.md (Fase 8): soporte N1 (ADMIN), N2 (desarrollo de PluriOne) y N3 (Edgar Loeffelmann con el asesor tecnico), cuatro severidades con tiempos en horas habiles, tareas diarias, semanales, mensuales y trimestrales, respaldo y restauracion con pg_dump, rotacion de token y llaves, actualizacion de versiones, 13 fallas conocidas e indicadores del servicio (commit 4d48cb9)",
+      "docs/MATRIZ_TRAZABILIDAD.md: objetivos, alcance, stack, arquitectura, 8 modulos, 11 KPIs con fuente y valor validado, esquema, 8 riesgos, 10 entregables y 4 criterios de aceptacion del PDR con implementacion, CC, evidencia de QA y estado; 8 de 10 entregables cumplidos y Fases 9 y 10 programadas (commit 840fbb4)"
     ],
     "en_progreso": [
-      "Fases 7 y 8 (jueves 15): manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR"
+      "Ninguno: Fases 7 y 8 cerradas; el viernes 16 se elaboran el acta de capacitacion y el informe final"
     ],
     "pendiente": [
       "Antes de la demostracion: python -m etl.simulador_vivo --reiniciar y despues correr el simulador con pausas (unos 30 minutos para ponerse al dia con la fecha real)",
-      "Viernes 16 por la manana: entrega y cierre (Fases 9 y 10)",
+      "Viernes 16 por la manana: acta de capacitacion (Fase 9), informe final (Fase 10) y entrega",
       "README.md en la rama proyecto-final y backend/.env.example sin contrasenas ni llaves",
       "Push inicial a GitHub (ramas master y proyecto-final, etiqueta mvp-v1.0) cuando lo decida la desarrolladora, previa verificacion de que no hay .env, setenv.bat, contrasenas, llaves ni documentos no publicables en el historial",
       "Opcional: instalar Ollama con un modelo de 7 a 8 mil millones de parametros como respaldo local del asistente",
@@ -113,6 +116,9 @@
     ]
   },
   "archivos_modificados_recientemente": [
+    "docs/MANUAL_TECNICO.md",
+    "docs/PLAN_MANTENIMIENTO.md",
+    "docs/MATRIZ_TRAZABILIDAD.md",
     "docs/REPORTE_QA.md",
     "docs/qa",
     "backend/etl/generar_operacion.py",
@@ -274,7 +280,10 @@
     "Funcionalidad congelada el 15 de octubre de 2026: despues solo se corrigen errores encontrados en la QA, cada uno con su commit fix",
     "QA: una prueba es Correcta si el resultado observado coincide con el esperado; cada defecto se corrige con su propio commit fix y se registra con ID QA-NN en el reporte",
     "Evidencia de la QA sin datos de sesion: el valor de la cookie en SEG-08 se enmascara y la captura de Request headers con la cookie no se publica; una captura puede cubrir dos pruebas (docs/qa/INDICE.txt)",
-    "Asistente: 35 s por llamada a cada modelo y 100 s por mensaje (PLAZO_TOTAL), para que el respaldo responda antes de los 120 s del AsistenteServlet; si quedan menos de 5 s no se intenta otro modelo"
+    "Asistente: 35 s por llamada a cada modelo y 100 s por mensaje (PLAZO_TOTAL), para que el respaldo responda antes de los 120 s del AsistenteServlet; si quedan menos de 5 s no se intenta otro modelo",
+    "Documentacion de las Fases 7 y 8 en Markdown dentro de docs/, versionada con el codigo: manual tecnico, plan de mantenimiento y matriz de trazabilidad; los secretos solo se mencionan por nombre de variable",
+    "Soporte multinivel: N1 usuario con rol ADMIN, N2 desarrollo de PluriOne y N3 lider de proyecto con el asesor tecnico; todo incidente de seguridad es severidad 1 y se informa a N3 el mismo dia",
+    "Los respaldos de la base se guardan fuera del repositorio porque contienen hashes de contrasenas e historial de decisiones"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -340,6 +349,7 @@
     "IndentationError en asistente_api.py por un reemplazo parcial; resuelto pegando el archivo completo y verificando con py_compile",
     "validar_kpis.sql dio error de sintaxis porque faltaba -v vol_b64; ademas [IO.File]::ReadAllBytes resuelve rutas relativas contra C:\\Users\\Pamela; resuelto con Resolve-Path y el comando documentado en REPORTE_QA.md (DAT-01)",
     "Get-ChildItem docs\\qa desde backend no encuentra la ruta; los comandos sobre docs se ejecutan desde la raiz",
-    "Expand-Archive ejecutado desde C:\\Users\\Pamela extrajo la evidencia en C:\\Users\\Pamela\\docs; se extrajo de nuevo desde la raiz del proyecto y se borro la copia"
+    "Expand-Archive ejecutado desde C:\\Users\\Pamela extrajo la evidencia en C:\\Users\\Pamela\\docs; se extrajo de nuevo desde la raiz del proyecto y se borro la copia",
+    "Al copiar bloques de codigo con sangria dentro de listas numeradas se perdian los espacios iniciales (MANUAL_TECNICO.md con 12 caracteres de menos); detectado por el conteo de caracteres y resuelto con los comandos en codigo en linea; el commit se corrigio con --amend antes del push"
   ]
 }
