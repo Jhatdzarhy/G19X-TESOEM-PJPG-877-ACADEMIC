@@ -4,6 +4,23 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-15 01:32 | 1cc395e | docs(estado): congelar funcionalidad con simulador en vivo, Server-Sent Events y vistas de los 8 modulos |
+| 2026-10-15 01:29 | a57221e | docs(cambios): registrar CC-22, CC-23 y CC-24 y marcar CC-09, CC-17 y CC-21 como implementados |
+| 2026-10-15 01:18 | 17a525c | feat(frontend): cada estacion del Resumen lleva a su modulo (CC-10, CC-24) |
+| 2026-10-15 01:18 | e7a9c09 | feat(frontend): vistas de los 8 modulos sobre la plantilla JSP comun y lista de usuarios solo para ADMIN (CC-10, CC-20, CC-24) |
+| 2026-10-15 01:18 | cf0be66 | feat(api): detalle de los modulos Compras, Inventarios, Logistica y Almacenes, filtro de alertas y lista de usuarios sin hash (CC-24) |
+| 2026-10-15 00:11 | 70c2663 | fix(asistente): reportar Ollama como no disponible cuando el servidor local no responde (CC-17) |
+| 2026-10-15 00:11 | 2a24ec7 | fix(api): registrar en el historial el usuario de la sesion que marca un paso del plan (CC-20, CC-21) |
+| 2026-10-14 23:41 | 0a4d22a | fix(api): evaluar el estado de cada KPI sobre el valor publicado para que cifra y estado no se contradigan (CC-16, CC-23) |
+| 2026-10-14 23:36 | ca9f022 | feat(frontend): franja de actividad en vivo en el Resumen y vista Ver actividad con Server-Sent Events (CC-09, CC-10, CC-22) |
+| 2026-10-14 23:36 | 56c3adb | feat(frontend): acentos de los textos del simulador en el diccionario de comun.js (CC-11) |
+| 2026-10-14 23:14 | bda700d | feat(frontend): Servlet asincrono de Server-Sent Events con un solo hilo de consulta compartido y actividad en la lista blanca (CC-09, CC-21, CC-22) |
+| 2026-10-14 23:00 | f026f86 | feat(api): endpoints de actividad en vivo con resumen, historial y flujo NDJSON para Server-Sent Events (CC-22) |
+| 2026-10-14 22:49 | df164ef | feat(etl): simulador en vivo con las reglas del generador, reloj simulado, clima de Open-Meteo, cierre diario con analitica y reinicio (CC-09, CC-22) |
+| 2026-10-14 22:33 | e236d1c | feat(db): tablas eventos_vivo y simulador_estado, refresco incremental del modelo estrella y reinicio del simulador (CC-22) |
+| 2026-10-14 21:33 | 6e62851 | chore(etl): extraer revisar_inventario y planear_orden del generador para reutilizarlos en el simulador en vivo, huella identica (CC-09) |
+| 2026-10-14 21:29 | 9796f28 | feat(etl): modo --huella de solo lectura en generar_operacion para verificar el refactor del simulador (CC-09) |
+| 2026-10-13 23:34 | 7b0eeaf | docs(bitacora): regenerar desde git log al cierre del Sprint 3 del 13 de octubre |
 | 2026-10-13 23:34 | c303406 | docs(estado): cerrar Sprint 3 con Resumen ejecutivo, Centro de soluciones y asistente verificados |
 | 2026-10-13 23:21 | dd1fc0f | fix(frontend): mostrar cuanto cuesta de mas una opcion contra no actuar en lugar de un ahorro negativo |
 | 2026-10-13 23:21 | 8fe366f | feat(frontend): vista de chat del asistente con historial, respuesta construida con nodos de texto y modelo, fecha de corte y aviso visibles (CC-17) |
