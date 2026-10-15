@@ -14,6 +14,7 @@ etiqueta mvp-v1.0.
 from fastapi import Depends, FastAPI
 
 from app import (
+    actividad_api,
     asistente_api,
     auth_api,
     kpis,
@@ -35,6 +36,7 @@ app.include_router(pronostico_api.router)
 app.include_router(riesgo_api.router)
 app.include_router(recomendaciones_api.router)
 app.include_router(asistente_api.router)
+app.include_router(actividad_api.router)
 
 
 @app.get("/")
