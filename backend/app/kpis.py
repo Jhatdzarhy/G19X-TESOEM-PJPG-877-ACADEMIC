@@ -249,7 +249,7 @@ def _kpi(clave, nombre, categoria, valor, unidad, fuentes, origen="SIMULADO", de
         "meta": meta["meta"] if meta else None,
         "umbral_critico": meta["critico"] if meta else None,
         "sentido": meta["sentido"] if meta else None,
-        "estado": _estado(clave_meta or clave, valor),
+        "estado": _estado(clave_meta or clave, _r(valor, decimales)),   # CC-23: sobre el valor publicado
         "origen": origen, "fuentes": fuentes, "detalle": detalle,
     }
 
@@ -370,7 +370,7 @@ def estaciones(dias: int = Query(30, ge=7, le=90, description="Largo de la venta
             "clave": clave, "nombre": nombre, "modulo": modulo,
             "kpi": kpi, "etiqueta": etiqueta, "unidad": unidad,
             "valor": _r(valor, 1), "meta": meta["meta"], "umbral_critico": meta["critico"],
-            "sentido": meta["sentido"], "estado": _estado(kpi, valor),
+            "sentido": meta["sentido"], "estado": _estado(kpi, _r(valor, 1)),   # CC-23: sobre el valor publicado
             "variacion_vs_anterior": None if valor is None or previo is None else _r(valor - previo, 1),
             "secundario": _secundario(clave, actual),
             "serie": [{"fecha": d.isoformat(), "valor": _r(v[kpi], 1)} for d, v in series.items()],
