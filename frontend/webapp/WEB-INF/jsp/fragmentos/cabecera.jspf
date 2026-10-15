@@ -28,7 +28,7 @@
         <span class="marca-sub">PluriOne · Dashboard ejecutivo</span>
     </div>
     <nav class="menu-enlaces" aria-label="Módulos">
-        <a class="${vista == 'resumen' ? 'activo' : ''}" href="${pageContext.request.contextPath}/resumen"
+        <a class="${vista == 'resumen' || vista == 'actividad' ? 'activo' : ''}" href="${pageContext.request.contextPath}/resumen"
            ${vista == 'resumen' ? 'aria-current="page"' : ''}>Resumen ejecutivo</a>
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Compras</span>
         <span class="menu-pendiente" aria-disabled="true" title="Disponible próximamente">Inventarios</span>

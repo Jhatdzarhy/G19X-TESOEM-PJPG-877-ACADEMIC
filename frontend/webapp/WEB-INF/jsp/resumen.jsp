@@ -17,6 +17,14 @@
     </div>
 </header>
 
+<section class="franja-vivo" id="franja-vivo" data-estado="RECONECTANDO" aria-label="Actividad en vivo">
+    <span class="franja-estado"><span class="franja-punto" aria-hidden="true"></span><span id="franja-estado">Conectando</span></span>
+    <time class="franja-hora" id="franja-hora"></time>
+    <span class="franja-titulo" id="franja-titulo"></span>
+    <span id="franja-insignia"></span>
+    <a class="franja-enlace" id="franja-contador" href="${pageContext.request.contextPath}/actividad">Ver actividad</a>
+</section>
+
 <p class="aviso aviso-error" id="resumen-error" role="alert" hidden></p>
 
 <section class="tarjeta" aria-labelledby="titulo-estado">
@@ -75,6 +83,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"
         integrity="sha256-SERKgtTty1vsDxll+qzd4Y2cF9swY9BCq62i9wXJ9Uo=" crossorigin="anonymous"></script>
 <script src="${pageContext.request.contextPath}/js/comun.js?v=${sc:esc(version)}"></script>
+<script src="${pageContext.request.contextPath}/js/vivo.js?v=${sc:esc(version)}"></script>
 <script src="${pageContext.request.contextPath}/js/resumen.js?v=${sc:esc(version)}"></script>
 
 <%@ include file="/WEB-INF/jsp/fragmentos/pie.jspf" %>

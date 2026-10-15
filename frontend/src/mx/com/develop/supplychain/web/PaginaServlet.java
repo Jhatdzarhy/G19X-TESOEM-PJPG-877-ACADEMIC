@@ -16,14 +16,15 @@ import java.util.Map;
  * <p>Las vistas viven en WEB-INF/jsp, inaccesibles por URL directa; el filtro
  * de seguridad ya exigio sesion antes de llegar aqui.</p>
  */
-@WebServlet({"/resumen", "/soluciones", "/asistente"})
+@WebServlet({"/resumen", "/soluciones", "/asistente", "/actividad"})
 public class PaginaServlet extends HttpServlet {
 
     /** Ruta publica de la vista: nombre de la JSP y titulo de la pagina. Se agregan vistas en cada bloque. */
-    private static final Map<String, String[]> VISTAS = Map.of(
-            "/resumen", new String[] {"resumen", "Resumen ejecutivo"},
-            "/soluciones", new String[] {"soluciones", "Centro de soluciones"},
-            "/asistente", new String[] {"asistente", "Asistente de IA"});
+    private static final Map<String, String[]> VISTAS = Map.ofEntries(
+            Map.entry("/resumen", new String[] {"resumen", "Resumen ejecutivo"}),
+            Map.entry("/soluciones", new String[] {"soluciones", "Centro de soluciones"}),
+            Map.entry("/asistente", new String[] {"asistente", "Asistente de IA"}),
+            Map.entry("/actividad", new String[] {"actividad", "Actividad en vivo"}));
 
     /** Cambia en cada despliegue (Tomcat recarga la clase) para que el navegador no use JS o CSS viejos. */
     private static final String VERSION = Long.toString(System.currentTimeMillis(), 36);
