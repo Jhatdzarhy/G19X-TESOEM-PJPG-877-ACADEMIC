@@ -54,6 +54,8 @@ public class ApiLecturaServlet extends HttpServlet {
             regla("^/recomendaciones/[1-9]\\d{0,8}$"),
             regla("^/asistente/sugerencias$"),
             regla("^/asistente/estado$"),
+            regla("^/actividad/resumen$"),
+            new Regla(Pattern.compile("^/actividad$"), Map.of("limite", Pattern.compile("^([1-9]|[1-9]\\d|1\\d\\d|200)$"), "antes_id", ENTERO), false),
             new Regla(Pattern.compile("^/asistente/conversaciones$"), Map.of(), true),
             new Regla(Pattern.compile("^/asistente/conversaciones/[1-9]\\d{0,8}$"), Map.of(), true));
 
