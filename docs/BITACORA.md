@@ -4,6 +4,11 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-15 16:43 | 43705f8 | docs(estado): cerrar las Fases 7 y 8 con manual tecnico, plan de mantenimiento y matriz de trazabilidad |
+| 2026-10-15 16:21 | 840fbb4 | docs(trazabilidad): matriz del PDR con implementacion, CC y evidencia de QA por objetivo, modulo, KPI, riesgo y criterio |
+| 2026-10-15 16:20 | 4d48cb9 | docs(mantenimiento): plan de soporte multinivel con severidades, tareas preventivas, procedimientos y fallas conocidas (Fase 8) |
+| 2026-10-15 16:09 | 5b32aa1 | docs(manual): manual tecnico con arquitectura, instalacion, operacion, rutas, seguridad y guia por rol (Fase 7) |
+| 2026-10-15 15:48 | 3da1502 | docs(bitacora): regenerar desde git log con la QA de la Fase 6 |
 | 2026-10-15 15:48 | 238a7f8 | docs(estado): cerrar la QA de la Fase 6 con 41 de 41 pruebas e iniciar las Fases 7 y 8 |
 | 2026-10-15 15:47 | 1fff90d | docs(control-cambios): registrar en CC-17 los defectos QA-01 y QA-02 corregidos en la QA |
 | 2026-10-15 15:25 | afcc1ef | docs(qa): evidencia de las pruebas de la Fase 6 (capturas y salidas de consola) |
