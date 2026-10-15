@@ -137,7 +137,10 @@
         'ultimos': 'últimos', 'Ultimos': 'Últimos', 'proximos': 'próximos', 'cotizacion': 'cotización',
         'automatico': 'automático', 'Atlantico': 'Atlántico', 'exito': 'éxito', 'ordenes': 'órdenes',
         'transito': 'tránsito', 'metodo': 'método', 'Metodo': 'Método', 'decision': 'decisión',
-        'Decision': 'Decisión', 'politica': 'política', 'Politica': 'Política'
+                'Decision': 'Decisión', 'politica': 'política', 'Politica': 'Política',
+        'Envio': 'Envío', 'llego': 'llegó', 'Atencion': 'Atención', 'Critico': 'Crítico',
+        'Simulacion': 'Simulación', 'simulacion': 'simulación', 'Operacion': 'Operación', 'operacion': 'operación',
+        'dia': 'día', 'Pacifico': 'Pacífico', 'Queretaro': 'Querétaro', 'Leon': 'León'
     };
 
     function ortografia(texto) {
