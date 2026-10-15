@@ -453,8 +453,26 @@ def sugerencias():
     ]}
 
 
+def _ollama_responde():
+    """Comprueba en 1 segundo si Ollama local esta encendido (GET /api/tags). Si no responde,
+    se reporta como no disponible en lugar de configurado (CC-17)."""
+    url = next(p["url"] for p in PROVEEDORES if not p["llave"])
+    base = url.split("/v1/")[0]
+    try:
+        with urllib.request.urlopen(base + "/api/tags", timeout=1) as resp:
+            return resp.status == 200
+    except (urllib.error.URLError, TimeoutError, OSError):
+        return False
+
+
 @router.get("/estado")
 def estado():
-    return {"proveedores": [{"nombre": p["nombre"], "modelo": p["modelo"],
-                             "configurado": (not p["llave"]) or bool(os.getenv(p["llave"]))} for p in PROVEEDORES],
-            "limite_mensajes_por_minuto": MENSAJES_POR_MINUTO}
+    """Z.AI: disponible si su llave esta en .env (no se gasta una llamada del plan gratuito para
+    comprobarlo). Ollama: disponible solo si responde en este momento."""
+    lista = []
+    for p in PROVEEDORES:
+        disponible = bool(os.getenv(p["llave"])) if p["llave"] else _ollama_responde()
+        lista.append({"nombre": p["nombre"], "modelo": p["modelo"],
+                      "configurado": disponible, "disponible": disponible,
+                      "comprobacion": "llave en .env" if p["llave"] else "respuesta del servidor local"})
+    return {"proveedores": lista, "limite_mensajes_por_minuto": MENSAJES_POR_MINUTO}
