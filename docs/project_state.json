@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
   "fecha_actualizacion": "2026-10-15",
-  "fase_actual": "Proyecto final - funcionalidad congelada el 15 de octubre: simulador en vivo, Server-Sent Events, franja en vivo y vistas de los 8 modulos verificados en el Tomcat real; siguiente (jueves 15): QA (Fase 6), manual tecnico, plan de mantenimiento y matriz de trazabilidad (Fases 7 y 8); entrega el viernes 16 por la manana",
+  "fase_actual": "Proyecto final - QA (Fase 6) cerrada el 15 de octubre con 41 de 41 pruebas correctas y 2 defectos corregidos (QA-01 y QA-02); siguiente (jueves 15): manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR (Fases 7 y 8); entrega el viernes 16 por la manana",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -92,14 +92,18 @@
       "Revision de los 8 modulos en el navegador con gerencia (EJECUTIVO) y admin (ADMIN): cifras coinciden con el Resumen y el Centro de soluciones; /api/admin/usuarios responde rol_no_autorizado con gerencia; la respuesta de usuarios no contiene hash ni contrasena",
       "Verificacion de seguridad de la API: 21 de 21 pruebas con 26 rutas, todas con token interno obligatorio",
       "Funcionalidad congelada el 15 de octubre de 2026 (commit 17a525c)",
-      "CC-22, CC-23 y CC-24 registrados en docs/CONTROL_DE_CAMBIOS.md; CC-09, CC-10, CC-17, CC-20 y CC-21 actualizados como implementados"
+      "CC-22, CC-23 y CC-24 registrados en docs/CONTROL_DE_CAMBIOS.md; CC-09, CC-10, CC-17, CC-20 y CC-21 actualizados como implementados",
+      "QA (Fase 6) del 14 y 15 de octubre: 41 de 41 pruebas correctas en 8 bloques (seguridad 9, roles 5, Resumen 5, modulos 7, Centro de soluciones 4, asistente 4, simulador en vivo 5, datos 2); reporte docs/REPORTE_QA.md (commit 64648c1)",
+      "Evidencia de la QA en docs/qa: 43 capturas, 7 salidas de consola e INDICE.txt, sin cookies de sesion, tokens ni llaves (commit afcc1ef)",
+      "QA-01: el asistente se quedaba en Consultando cuando Z.AI se saturaba (TimeoutError a 90 s y 429 codigo 1302); espera maxima de 35 s por modelo y plazo total de 100 s por mensaje, menor que los 120 s del AsistenteServlet (commit 04d14d7)",
+      "QA-02: el prompt del asistente pide estados con palabras (En meta, Atencion, Critico, Informativo) y sin emojis (commit 9309c34)",
+      "Durante la QA: validar_kpis.sql 23 de 23 correctas, verificar_seguridad 21 de 21 con 26 rutas, ciclo de decision con los tres roles en la recomendacion 35 (revertido con SQL), simulador dia 1 determinista y reinicio exacto; Resumen sin cache en 515 ms",
+      "CC-17 actualizado en docs/CONTROL_DE_CAMBIOS.md con QA-01 y QA-02"
     ],
     "en_progreso": [
-      "Ninguno: funcionalidad congelada; el jueves 15 inicia la QA (Fase 6)"
+      "Fases 7 y 8 (jueves 15): manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR"
     ],
     "pendiente": [
-      "Jueves 15: QA (Fase 6): python -m admin.verificar_seguridad, login y bloqueo, roles (OPERACIONES sin decisiones, solo ADMIN en Administracion), Centro de soluciones, asistente, simulador en vivo con la franja y los 8 modulos; reporte de evidencia",
-      "Jueves 15: manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR (Fases 7 y 8)",
       "Antes de la demostracion: python -m etl.simulador_vivo --reiniciar y despues correr el simulador con pausas (unos 30 minutos para ponerse al dia con la fecha real)",
       "Viernes 16 por la manana: entrega y cierre (Fases 9 y 10)",
       "README.md en la rama proyecto-final y backend/.env.example sin contrasenas ni llaves",
@@ -109,6 +113,8 @@
     ]
   },
   "archivos_modificados_recientemente": [
+    "docs/REPORTE_QA.md",
+    "docs/qa",
     "backend/etl/generar_operacion.py",
     "backend/etl/simulador_vivo.py",
     "db/final/07_simulador_vivo.sql",
@@ -265,7 +271,10 @@
     "CC-24: Rutas y clima no inventa datos: en transito con llegada vencida se marca Atrasado N dias; el clima en transito se muestra hasta la fecha de corte y Sin dato aun si no hay ningun dato, porque el generador trata como DESPEJADO 0 mm un dia sin dato en la cache",
     "Almacenes: el KPI de utilizacion es de la red en la ventana de 30 dias (equivale al promedio de 30 dias ponderado por capacidad); la tabla del modulo desglosa cada almacen al corte, en promedio y en maximo",
     "La etiqueta del rol ADMIN en la tabla de Administracion es Administracion, igual que en el menu lateral (rolVisible de UsuarioSesion)",
-    "Funcionalidad congelada el 15 de octubre de 2026: despues solo se corrigen errores encontrados en la QA, cada uno con su commit fix"
+    "Funcionalidad congelada el 15 de octubre de 2026: despues solo se corrigen errores encontrados en la QA, cada uno con su commit fix",
+    "QA: una prueba es Correcta si el resultado observado coincide con el esperado; cada defecto se corrige con su propio commit fix y se registra con ID QA-NN en el reporte",
+    "Evidencia de la QA sin datos de sesion: el valor de la cookie en SEG-08 se enmascara y la captura de Request headers con la cookie no se publica; una captura puede cubrir dos pruebas (docs/qa/INDICE.txt)",
+    "Asistente: 35 s por llamada a cada modelo y 100 s por mensaje (PLAZO_TOTAL), para que el respaldo responda antes de los 120 s del AsistenteServlet; si quedan menos de 5 s no se intenta otro modelo"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -326,6 +335,11 @@
     "Logistica mostro 'El servicio de analisis no esta disponible' tras un reemplazo parcial en modulos_api.py; resuelto reemplazando el archivo completo",
     "Logistica mostro 'Cannot read properties of undefined (reading 0)' porque el navegador tenia el modulo.js anterior sin el estado ATRASADO; resuelto ejecutando build.ps1",
     "La ultima linea de una JSP se pego en la terminal y PowerShell respondio que '<' no se reconoce; no cambio ningun archivo; se revisa que la linea de la terminal este vacia antes de pegar un comando",
-    "F12 activa el modo avion en la laptop de desarrollo y desconecta internet; las herramientas del navegador se abren con Ctrl+Shift+I o Fn+F12"
+    "F12 activa el modo avion en la laptop de desarrollo y desconecta internet; las herramientas del navegador se abren con Ctrl+Shift+I o Fn+F12",
+    "El asistente se quedaba en Consultando: GLM-4.7-Flash agoto 90 s y despues respondio 429 codigo 1302, y el Servlet cortaba a los 120 s; resuelto con QA-01 (commit 04d14d7)",
+    "IndentationError en asistente_api.py por un reemplazo parcial; resuelto pegando el archivo completo y verificando con py_compile",
+    "validar_kpis.sql dio error de sintaxis porque faltaba -v vol_b64; ademas [IO.File]::ReadAllBytes resuelve rutas relativas contra C:\\Users\\Pamela; resuelto con Resolve-Path y el comando documentado en REPORTE_QA.md (DAT-01)",
+    "Get-ChildItem docs\\qa desde backend no encuentra la ruta; los comandos sobre docs se ejecutan desde la raiz",
+    "Expand-Archive ejecutado desde C:\\Users\\Pamela extrajo la evidencia en C:\\Users\\Pamela\\docs; se extrajo de nuevo desde la raiz del proyecto y se borro la copia"
   ]
 }
