@@ -4,6 +4,15 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-16 00:34 | 98b69ab | docs(estado): cerrar las Fases 9 y 10 con guia de capacitacion, informe final, README y plantilla de configuracion |
+| 2026-10-16 00:31 | 78ce3f5 | fix(manual): escribir los apellidos de la desarrolladora sin acentos, como en el acta de nacimiento |
+| 2026-10-16 00:28 | 313be51 | docs(trazabilidad): marcar las Fases 9 y 10 como cumplidas con la guia de capacitacion y el informe final |
+| 2026-10-16 00:23 | a824d24 | docs(cierre): informe final con resultados contra objetivos, entregables, cambios y lecciones aprendidas (Fase 10) |
+| 2026-10-16 00:19 | 0f6959c | chore(config): plantilla backend/.env.example con los nombres de las variables y sin valores (CC-12) |
+| 2026-10-16 00:16 | cba21d0 | docs(readme): descripcion, funcionalidad, versiones, como levantar el sistema y documentacion del proyecto |
+| 2026-10-15 17:04 | aca70d8 | docs(control-cambios): registrar CC-25, capacitacion sin usuarios finales designados con guia y formato de acta |
+| 2026-10-15 17:04 | 1514d12 | docs(capacitacion): guia de capacitacion por rol con ejercicios, criterios y formato de acta (Fase 9, CC-25) |
+| 2026-10-15 16:44 | d9629db | docs(bitacora): regenerar desde git log con las Fases 7 y 8 |
 | 2026-10-15 16:43 | 43705f8 | docs(estado): cerrar las Fases 7 y 8 con manual tecnico, plan de mantenimiento y matriz de trazabilidad |
 | 2026-10-15 16:21 | 840fbb4 | docs(trazabilidad): matriz del PDR con implementacion, CC y evidencia de QA por objetivo, modulo, KPI, riesgo y criterio |
 | 2026-10-15 16:20 | 4d48cb9 | docs(mantenimiento): plan de soporte multinivel con severidades, tareas preventivas, procedimientos y fallas conocidas (Fase 8) |
