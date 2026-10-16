@@ -123,9 +123,9 @@ Cada KPI tiene fuente trazable en el esquema de la sección 8 (criterio de acept
 | R1 | Disponibilidad o cambios de APIs públicas | Caché local del clima; histórico FIX cargado en la base; datos base independientes de las APIs; respaldo de modelos del asistente | CC-03, CC-04, CC-17 | QA-01, plan de mantenimiento 4.4 | Mitigado |
 | R2 | Poco histórico para los modelos | 12 meses simulados con reglas de negocio, eventos inyectados con verdad conocida y estacionalidad semanal | CC-07 | `evaluacion_anomalias.json`, DAT-01 | Mitigado |
 | R3 | Retrasos en la integración Java-Python | Contrato OpenAPI, cliente Java propio y verificación automatizada del canal | CC-21 | SEG-01 | Mitigado |
-| R4 | Baja adopción ejecutiva | Resumen de una pantalla, gráficas primero, decisiones con impacto en MXN y guía por rol | CC-10 | RES-01 a RES-05; capacitación de la Fase 9 | Mitigado; capacitación programada |
+| R4 | Baja adopción ejecutiva | Resumen de una pantalla, gráficas primero, decisiones con impacto en MXN y guía por rol | CC-10 | RES-01 a RES-05; `docs/GUIA_CAPACITACION.md` | Mitigado; sesión pendiente (CC-25) |
 | R5 | Escalabilidad de PostgreSQL | Modelo estrella con índices; analítica en lote; carga del Resumen en 515 ms | CC-02 | DAT-02 | Mitigado |
-| R6 | Cambios de alcance | Control de cambios formal con 24 CC | Todos | `docs/CONTROL_DE_CAMBIOS.md` | Mitigado |
+| R6 | Cambios de alcance | Control de cambios formal con 25 CC | Todos | `docs/CONTROL_DE_CAMBIOS.md` | Mitigado |
 | R7 | Vulnerabilidades en autenticación y roles | PBKDF2, bloqueo por intentos, sesión segura, CSRF, CSP, roles por Servlet, canal interno con token | CC-20, CC-21 | SEG-01 a SEG-09, ROL-01 a ROL-05 | Mitigado |
 | R8 | Dependencia de una sola desarrolladora | Manual técnico, plan de mantenimiento, reporte QA, matriz, bitácora y estado versionados | — | Documentos de `docs/` | Mitigado |
 
@@ -145,8 +145,8 @@ Fechas de acuerdo con la extensión registrada en CC-14.
 | 6 | Reporte QA | `docs/REPORTE_QA.md` y `docs/qa/` | Cumplido |
 | 7 | Manual técnico | `docs/MANUAL_TECNICO.md` | Cumplido |
 | 8 | Plan de mantenimiento | `docs/PLAN_MANTENIMIENTO.md` | Cumplido |
-| 9 | Acta de capacitación | 16 de octubre de 2026 | Programado |
-| 10 | Informe final | 16 de octubre de 2026 | Programado |
+| 9 | Acta de capacitación | `docs/GUIA_CAPACITACION.md` con el formato de acta; sesión pendiente de que se designen usuarios (CC-25) | Cumplido con CC |
+| 10 | Informe final | `docs/INFORME_FINAL.md` | Cumplido |
 
 ---
 
@@ -170,5 +170,5 @@ Fechas de acuerdo con la extensión registrada en CC-14.
 | 6. Módulos | 8 | 8 | 0 |
 | 7. KPIs | 11 | 11 | 0 |
 | 9. Riesgos | 8 | 8 | 0 |
-| 10. Entregables | 10 | 8 | 2 (Fases 9 y 10) |
+| 10. Entregables | 10 | 10 | 0 |
 | 12. Criterios de aceptación | 4 | 4 | 0 |
