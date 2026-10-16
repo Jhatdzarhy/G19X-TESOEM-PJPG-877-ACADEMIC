@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
   "fecha_actualizacion": "2026-10-15",
-  "fase_actual": "Proyecto final - Fases 6, 7 y 8 cerradas el 15 de octubre: QA con 41 de 41 pruebas, manual tecnico, plan de mantenimiento y matriz de trazabilidad del PDR; siguiente (viernes 16 por la manana): acta de capacitacion (Fase 9), informe final (Fase 10), README y entrega",
+  "fase_actual": "Proyecto final - Fases 1 a 10 cerradas el 16 de octubre: guia de capacitacion (Fase 9, CC-25), informe final (Fase 10), README y plantilla .env.example; siguiente: revision del historial sin secretos, push a GitHub y rama predeterminada proyecto-final para la evaluacion de Edgar Loeffelmann",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -101,24 +101,34 @@
       "CC-17 actualizado en docs/CONTROL_DE_CAMBIOS.md con QA-01 y QA-02",
       "docs/MANUAL_TECNICO.md (Fase 7): arquitectura, estructura del repositorio, requisitos, configuracion con nombres de variables sin valores, instalacion desde cero en orden, operacion diaria, simulador, catalogo de rutas de Tomcat y de las 26 rutas de FastAPI, seguridad, modelo de datos, modelos analiticos, guia de uso por rol y limitaciones (commit 5b32aa1)",
       "docs/PLAN_MANTENIMIENTO.md (Fase 8): soporte N1 (ADMIN), N2 (desarrollo de PluriOne) y N3 (Edgar Loeffelmann con el asesor tecnico), cuatro severidades con tiempos en horas habiles, tareas diarias, semanales, mensuales y trimestrales, respaldo y restauracion con pg_dump, rotacion de token y llaves, actualizacion de versiones, 13 fallas conocidas e indicadores del servicio (commit 4d48cb9)",
-      "docs/MATRIZ_TRAZABILIDAD.md: objetivos, alcance, stack, arquitectura, 8 modulos, 11 KPIs con fuente y valor validado, esquema, 8 riesgos, 10 entregables y 4 criterios de aceptacion del PDR con implementacion, CC, evidencia de QA y estado; 8 de 10 entregables cumplidos y Fases 9 y 10 programadas (commit 840fbb4)"
+      "docs/MATRIZ_TRAZABILIDAD.md: objetivos, alcance, stack, arquitectura, 8 modulos, 11 KPIs con fuente y valor validado, esquema, 8 riesgos, 10 entregables y 4 criterios de aceptacion del PDR con implementacion, CC, evidencia de QA y estado; 8 de 10 entregables cumplidos y Fases 9 y 10 programadas (commit 840fbb4)",
+      "docs/GUIA_CAPACITACION.md (Fase 9): preparacion del instructor, 7 modulos por rol con objetivo, ejercicio y criterio de aprendizaje, cierre que regresa la base al estado validado y formato de acta en blanco (commit 1514d12)",
+      "CC-25 aprobado: capacitacion sin usuarios finales designados; la Fase 9 se cumple con la guia y el formato de acta, sin registrar una sesion que no ocurrio (commit aca70d8)",
+      "README.md: descripcion alineada al documento del proyecto, funcionalidad por vista, detalles importantes, versiones exactas, como levantar el sistema, documentacion y atribuciones; sin usuarios, contrasenas ni rutas de secretos (commit cba21d0)",
+      "backend/.env.example con los nombres de las variables y sin valores; git check-ignore confirma que backend/.env sigue ignorado (commit 0f6959c)",
+      "Revision de credenciales en los archivos versionados de backend, frontend y db: sin contrasenas, tokens ni llaves escritos; solo los hashes publicos de integridad de Bootstrap y Chart.js",
+      "docs/INFORME_FINAL.md (Fase 10): resultados contra los 5 objetivos, resultados tecnicos, entregables, 25 CC, evaluacion post-implementacion por revision en GitHub, 12 lecciones aprendidas y trabajo futuro (commit a824d24)",
+      "Matriz de trazabilidad con las Fases 9 y 10 cumplidas: 10 de 10 entregables (commit 313be51)"
     ],
     "en_progreso": [
-      "Ninguno: Fases 7 y 8 cerradas; el viernes 16 se elaboran el acta de capacitacion y el informe final"
+      "Preparacion del push: revision del historial completo sin secretos"
     ],
     "pendiente": [
       "Antes de la demostracion: python -m etl.simulador_vivo --reiniciar y despues correr el simulador con pausas (unos 30 minutos para ponerse al dia con la fecha real)",
-      "Viernes 16 por la manana: acta de capacitacion (Fase 9), informe final (Fase 10) y entrega",
-      "README.md en la rama proyecto-final y backend/.env.example sin contrasenas ni llaves",
       "Push inicial a GitHub (ramas master y proyecto-final, etiqueta mvp-v1.0) cuando lo decida la desarrolladora, previa verificacion de que no hay .env, setenv.bat, contrasenas, llaves ni documentos no publicables en el historial",
       "Opcional: instalar Ollama con un modelo de 7 a 8 mil millones de parametros como respaldo local del asistente",
       "Opcional despues de la entrega: etiqueta de valor en las barras de 0% de la grafica de rutas y mostrar bloqueado_hasta en Administracion"
     ]
   },
   "archivos_modificados_recientemente": [
+    "README.md",
+    "backend/.env.example",
+    "docs/GUIA_CAPACITACION.md",
+    "docs/INFORME_FINAL.md",
+    "docs/CONTROL_DE_CAMBIOS.md",
+    "docs/MATRIZ_TRAZABILIDAD.md",
     "docs/MANUAL_TECNICO.md",
     "docs/PLAN_MANTENIMIENTO.md",
-    "docs/MATRIZ_TRAZABILIDAD.md",
     "docs/REPORTE_QA.md",
     "docs/qa",
     "backend/etl/generar_operacion.py",
@@ -142,7 +152,6 @@
     "frontend/webapp/WEB-INF/jsp/resumen.jsp",
     "frontend/webapp/js",
     "frontend/webapp/css/app.css",
-    "docs/CONTROL_DE_CAMBIOS.md",
     "docs/project_state.json"
   ],
   "decisiones_de_diseno": [
@@ -283,7 +292,11 @@
     "Asistente: 35 s por llamada a cada modelo y 100 s por mensaje (PLAZO_TOTAL), para que el respaldo responda antes de los 120 s del AsistenteServlet; si quedan menos de 5 s no se intenta otro modelo",
     "Documentacion de las Fases 7 y 8 en Markdown dentro de docs/, versionada con el codigo: manual tecnico, plan de mantenimiento y matriz de trazabilidad; los secretos solo se mencionan por nombre de variable",
     "Soporte multinivel: N1 usuario con rol ADMIN, N2 desarrollo de PluriOne y N3 lider de proyecto con el asesor tecnico; todo incidente de seguridad es severidad 1 y se informa a N3 el mismo dia",
-    "Los respaldos de la base se guardan fuera del repositorio porque contienen hashes de contrasenas e historial de decisiones"
+    "Los respaldos de la base se guardan fuera del repositorio porque contienen hashes de contrasenas e historial de decisiones",
+    "La evaluacion post-implementacion la hace Edgar Loeffelmann revisando el repositorio en GitHub; no hay presentacion ni sesion de capacitacion (CC-25)",
+    "Al publicar, la rama predeterminada de GitHub pasa a proyecto-final para que el README visible sea el del proyecto final; master y la etiqueta mvp-v1.0 se conservan sin cambios",
+    "El README no menciona rutas de archivos de secretos ni nombres de cuentas; la ubicacion de la configuracion esta en el manual tecnico",
+    "Los apellidos de la desarrolladora se escriben sin acentos, como en su acta de nacimiento (Perez Gomez); la modalidad academica es Residencia Profesional"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -350,6 +363,8 @@
     "validar_kpis.sql dio error de sintaxis porque faltaba -v vol_b64; ademas [IO.File]::ReadAllBytes resuelve rutas relativas contra C:\\Users\\Pamela; resuelto con Resolve-Path y el comando documentado en REPORTE_QA.md (DAT-01)",
     "Get-ChildItem docs\\qa desde backend no encuentra la ruta; los comandos sobre docs se ejecutan desde la raiz",
     "Expand-Archive ejecutado desde C:\\Users\\Pamela extrajo la evidencia en C:\\Users\\Pamela\\docs; se extrajo de nuevo desde la raiz del proyecto y se borro la copia",
-    "Al copiar bloques de codigo con sangria dentro de listas numeradas se perdian los espacios iniciales (MANUAL_TECNICO.md con 12 caracteres de menos); detectado por el conteo de caracteres y resuelto con los comandos en codigo en linea; el commit se corrigio con --amend antes del push"
+    "Al copiar bloques de codigo con sangria dentro de listas numeradas se perdian los espacios iniciales (MANUAL_TECNICO.md con 12 caracteres de menos); detectado por el conteo de caracteres y resuelto con los comandos en codigo en linea; el commit se corrigio con --amend antes del push",
+    "git grep mostraba solo la primera pantalla por el paginador; se usa git --no-pager grep para revisar la salida completa",
+    "Una carpeta backend/docs con una copia vieja de REPORTE_QA.md (15328 bytes) quedo sin versionar por un New-Item ejecutado desde backend; se comparo contra la version buena y se borro"
   ]
 }
