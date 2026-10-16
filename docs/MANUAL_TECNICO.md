@@ -4,7 +4,7 @@
 **Empresa:** PluriOne S.A. de C.V. (Develop Talent & Technology)
 **Documento de referencia:** PDR-SCM-2026-001 v1.0, Fase 7 (Documentación técnica y de usuario)
 **Versión del sistema:** rama `proyecto-final`, funcionalidad congelada el 15 de octubre de 2026
-**Desarrolladora:** Pamela Jhatdzarhy Pérez Gómez
+**Desarrolladora:** Pamela Jhatdzarhy Perez Gomez
 
 Este manual explica cómo está construido el sistema, cómo se instala desde cero, cómo se opera cada día y cómo lo usa cada rol. Las decisiones que extienden o precisan el PDR están en `docs/CONTROL_DE_CAMBIOS.md` (CC-01 a CC-24); aquí se citan por su número. Las pruebas están en `docs/REPORTE_QA.md`.
 
