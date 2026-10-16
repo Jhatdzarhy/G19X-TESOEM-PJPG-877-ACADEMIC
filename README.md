@@ -47,7 +47,7 @@ Proyecto de Residencia Profesional desarrollado por Pamela J. Perez G. en PluriO
 ## Arquitectura
 
 ```mermaid
-flowchart LR
+flowchart TB
     N[Navegador] --> T["Tomcat<br/>Servlets y JSP"]
     T -- "REST interno con token" --> F["FastAPI<br/>motor analítico"]
     F --> P[("PostgreSQL")]
