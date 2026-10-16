@@ -4,6 +4,9 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-16 00:51 | afaa060 | docs(estado): registrar la revision del historial y la publicacion en GitHub con proyecto-final como rama predeterminada |
+| 2026-10-16 00:48 | 1546f74 | docs(readme): dibujar el diagrama de arquitectura de arriba hacia abajo para que GitHub no tape PostgreSQL |
+| 2026-10-16 00:34 | c324bab | docs(bitacora): regenerar desde git log con el cierre de las Fases 9 y 10 |
 | 2026-10-16 00:34 | 98b69ab | docs(estado): cerrar las Fases 9 y 10 con guia de capacitacion, informe final, README y plantilla de configuracion |
 | 2026-10-16 00:31 | 78ce3f5 | fix(manual): escribir los apellidos de la desarrolladora sin acentos, como en el acta de nacimiento |
 | 2026-10-16 00:28 | 313be51 | docs(trazabilidad): marcar las Fases 9 y 10 como cumplidas con la guia de capacitacion y el informe final |
