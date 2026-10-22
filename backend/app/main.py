@@ -12,7 +12,13 @@ formulas y umbrales no coinciden con CC-15 y CC-16. Se conservan en la
 etiqueta mvp-v1.0.
 
 Las vistas por modulo (CC-24) leen el detalle de modulos_api.
+
+Al arrancar se valida la configuracion de PostgreSQL de backend/.env
+(app/database.py): si falta una variable obligatoria, FastAPI no levanta y la
+consola dice cual falta.
 """
+from contextlib import asynccontextmanager
+
 from fastapi import Depends, FastAPI
 
 from app import (
@@ -25,12 +31,21 @@ from app import (
     recomendaciones_api,
     riesgo_api,
 )
+from app.database import configuracion
 from app.seguridad import verificar_token_interno
+
+
+@asynccontextmanager
+async def ciclo_de_vida(_app):
+    configuracion()          # ConfiguracionError detiene el arranque con un mensaje claro
+    yield
+
 
 app = FastAPI(
     title="Supply Chain Dashboard - Analytics API",
     version="0.4.0",
     dependencies=[Depends(verificar_token_interno)],
+    lifespan=ciclo_de_vida,
 )
 
 app.include_router(auth_api.router)
