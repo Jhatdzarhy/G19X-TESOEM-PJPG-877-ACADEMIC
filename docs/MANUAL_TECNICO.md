@@ -53,7 +53,7 @@ supply-chain-dashboard/
 │   │   └── datos/      config_simulacion.json, eventos_inyectados.json, volumen_por_sku.json
 │   └── requirements.txt
 ├── db/
-│   ├── final/          01 a 07 (esquema y extensiones), 03_verificar_extensiones.sql, validar_kpis.sql
+│   ├── final/          01 a 07 (esquema y extensiones), 99_verificar_extensiones.sql, validar_kpis.sql
 │   └── schema.sql      esquema del MVP (etiqueta mvp-v1.0), no se usa en el proyecto final
 ├── frontend/
 │   ├── build.ps1       compila y despliega en Tomcat
@@ -142,12 +142,12 @@ psql -U postgres -c "CREATE DATABASE supply_chain_final ENCODING 'UTF8'"
 psql -U postgres -d supply_chain_final -f db\final\01_esquema_pdr.sql
 psql -U postgres -d supply_chain_final -f db\final\02_centro_soluciones.sql
 psql -U postgres -d supply_chain_final -f db\final\03_extensiones_modelo.sql
-psql -U postgres -d supply_chain_final -f db\final\03_verificar_extensiones.sql
+psql -U postgres -d supply_chain_final -f db\final\99_verificar_extensiones.sql
 psql -U postgres -d supply_chain_final -f db\final\05_asistente.sql
 psql -U postgres -d supply_chain_final -f db\final\06_usuarios.sql
 ```
 
-`03_verificar_extensiones.sql` debe reportar 36 de 36 pruebas correctas.
+`99_verificar_extensiones.sql` debe reportar 36 de 36 pruebas correctas.
 
 ### 5.3 Carga de datos (carpeta `backend`, entorno virtual activo)
 
@@ -379,7 +379,7 @@ Cada decisión queda en el historial del caso con usuario y fecha.
 
 | Verificación | Comando o documento | Resultado esperado |
 |---|---|---|
-| Extensiones del modelo | `db\final\03_verificar_extensiones.sql` | 36 de 36 |
+| Extensiones del modelo | `db\final\99_verificar_extensiones.sql` | 36 de 36 |
 | Integridad y KPIs | `db\final\validar_kpis.sql` (sección 5.8) | 23 de 23 |
 | Seguridad de la API | `python -m admin.verificar_seguridad` | 21 de 21, 26 rutas |
 | Huella del generador | `python -m etl.generar_operacion --huella` | `efe7c9c4...` |

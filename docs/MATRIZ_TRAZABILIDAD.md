@@ -108,9 +108,9 @@ Cada KPI tiene fuente trazable en el esquema de la sección 8 (criterio de acept
 | Elemento | Implementación | CC | Evidencia | Estado |
 |---|---|---|---|---|
 | 8.1 Ocho tablas operacionales | `db/final/01_esquema_pdr.sql`, sin eliminar ni renombrar columnas | CC-06 | DAT-01 (pruebas de integridad 1 a 10) | Cumplido con CC |
-| 8.1 Columnas para trazabilidad de OTIF y Fill Rate | `cantidad_recibida`, `orden_id` en movimientos, tabla `demanda_diaria` | CC-02 | `03_verificar_extensiones.sql` (36 de 36) | Cumplido con CC |
+| 8.1 Columnas para trazabilidad de OTIF y Fill Rate | `cantidad_recibida`, `orden_id` en movimientos, tabla `demanda_diaria` | CC-02 | `99_verificar_extensiones.sql` (36 de 36) | Cumplido con CC |
 | 8.2 `fact_supply_chain`, `dim_tiempo` y `forecast_demanda` | `db/final/04_agregacion_fact.sql`; pronóstico escrito por `analitica/pronostico.py` | CC-02, CC-07 | DAT-01 | Cumplido con CC |
-| 8.2 Índices recomendados | Índices por fecha, producto y proveedor en `fact_supply_chain` y compuesto en `ordenes_compra` | CC-02 | `03_verificar_extensiones.sql` | Cumplido |
+| 8.2 Índices recomendados | Índices por fecha, producto y proveedor en `fact_supply_chain` y compuesto en `ordenes_compra` | CC-02 | `99_verificar_extensiones.sql` | Cumplido |
 | Tablas adicionales | `recomendaciones`, `plan_acciones`, `asistente_*`, `usuarios`, `eventos_vivo`, `simulador_estado` | CC-01, CC-17, CC-20, CC-22 | SOL-03, IA-01, ROL-03, VIV-01 | Cumplido con CC |
 | Texto en ASCII | Saneamiento antes de insertar | CC-11 | DAT-01 (prueba 8) | Cumplido con CC |
 
