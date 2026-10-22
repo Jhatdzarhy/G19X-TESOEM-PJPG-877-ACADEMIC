@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
-  "fecha_actualizacion": "2026-10-15",
-  "fase_actual": "Proyecto final entregado el 16 de octubre: Fases 1 a 10 cerradas y repositorio publicado en GitHub con proyecto-final como rama predeterminada; en espera de la evaluacion de Edgar Loeffelmann",
+  "fecha_actualizacion": "2026-10-22",
+  "fase_actual": "Atencion de la retroalimentacion de TODO Academy (cortes del 19 y 21 de octubre): pruebas automaticas, funcionamiento sin llaves e instalacion en un paso; la funcionalidad congelada no cambia",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -110,53 +110,41 @@
       "docs/INFORME_FINAL.md (Fase 10): resultados contra los 5 objetivos, resultados tecnicos, entregables, 25 CC, evaluacion post-implementacion por revision en GitHub, 12 lecciones aprendidas y trabajo futuro (commit a824d24)",
       "Matriz de trazabilidad con las Fases 9 y 10 cumplidas: 10 de 10 entregables (commit 313be51)",
       "Historial completo revisado antes del push: ningun commit contiene .env, setenv.bat, entornos virtuales, caches, .vscode, frontend/build, el PDR, documentos internos, contrasenas, cadenas de conexion ni tokens",
-      "Push a GitHub: proyecto-final primero (rama predeterminada), master y etiqueta mvp-v1.0; git ls-remote confirma HEAD en proyecto-final"
+      "Push a GitHub: proyecto-final primero (rama predeterminada), master y etiqueta mvp-v1.0; git ls-remote confirma HEAD en proyecto-final",
+      "Bloque 1 de la retroalimentacion: backend/app/database.py sin contrasena por omision, DB_USER y DB_PASSWORD obligatorias, supply_chain_final por omision y rechazo de supply_chain_mvp; FastAPI valida la configuracion al arrancar (lifespan en app/main.py); verificar_seguridad 21 de 21 con 26 rutas",
+      "Scripts de db/final con base destino parametrizable (psql -v base=<nombre>, por omision supply_chain_final) en lugar de una conexion fija a supply_chain_final",
+      "04_agregacion_fact.sql crea refrescar_modelo_estrella() aunque la base no tenga datos y solo agrega si hay demanda_diaria; 01 a 07 y 99 corren en orden numerico en una base vacia (verificado en supply_chain_prueba, 36 de 36)",
+      "Verificacion de extensiones renombrada a db/final/99_verificar_extensiones.sql; cuenta por nombre las 14 tablas de 01 a 03: 36 de 36 en supply_chain_final con 19 tablas; validar_kpis.sql 23 de 23",
+      "Respaldo de supply_chain_final antes del bloque 1 en C:/respaldos/supply_chain_final_20261022.dump (fuera del repositorio)"
     ],
-    "en_progreso": [
-      "Ninguno: proyecto entregado; en espera de la evaluacion de Edgar Loeffelmann en GitHub"
-    ],
-    "pendiente": [
-      "Subir el descriptivo del proyecto (PDF) en TODO Academy, Mis proyectos; no se versiona en el repositorio",
-      "Atender las observaciones de la evaluacion con el flujo de mantenimiento correctivo (commit fix y push)",
-      "Antes de la demostracion: python -m etl.simulador_vivo --reiniciar y despues correr el simulador con pausas (unos 30 minutos para ponerse al dia con la fecha real)",
-      "Opcional: instalar Ollama con un modelo de 7 a 8 mil millones de parametros como respaldo local del asistente",
-      "Opcional despues de la entrega: etiqueta de valor en las barras de 0% de la grafica de rutas y mostrar bloqueado_hasta en Administracion"
-    ]
+"en_progreso": [
+  "Bloque 2 de la retroalimentacion: pruebas automaticas con pytest de seguridad.py, auth_api.py y KPIs, sin PostgreSQL ni llaves (CC-26)"
+],
+"pendiente": [
+  "Bloque 3: datos de respaldo versionados (FIX de Banxico, catalogo de DummyJSON y clima de Open-Meteo) para cargar sin llaves con la misma huella efe7c9c4 (CC-27)",
+  "Bloque 4: instalar.ps1 en la raiz y admin.cargar_todo para instalar en un paso; documentacion con CATALINA_HOME en lugar de rutas fijas (CC-28)",
+  "Bloque 5: declarar el uso de IA en el README, prueba de instalacion en un clon limpio con supply_chain_prueba y evidencia en docs/qa",
+  "Subir el descriptivo del proyecto (PDF) en TODO Academy, Mis proyectos; no se versiona en el repositorio",
+  "Antes de la demostracion: python -m etl.simulador_vivo --reiniciar y despues correr el simulador con pausas",
+  "Opcional: instalar Ollama con un modelo de 7 a 8 mil millones de parametros como respaldo local del asistente",
+  "Opcional despues de la entrega: etiqueta de valor en las barras de 0% de la grafica de rutas y mostrar bloqueado_hasta en Administracion"
+]
   },
   "archivos_modificados_recientemente": [
-    "README.md",
-    "backend/.env.example",
-    "docs/GUIA_CAPACITACION.md",
-    "docs/INFORME_FINAL.md",
-    "docs/CONTROL_DE_CAMBIOS.md",
-    "docs/MATRIZ_TRAZABILIDAD.md",
-    "docs/MANUAL_TECNICO.md",
-    "docs/PLAN_MANTENIMIENTO.md",
-    "docs/REPORTE_QA.md",
-    "docs/qa",
-    "backend/etl/generar_operacion.py",
-    "backend/etl/simulador_vivo.py",
-    "db/final/07_simulador_vivo.sql",
-    "backend/app/actividad_api.py",
-    "backend/app/modulos_api.py",
-    "backend/app/kpis.py",
-    "backend/app/recomendaciones_api.py",
-    "backend/app/asistente_api.py",
-    "backend/app/main.py",
-    "frontend/src/mx/com/develop/supplychain/servicio/CentralEventos.java",
-    "frontend/src/mx/com/develop/supplychain/web/EventosServlet.java",
-    "frontend/src/mx/com/develop/supplychain/web/AdminServlet.java",
-    "frontend/src/mx/com/develop/supplychain/web/ApiLecturaServlet.java",
-    "frontend/src/mx/com/develop/supplychain/web/PaginaServlet.java",
-    "frontend/src/mx/com/develop/supplychain/web/DecisionServlet.java",
-    "frontend/webapp/WEB-INF/jsp/fragmentos/cabecera.jspf",
-    "frontend/webapp/WEB-INF/jsp/modulo.jsp",
-    "frontend/webapp/WEB-INF/jsp/actividad.jsp",
-    "frontend/webapp/WEB-INF/jsp/resumen.jsp",
-    "frontend/webapp/js",
-    "frontend/webapp/css/app.css",
-    "docs/project_state.json"
-  ],
+  "backend/app/database.py",
+  "backend/app/main.py",
+  "db/final/01_esquema_pdr.sql",
+  "db/final/02_centro_soluciones.sql",
+  "db/final/03_extensiones_modelo.sql",
+  "db/final/04_agregacion_fact.sql",
+  "db/final/05_asistente.sql",
+  "db/final/07_simulador_vivo.sql",
+  "db/final/99_verificar_extensiones.sql",
+  "db/final/validar_kpis.sql",
+  "docs/MANUAL_TECNICO.md",
+  "docs/MATRIZ_TRAZABILIDAD.md",
+  "docs/project_state.json"
+],
   "decisiones_de_diseno": [
     "Arquitectura de 3 capas: PostgreSQL -> FastAPI -> Java/JSP",
     "Infraestructura local a costo $0 (localhost:8080 y localhost:8000)",
@@ -300,7 +288,11 @@
     "Al publicar, la rama predeterminada de GitHub pasa a proyecto-final para que el README visible sea el del proyecto final; master y la etiqueta mvp-v1.0 se conservan sin cambios",
     "El README no menciona rutas de archivos de secretos ni nombres de cuentas; la ubicacion de la configuracion esta en el manual tecnico",
     "Los apellidos de la desarrolladora se escriben sin acentos, como en su acta de nacimiento (Perez Gomez); la modalidad academica es Residencia Profesional",
-    "En un repositorio vacio GitHub toma como predeterminada la primera rama que se sube; por eso se subio proyecto-final antes que master"
+    "En un repositorio vacio GitHub toma como predeterminada la primera rama que se sube; por eso se subio proyecto-final antes que master",
+    "La retroalimentacion de TODO Academy se atiende por bloques de commits pequenos con push al cerrar cada bloque; la funcionalidad congelada el 15 de octubre no cambia: solo correcciones, pruebas, datos de respaldo e instalacion",
+    "Unica dependencia nueva: pytest, solo de desarrollo (backend/requirements-dev.txt); sin Docker, Maven, JUnit ni integracion continua",
+    "Los scripts SQL se ejecutan en orden numerico (01 a 07 y 99); 04 solo agrega si hay datos y validar_kpis.sql se ejecuta al final, con los datos cargados",
+    "Las ediciones puntuales de archivos existentes se hacen con la funcion Reemplazar-Texto de PowerShell: cambia solo si encuentra el numero exacto de coincidencias y conserva los saltos de linea y la codificacion del archivo"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -369,6 +361,11 @@
     "Expand-Archive ejecutado desde C:\\Users\\Pamela extrajo la evidencia en C:\\Users\\Pamela\\docs; se extrajo de nuevo desde la raiz del proyecto y se borro la copia",
     "Al copiar bloques de codigo con sangria dentro de listas numeradas se perdian los espacios iniciales (MANUAL_TECNICO.md con 12 caracteres de menos); detectado por el conteo de caracteres y resuelto con los comandos en codigo en linea; el commit se corrigio con --amend antes del push",
     "git grep mostraba solo la primera pantalla por el paginador; se usa git --no-pager grep para revisar la salida completa",
-    "Una carpeta backend/docs con una copia vieja de REPORTE_QA.md (15328 bytes) quedo sin versionar por un New-Item ejecutado desde backend; se comparo contra la version buena y se borro"
+    "Una carpeta backend/docs con una copia vieja de REPORTE_QA.md (15328 bytes) quedo sin versionar por un New-Item ejecutado desde backend; se comparo contra la version buena y se borro",
+    "03_verificar_extensiones.sql daba 35 de 36 (REVISAR 19) despues de aplicar 05 a 07 porque contaba todas las tablas de public; ahora cuenta las 14 tablas esperadas por nombre",
+    "Los scripts de db/final se conectaban siempre a supply_chain_final e ignoraban -d: al instalar en otra base, 01 y 02 (que borran tablas) se habrian ejecutado sobre la base real; ahora la base se elige con -v base",
+    "04_agregacion_fact.sql fallaba en una base vacia (No hay datos operativos), por lo que el orden numerico de los scripts no servia para instalar desde cero",
+    "backend/app/database.py tenia supply_chain_mvp y la contrasena postgres como valores por omision",
+    "git add backend/... ejecutado desde la carpeta backend busca backend/backend; los comandos de git se ejecutan desde la raiz"
   ]
 }
