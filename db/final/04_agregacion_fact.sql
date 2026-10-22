@@ -113,7 +113,12 @@ $$;
 COMMENT ON FUNCTION refrescar_modelo_estrella() IS
     'PDR 5.2 y 8.2: regenera dim_tiempo y fact_supply_chain (un registro por renglon recibido); CC-03, CC-05, CC-06, CC-15';
 
+-- En una base recien creada aun no hay datos operativos: la funcion queda creada y
+-- se ejecuta al correr este script despues de etl.generar_operacion.
+SELECT EXISTS (SELECT 1 FROM demanda_diaria) AS hay_datos \gset
+\if :hay_datos
 SELECT * FROM refrescar_modelo_estrella();
+\endif
 
 COMMIT;
 
@@ -138,4 +143,8 @@ SELECT 'Costo de transporte por unidad (MXN)',
        ROUND(SUM(costo_flete) / SUM(unidades), 2)::text
 FROM fact_supply_chain;
 
+\if :hay_datos
 \echo '04_agregacion_fact.sql aplicado: dim_tiempo y fact_supply_chain regenerados.'
+\else
+\echo '04_agregacion_fact.sql aplicado: funcion creada; sin datos operativos que agregar todavia.'
+\endif
