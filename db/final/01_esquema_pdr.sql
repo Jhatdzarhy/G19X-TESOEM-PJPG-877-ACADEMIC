@@ -3,7 +3,12 @@
 -- Se ejecuta SOLO contra supply_chain_final
 -- ============================================================
 \set ON_ERROR_STOP on
-\connect supply_chain_final
+-- Base destino: supply_chain_final, u otra con -v base=<nombre> (instalador y pruebas)
+\if :{?base}
+\else
+\set base supply_chain_final
+\endif
+\connect :"base"
 SET client_encoding = 'UTF8';
 
 DROP TABLE IF EXISTS forecast_demanda, fact_supply_chain, dim_tiempo, tipo_cambio,

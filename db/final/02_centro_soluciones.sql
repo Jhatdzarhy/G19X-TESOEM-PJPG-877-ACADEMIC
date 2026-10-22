@@ -5,7 +5,12 @@
 -- La IA solo recomienda: no ejecuta compras (alcance del PDR, seccion 2)
 -- ============================================================
 \set ON_ERROR_STOP on
-\connect supply_chain_final
+-- Base destino: supply_chain_final, u otra con -v base=<nombre> (instalador y pruebas)
+\if :{?base}
+\else
+\set base supply_chain_final
+\endif
+\connect :"base"
 SET client_encoding = 'UTF8';
 
 DROP TABLE IF EXISTS plan_acciones, recomendaciones CASCADE;

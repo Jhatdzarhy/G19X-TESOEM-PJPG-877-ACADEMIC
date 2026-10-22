@@ -12,7 +12,12 @@
 -- Requiere: 01 a 06 aplicados.
 -- ============================================================
 \set ON_ERROR_STOP on
-\connect supply_chain_final
+-- Base destino: supply_chain_final, u otra con -v base=<nombre> (instalador y pruebas)
+\if :{?base}
+\else
+\set base supply_chain_final
+\endif
+\connect :"base"
 SET client_encoding = 'UTF8';
 SET client_min_messages = warning;
 
