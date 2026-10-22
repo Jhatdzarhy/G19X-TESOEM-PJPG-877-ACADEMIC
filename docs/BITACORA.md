@@ -4,6 +4,14 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-22 15:27 | 5aead0b | docs(estado): registrar el bloque 1 de la retroalimentacion de TODO Academy |
+| 2026-10-22 15:22 | bd3e47d | docs: referencias a 99_verificar_extensiones.sql en el manual tecnico y la matriz |
+| 2026-10-22 15:21 | c0044a6 | chore(db): renombrar 03_verificar_extensiones.sql a 99_verificar_extensiones.sql para que el orden numerico sea el de ejecucion (revision del 19 oct) |
+| 2026-10-22 15:21 | 2057c57 | fix(db): la verificacion de extensiones cuenta las 14 tablas por nombre; daba 35 de 36 con 05 a 07 aplicados |
+| 2026-10-22 15:20 | e27f2a9 | fix(db): 04_agregacion_fact crea la funcion en una base vacia y solo agrega si hay datos |
+| 2026-10-22 15:19 | d230661 | fix(db): base destino de los scripts con -v base en lugar de conectar siempre a supply_chain_final |
+| 2026-10-22 15:15 | b55ffea | fix(api): database.py sin contrasena por omision, supply_chain_final por omision y validacion al arrancar FastAPI (revision del 19 oct) |
+| 2026-10-16 00:51 | c5604cf | docs(bitacora): regenerar desde git log con la publicacion en GitHub |
 | 2026-10-16 00:51 | afaa060 | docs(estado): registrar la revision del historial y la publicacion en GitHub con proyecto-final como rama predeterminada |
 | 2026-10-16 00:48 | 1546f74 | docs(readme): dibujar el diagrama de arquitectura de arriba hacia abajo para que GitHub no tape PostgreSQL |
 | 2026-10-16 00:34 | c324bab | docs(bitacora): regenerar desde git log con el cierre de las Fases 9 y 10 |
