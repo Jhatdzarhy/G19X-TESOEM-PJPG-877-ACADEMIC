@@ -69,10 +69,15 @@ SELECT 'tipo_cambio sin fuente nula',
 FROM tipo_cambio WHERE fuente IS NULL;
 
 INSERT INTO resultado_qa (prueba, resultado)
-SELECT 'Total de tablas en public = 14',
+-- Solo las 14 tablas de 01 a 03; 05 a 07 agregan otras (CC-17, CC-20, CC-22)
+SELECT 'Tablas del PDR, CC-01 y CC-02 presentes = 14',
        CASE WHEN COUNT(*) = 14 THEN 'OK' ELSE 'REVISAR (' || COUNT(*) || ')' END
 FROM information_schema.tables
-WHERE table_schema = 'public' AND table_type = 'BASE TABLE';
+WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
+  AND table_name IN ('proveedores', 'productos', 'almacenes', 'ordenes_compra',
+                     'detalle_orden_compra', 'movimientos_inventario', 'envios', 'tipo_cambio',
+                     'fact_supply_chain', 'dim_tiempo', 'forecast_demanda',
+                     'recomendaciones', 'plan_acciones', 'demanda_diaria');
 
 -- ------------------------------------------------------------
 -- B. Reglas de negocio (cada prueba en su propio subbloque)
