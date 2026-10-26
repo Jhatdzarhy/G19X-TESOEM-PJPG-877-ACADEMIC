@@ -43,6 +43,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 | CC-24 | 2026-10-15 | 6 (Módulos 1 a 8), CC-10, CC-20 | Precisión e interpretación | Vistas de los módulos y administración de usuarios de solo lectura |
 | CC-25 | 2026-10-15 | 10 (Fase 9), 9 (R4) | Interpretación | Capacitación sin usuarios finales designados: guía de capacitación y formato de acta |
 | CC-26 | 2026-10-22 | 10 (Fase 6), 4.3 | Adición | Pruebas automáticas con pytest |
+| CC-27 | 2026-10-25 | 9 (R1), 5.1, 4.1 | Adición | Datos de respaldo versionados para instalar sin llaves ni conexión |
 
 ---
 
@@ -354,4 +355,22 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 - **Justificación:** lo más delicado del sistema (seguridad y KPIs) se comprueba en segundos con un comando, antes de cada cambio y por cualquier revisor. Las pruebas detectan regresiones: fallan si cambia el número de intentos del bloqueo, el mínimo de 15 caracteres o la regla de CC-23.
 - **Límite respetado:** no cambia la funcionalidad congelada; pytest es la única dependencia nueva y solo se usa en desarrollo. No sustituye a la QA de la Fase 6 (41 pruebas) ni a `verificar_seguridad` y `validar_kpis.sql`, que prueban contra la base real.
 - **Verificación:** `python -m pytest` desde `backend`: 55 de 55 (AUT-01, `docs/qa/AUT-01.txt`). Starlette 1.7.0 emite una advertencia de obsolescencia sobre `httpx` en su cliente de pruebas; no afecta el resultado y no se instala `httpx2` para no agregar dependencias.
+- **Estado:** Aprobado e implementado.
+
+### CC-27. Datos de respaldo versionados para instalar sin llaves ni conexión
+- **Qué dice el PDR:** el riesgo R1 (Sección 9) es la disponibilidad o los cambios de las APIs públicas; la Sección 5.1 ubica la ingesta en el ETL y la Sección 4.1 fija costo $0. El PDR no define cómo instalar el sistema si una API no responde o si quien lo evalúa no tiene las llaves.
+- **Origen:** revisión del repositorio del 19 y 21 de octubre de 2026 (TODO Academy): documentar qué pasa sin token de Banxico ni llave de Z.AI y dejar un modo con datos ya cargados.
+- **Cambio:**
+  - `backend/etl/respaldo/`: copia exacta de los datos externos con que se validaron los 12 meses, exportada con `python -m etl.respaldo --exportar` desde `supply_chain_final` (huella `efe7c9c4...`):
+    - `productos.csv`: 12 productos de DummyJSON con sus `producto_id`.
+    - `banxico_fix_sf43718.csv`: 251 días del FIX de Banxico SIE.
+    - `clima/`: 10 archivos de clima histórico de Open-Meteo.
+    - `LEEME.md`: fuentes, licencias, atribución y fecha de corte.
+  - `etl.cargar_productos`, `etl.cargar_banxico` y `etl.descargar_clima` usan el respaldo si falta la llave, si la API no responde o con `--respaldo`, y lo dicen con un aviso. El FIX conserva la fuente `BANXICO_SIE` porque son los mismos datos oficiales.
+  - Sin cambios en la interfaz: el periodo simulado termina el 30 de septiembre de 2026, así que las cifras y su fecha de corte son las mismas con o sin respaldo.
+  - Sin llave de Z.AI, el asistente avisa que no está disponible (CC-17, QA-01) y el resto del dashboard funciona. Sin ExchangeRate-API, el módulo Compras muestra el FIX de Banxico. Sin Open-Meteo, el simulador en vivo usa su caché o clima despejado (CC-22).
+- **Justificación:** cualquier persona puede instalar y revisar el sistema sin pedir llaves y con los mismos datos validados. La huella del generador demuestra que el respaldo no altera los 12 meses.
+- **Licencias:** Open-Meteo publica bajo CC BY 4.0, que permite redistribuir con atribución. Banxico pide citar la fuente con su dirección para que terceros verifiquen los datos. DummyJSON ofrece datos de prueba. Las atribuciones están en `respaldo/LEEME.md` y en el pie del dashboard.
+- **Límite respetado:** no cambia la funcionalidad congelada, ni los datos ni los KPIs. Con las llaves y conexión, los ETL descargan como antes.
+- **Verificación:** en `supply_chain_prueba`, sin `BANXICO_TOKEN` y con la caché apartada, la carga desde el respaldo dio la huella `efe7c9c4...` y archivos de clima idénticos byte por byte (AUT-02, `docs/qa/AUT-02.txt`). Las 55 pruebas automáticas siguen correctas.
 - **Estado:** Aprobado e implementado.
