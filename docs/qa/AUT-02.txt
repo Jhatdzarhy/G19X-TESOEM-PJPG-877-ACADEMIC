@@ -1,0 +1,30 @@
+AVISO: no hay BANXICO_TOKEN en backend/.env. Se usa el respaldo versionado de Banxico SIE: backend/etl/respaldo/banxico_fix_sf43718.csv
+Banxico SIE SF43718 (FIX USD-MXN) 2025-10-01 a 2026-09-30, desde respaldo versionado
+  dias publicados: 251   descartados (N/E o fuera de rango): 0
+  en tipo_cambio con fuente BANXICO_SIE: 251 dias, 2025-10-01 a 2026-09-30, tasa 16.874800 a 18.623300
+Fuente: Banco de Mexico, Sistema de Informacion Economica (SIE).
+Clima historico 2025-10-01 a 2026-09-30: 10 puntos -> backend\etl\cache\clima
+
+Punto                   Origen       Dias  Lluvia  Fuerte  Tormenta
+ALM_CDMX                respaldo      365     163       3         0
+ALM_MTY                 respaldo      365      89       2         0
+ALM_GDL                 respaldo      365     125       0         0
+DESP_APODACA            respaldo      365      81       1         0
+DESP_MANZANILLO         respaldo      365      75       3         1
+DESP_NUEVO_LAREDO       respaldo      365      67       2         0
+DESP_LEON               respaldo      365      97       0         0
+DESP_ZAPOPAN            respaldo      365     121       1         0
+DESP_QUERETARO          respaldo      365     103       1         0
+DESP_LAZARO_CARDENAS    respaldo      365      89       6         5
+
+Clima listo. Fuente: Open-Meteo.com (CC BY 4.0).
+Resumen de la simulacion (verificacion rapida, no sustituye a validar_kpis.sql)
+  ordenes: 395   renglones: 401   envios recibidos: 383
+  movimientos: 13311   demanda_diaria: 13140
+  OTIF: 80.4%   a tiempo: 88.0%
+  Fill Rate de servicio: 97.3%   Fill Rate de proveedor: 96.6%
+  Lead time promedio: 8.4 dias
+  Flete por unidad: 25.61 MXN
+  Utilizacion promedio / maxima: CDMX 57%/88%  MTY 65%/89%  GDL 64%/90%
+  Condicion climatica de envios: DESPEJADO 178, LLUVIA 208, LLUVIA_FUERTE 9
+Huella SHA-256: efe7c9c479757f45d1283033b0d126db4a73a0bb3649b55f00d5ce30de2185ad

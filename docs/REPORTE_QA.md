@@ -119,7 +119,7 @@ Agregadas el 22 de octubre de 2026, después de la QA, a partir de la revisión 
 | ID | Prueba | Pasos | Resultado esperado | Resultado | Evidencia |
 |---|---|---|---|---|---|
 | AUT-01 | Pruebas automáticas del motor analítico | Desde `backend`, con el entorno virtual activo y `requirements-dev.txt` instalado: `python -m pytest -v --no-header` | 55 de 55: contraseñas y token interno, login con 401 y 429, KPIs con valores calculados a mano, umbrales de CC-16, CC-23 y configuración de la base | Correcta: 55 de 55 en 8.8 s; una advertencia de obsolescencia de Starlette que no afecta el resultado | AUT-01.txt |
-
+| AUT-02 | Carga sin llaves desde el respaldo (CC-27) | Base nueva `supply_chain_prueba` con 01 a 07, caché de clima apartada y sin `BANXICO_TOKEN`; desde `backend`: `etl.cargar_productos --respaldo`, `etl.cargar_banxico`, `etl.descargar_clima --respaldo` y `etl.generar_operacion --huella` | Aviso de token faltante; 12 productos, 251 días de FIX y 10 puntos de clima desde el respaldo; misma huella que la base validada | Correcta: huella `efe7c9c4...` idéntica; los 10 archivos de clima copiados son idénticos byte por byte a la caché original | AUT-02.txt |
 ---
 
 ## Defectos encontrados y corregidos antes del congelamiento

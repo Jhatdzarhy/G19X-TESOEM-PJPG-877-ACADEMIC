@@ -69,5 +69,6 @@ Observaciones
   OBS-02  OBS-02-finish-sse.png
   OBS-05  OBS-05-detenido.png
 
-Pruebas automaticas (CC-26)
+Pruebas automaticas (CC-26 y CC-27)
   AUT-01  AUT-01.txt (salida de python -m pytest -v, 55 de 55)
+  AUT-02  AUT-02.txt (carga sin llaves desde el respaldo y huella efe7c9c4, CC-27)
