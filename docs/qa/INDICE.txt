@@ -68,3 +68,6 @@ Observaciones
   OBS-01  OBS-01-consola-csp.png
   OBS-02  OBS-02-finish-sse.png
   OBS-05  OBS-05-detenido.png
+
+Pruebas automaticas (CC-26)
+  AUT-01  AUT-01.txt (salida de python -m pytest -v, 55 de 55)
