@@ -4,6 +4,18 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-25 23:31 | f5d5487 | docs(estado): registrar el bloque 2 de la retroalimentacion: pruebas automaticas (CC-26) |
+| 2026-10-25 23:26 | db389d6 | docs(manual): pruebas automaticas en la tabla de verificacion (CC-26) |
+| 2026-10-25 23:24 | 21cb8fd | docs(qa): agregar AUT-01 al indice de evidencia (CC-26) |
+| 2026-10-25 23:23 | e5fadb9 | docs(qa): AUT-01 con 55 de 55 pruebas automaticas y su evidencia (CC-26) |
+| 2026-10-25 23:18 | 8e2d4cd | docs(control-cambios): registrar CC-26 pruebas automaticas con pytest |
+| 2026-10-25 23:13 | 9c097d7 | chore(tests): pruebas de la configuracion de la base: obligatorias, omision y rechazo del MVP (CC-26) |
+| 2026-10-25 23:13 | 15ab984 | chore(tests): pruebas de KPIs con valores calculados a mano y umbrales de CC-16 y CC-23 (CC-26) |
+| 2026-10-25 23:13 | 129e50a | chore(tests): pruebas del login: mismo 401, bloqueo con 429 al quinto intento y reinicio del contador (CC-20, CC-26) |
+| 2026-10-25 23:13 | c9420d6 | chore(tests): pruebas de seguridad.py: hash, politica de 15 a 128 caracteres y token interno (CC-20, CC-21, CC-26) |
+| 2026-10-25 23:12 | 469acb7 | chore(tests): pytest.ini y conftest con credenciales de prueba y tabla de usuarios en memoria, sin PostgreSQL ni llaves (CC-26) |
+| 2026-10-25 23:12 | 858dc33 | chore(deps): requirements-dev.txt con pytest fijado, solo para desarrollo (CC-26) |
+| 2026-10-22 15:28 | 49f308e | docs(bitacora): regenerar desde git log con el bloque 1 de la retroalimentacion |
 | 2026-10-22 15:27 | 5aead0b | docs(estado): registrar el bloque 1 de la retroalimentacion de TODO Academy |
 | 2026-10-22 15:22 | bd3e47d | docs: referencias a 99_verificar_extensiones.sql en el manual tecnico y la matriz |
 | 2026-10-22 15:21 | c0044a6 | chore(db): renombrar 03_verificar_extensiones.sql a 99_verificar_extensiones.sql para que el orden numerico sea el de ejecucion (revision del 19 oct) |
