@@ -382,6 +382,7 @@ Cada decisión queda en el historial del caso con usuario y fecha.
 | Extensiones del modelo | `db\final\99_verificar_extensiones.sql` | 36 de 36 |
 | Integridad y KPIs | `db\final\validar_kpis.sql` (sección 5.8) | 23 de 23 |
 | Seguridad de la API | `python -m admin.verificar_seguridad` | 21 de 21, 26 rutas |
+| Pruebas automáticas (CC-26) | Desde `backend`: `pip install -r requirements-dev.txt` una vez y después `python -m pytest`; no requieren PostgreSQL ni llaves | 55 de 55 |
 | Huella del generador | `python -m etl.generar_operacion --huella` | `efe7c9c4...` |
 | Pruebas funcionales | `docs/REPORTE_QA.md` y `docs/qa/` | 41 de 41 |
 
