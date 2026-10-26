@@ -112,8 +112,17 @@
 
 ---
 
-## Defectos encontrados y corregidos antes del congelamiento
+## AUT. Pruebas automáticas (CC-26)
 
+Agregadas el 22 de octubre de 2026, después de la QA, a partir de la revisión del repositorio del 19 de octubre. No forman parte de las 41 pruebas de la Fase 6: se repiten con un comando y no requieren PostgreSQL ni llaves externas.
+
+| ID | Prueba | Pasos | Resultado esperado | Resultado | Evidencia |
+|---|---|---|---|---|---|
+| AUT-01 | Pruebas automáticas del motor analítico | Desde `backend`, con el entorno virtual activo y `requirements-dev.txt` instalado: `python -m pytest -v --no-header` | 55 de 55: contraseñas y token interno, login con 401 y 429, KPIs con valores calculados a mano, umbrales de CC-16, CC-23 y configuración de la base | Correcta: 55 de 55 en 8.8 s; una advertencia de obsolescencia de Starlette que no afecta el resultado | AUT-01.txt |
+
+---
+
+## Defectos encontrados y corregidos antes del congelamiento
 | Defecto | Corrección | Commit |
 |---|---|---|
 | Estado de un KPI contradecía la cifra publicada ("95.0 % pasa a Atención, meta 95.0 %") | Estado evaluado sobre el valor publicado (CC-23) | 0a4d22a |
