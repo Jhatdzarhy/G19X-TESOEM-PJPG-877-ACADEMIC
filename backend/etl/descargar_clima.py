@@ -12,15 +12,21 @@ Puntos consultados (desde config_simulacion.json):
 Salida: un archivo JSON por punto en backend/etl/cache/clima/<clave>.json
 Datos: Open-Meteo.com, licencia CC BY 4.0 (atribucion en el pie del dashboard).
 
+Sin conexion a Open-Meteo, o con --respaldo, copia a la cache los archivos de
+backend/etl/respaldo/clima, que son la misma descarga con que se validaron los 12
+meses (CC-27, control de cambios, riesgo R1); el generador produce la misma huella.
+
 Uso (desde la raiz del proyecto):
-  python backend/etl/descargar_clima.py            usa la cache si ya existe
-  python backend/etl/descargar_clima.py --forzar   vuelve a descargar todo
+  python backend/etl/descargar_clima.py              usa la cache si ya existe
+  python backend/etl/descargar_clima.py --forzar     vuelve a descargar todo
+  python backend/etl/descargar_clima.py --respaldo   copia el respaldo versionado a la cache
 
 Solo usa la biblioteca estandar de Python: no agrega dependencias.
 """
 
 import argparse
 import json
+import shutil
 import sys
 import time
 import unicodedata
@@ -32,6 +38,7 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
 CONFIG = RAIZ / "backend" / "etl" / "datos" / "config_simulacion.json"
+RESPALDO = RAIZ / "backend" / "etl" / "respaldo" / "clima"
 URL_ARCHIVO = "https://archive-api.open-meteo.com/v1/archive"
 REINTENTOS = 3
 PAUSA_ENTRE_LLAMADAS_S = 1.0
@@ -130,9 +137,19 @@ def cache_vigente(ruta: Path, inicio: str, fin: str, variables: list) -> bool:
     return meta.get("inicio") == inicio and meta.get("fin") == fin and meta.get("variables") == variables
 
 
+def desde_respaldo(ruta: Path, inicio: str, fin: str, variables: list) -> bool:
+    """Copia el archivo del punto desde el respaldo versionado si cubre el mismo periodo (CC-27)."""
+    origen = RESPALDO / ruta.name
+    if not cache_vigente(origen, inicio, fin, variables):
+        return False
+    shutil.copyfile(origen, ruta)
+    return True
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Descarga el clima historico de Open-Meteo con cache local (CC-04).")
     parser.add_argument("--forzar", action="store_true", help="ignora la cache y vuelve a descargar")
+    parser.add_argument("--respaldo", action="store_true", help="copia el respaldo versionado sin llamar a la API")
     args = parser.parse_args()
 
     cfg = json.loads(CONFIG.read_text(encoding="utf-8"))
@@ -151,24 +168,40 @@ def main() -> int:
     print(f"Clima historico {inicio} a {fin}: {len(puntos)} puntos -> {carpeta.relative_to(RAIZ)}")
 
     resumen = []
+    usar_respaldo = args.respaldo          # pasa a True si Open-Meteo no responde (CC-27)
     for clave, punto in puntos.items():
         ruta = carpeta / f"{clave}.json"
-        if not args.forzar and cache_vigente(ruta, inicio, fin, variables):
+        if not args.forzar and not usar_respaldo and cache_vigente(ruta, inicio, fin, variables):
             datos = json.loads(ruta.read_text(encoding="utf-8"))
             origen = "cache"
+        elif usar_respaldo:
+            if not desde_respaldo(ruta, inicio, fin, variables):
+                raise RuntimeError(f"El respaldo no tiene el clima de {clave} para {inicio} a {fin}")
+            datos = json.loads(ruta.read_text(encoding="utf-8"))
+            origen = "respaldo"
         else:
             print(f"  descargando {clave} ({punto['nombre']})")
-            datos = descargar(punto, inicio, fin, variables, zona)
-            avisos = validar(datos, inicio, fin, variables)
-            datos["_meta"] = {
-                "clave": clave, "nombre": punto["nombre"], "uso": punto["uso"],
-                "inicio": inicio, "fin": fin, "variables": variables,
-                "fuente": "Open-Meteo.com, API de archivo, licencia CC BY 4.0",
-                "descargado": date.today().isoformat(), "avisos": avisos,
-            }
-            ruta.write_text(json.dumps(datos, ensure_ascii=True, indent=1), encoding="utf-8")
-            origen = "descargado"
-            time.sleep(PAUSA_ENTRE_LLAMADAS_S)
+            try:
+                datos = descargar(punto, inicio, fin, variables, zona)
+            except RuntimeError as e:
+                if not desde_respaldo(ruta, inicio, fin, variables):
+                    raise
+                print(f"AVISO: {e}. Se usa el respaldo versionado de backend/etl/respaldo/clima "
+                      "para este punto y los siguientes.")
+                usar_respaldo = True
+                datos = json.loads(ruta.read_text(encoding="utf-8"))
+                origen = "respaldo"
+            else:
+                avisos = validar(datos, inicio, fin, variables)
+                datos["_meta"] = {
+                    "clave": clave, "nombre": punto["nombre"], "uso": punto["uso"],
+                    "inicio": inicio, "fin": fin, "variables": variables,
+                    "fuente": "Open-Meteo.com, API de archivo, licencia CC BY 4.0",
+                    "descargado": date.today().isoformat(), "avisos": avisos,
+                }
+                ruta.write_text(json.dumps(datos, ensure_ascii=True, indent=1), encoding="utf-8")
+                origen = "descargado"
+                time.sleep(PAUSA_ENTRE_LLAMADAS_S)
 
         d = datos["daily"]
         conteo = {"DESPEJADO": 0, "LLUVIA": 0, "LLUVIA_FUERTE": 0, "TORMENTA": 0}
