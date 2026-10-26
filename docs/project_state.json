@@ -1,8 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
-  "fecha_actualizacion": "2026-10-25",
-  "fase_actual": "Atencion de la retroalimentacion de TODO Academy (cortes del 19 y 21 de octubre): bloques 1 y 2 cerrados; sigue el funcionamiento sin llaves y la instalacion en un paso; la funcionalidad congelada no cambia",
-  "backlog": {
+  "fecha_actualizacion": "2026-10-26",
+  "fase_actual": "Atencion de la retroalimentacion de TODO Academy (cortes del 19 y 21 de octubre): bloques 1, 2 y 3 cerrados; sigue la instalacion en un paso; la funcionalidad congelada no cambia",  "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
       "Creacion de estructura de carpetas (db, backend, frontend, docs)",
@@ -118,13 +117,15 @@
       "Respaldo de supply_chain_final antes del bloque 1 en C:/respaldos/supply_chain_final_20261022.dump (fuera del repositorio)",
       "Bloque 2 de la retroalimentacion: 55 pruebas automaticas con pytest en backend/tests (seguridad.py, auth_api.py, kpis.py y database.py), sin PostgreSQL ni llaves; 55 de 55 en 8.8 s (AUT-01, docs/qa/AUT-01.txt; CC-26)",
       "backend/requirements-dev.txt con pytest 9.1.1, pluggy 1.7.0 e iniconfig 2.3.1, solo para desarrollo; backend/pytest.ini sin cache de pytest",
-      "CC-26 registrado en CONTROL_DE_CAMBIOS.md; AUT-01 en REPORTE_QA.md y en docs/qa/INDICE.txt; fila de pruebas automaticas en la seccion 12 del manual tecnico"
+      "CC-26 registrado en CONTROL_DE_CAMBIOS.md; AUT-01 en REPORTE_QA.md y en docs/qa/INDICE.txt; fila de pruebas automaticas en la seccion 12 del manual tecnico",
+      "Bloque 3 de la retroalimentacion: datos de respaldo versionados en backend/etl/respaldo (12 productos de DummyJSON, 251 dias del FIX de Banxico SIE y 10 puntos de clima de Open-Meteo) exportados con python -m etl.respaldo --exportar desde supply_chain_final con huella efe7c9c4 (CC-27)",
+      "cargar_productos, cargar_banxico y descargar_clima usan el respaldo si falta la llave, si la API no responde o con --respaldo, con aviso en la consola; con llaves y conexion descargan como antes",
+      "AUT-02: en supply_chain_prueba, sin BANXICO_TOKEN y con la cache apartada, la carga desde el respaldo dio la huella efe7c9c4 y archivos de clima identicos byte por byte; CC-27 registrado; seccion Funcionamiento sin llaves en el README y nota en la seccion 5.3 del manual"
     ],
 "en_progreso": [
-  "Bloque 3 de la retroalimentacion: datos de respaldo versionados (FIX de Banxico, catalogo de DummyJSON y clima de Open-Meteo) para cargar sin llaves con la misma huella efe7c9c4 (CC-27)"
+  "Bloque 4 de la retroalimentacion: instalar.ps1 en la raiz y admin.cargar_todo para instalar en un paso; documentacion con CATALINA_HOME en lugar de rutas fijas (CC-28)"
 ],
 "pendiente": [
-  "Bloque 4: instalar.ps1 en la raiz y admin.cargar_todo para instalar en un paso; documentacion con CATALINA_HOME en lugar de rutas fijas (CC-28)",
   "Bloque 5: declarar el uso de IA en el README, prueba de instalacion en un clon limpio con supply_chain_prueba y evidencia en docs/qa",
   "Subir el descriptivo del proyecto (PDF) en TODO Academy, Mis proyectos; no se versiona en el repositorio",
   "Antes de la demostracion: python -m etl.simulador_vivo --reiniciar y despues correr el simulador con pausas",
@@ -133,18 +134,20 @@
 ]
   },
 "archivos_modificados_recientemente": [
-  "backend/requirements-dev.txt",
-  "backend/pytest.ini",
-  "backend/tests/conftest.py",
-  "backend/tests/test_seguridad.py",
-  "backend/tests/test_auth_api.py",
-  "backend/tests/test_kpis.py",
-  "backend/tests/test_database.py",
-  "docs/CONTROL_DE_CAMBIOS.md",
-  "docs/REPORTE_QA.md",
-  "docs/MANUAL_TECNICO.md",
-  "docs/qa/AUT-01.txt",
+  "backend/etl/respaldo.py",
+  "backend/etl/respaldo/LEEME.md",
+  "backend/etl/respaldo/productos.csv",
+  "backend/etl/respaldo/banxico_fix_sf43718.csv",
+  "backend/etl/respaldo/clima/",
+  "backend/etl/cargar_productos.py",
+  "backend/etl/cargar_banxico.py",
+  "backend/etl/descargar_clima.py",
+  "docs/qa/AUT-02.txt",
   "docs/qa/INDICE.txt",
+  "docs/REPORTE_QA.md",
+  "docs/CONTROL_DE_CAMBIOS.md",
+  "docs/MANUAL_TECNICO.md",
+  "README.md",
   "docs/project_state.json"
 ],
   "decisiones_de_diseno": [
@@ -295,7 +298,9 @@
     "Unica dependencia nueva: pytest, solo de desarrollo (backend/requirements-dev.txt); sin Docker, Maven, JUnit ni integracion continua",
     "Los scripts SQL se ejecutan en orden numerico (01 a 07 y 99); 04 solo agrega si hay datos y validar_kpis.sql se ejecuta al final, con los datos cargados",
     "Las ediciones puntuales de archivos existentes se hacen con la funcion Reemplazar-Texto de PowerShell: cambia solo si encuentra el numero exacto de coincidencias y conserva los saltos de linea y la codificacion del archivo",
-    "Las pruebas automaticas no usan la base real: credenciales de prueba en el entorno y tabla de usuarios en memoria para que las pruebas de bloqueo no toquen cuentas; no se instala httpx2 pese al aviso de obsolescencia de Starlette 1.7.0, para no agregar dependencias"
+    "Las pruebas automaticas no usan la base real: credenciales de prueba en el entorno y tabla de usuarios en memoria para que las pruebas de bloqueo no toquen cuentas; no se instala httpx2 pese al aviso de obsolescencia de Starlette 1.7.0, para no agregar dependencias",
+    "El respaldo guarda los producto_id originales y una copia exacta del clima para que la huella no cambie; el FIX del respaldo conserva la fuente BANXICO_SIE porque son los mismos datos oficiales; la interfaz no cambia porque el periodo simulado y su fecha de corte son fijos",
+    "Para el bloque 4: etl.generar_operacion reescribe backend/etl/datos/eventos_inyectados.json con la fecha del dia; el instalador debe restaurarlo o no versionar ese cambio"
   ],
   "errores_resueltos": [
     "psql no reconocido - se agrego C:\\Program Files\\PostgreSQL\\18\\bin al PATH del usuario",
@@ -371,6 +376,8 @@
     "backend/app/database.py tenia supply_chain_mvp y la contrasena postgres como valores por omision",
     "git add backend/... ejecutado desde la carpeta backend busca backend/backend; los comandos de git se ejecutan desde la raiz",
     "Los archivos de backend/tests se crearon con New-Item pero quedaron en 0 bytes hasta pegar su contenido; se detecto con Get-ChildItem antes de correr pytest y se corrigio pegando cada archivo y guardando con Ctrl+S",
-    "Al insertar la seccion AUT en REPORTE_QA.md quedaron mal colocadas las lineas en blanco alrededor de los separadores; se detecto revisando git diff --staged antes del commit y se corrigio dejando una linea vacia antes y despues de cada --- y de cada titulo"
+    "Al insertar la seccion AUT en REPORTE_QA.md quedaron mal colocadas las lineas en blanco alrededor de los separadores; se detecto revisando git diff --staged antes del commit y se corrigio dejando una linea vacia antes y despues de cada --- y de cada titulo",
+    "python -m ejecutado desde la raiz da No module named etl; los comandos python -m se ejecutan desde backend con el entorno virtual activo",
+    "Las variables de entorno de PowerShell valen solo en la ventana donde se definen: DB_NAME de la prueba se quito en la terminal de backend, no en la de la raiz"
   ]
 }
