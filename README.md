@@ -86,7 +86,7 @@ La primera vez hay que instalar y cargar los datos; después solo se arrancan do
 
 1. Instalar las versiones de la tabla anterior.
 2. En la carpeta `backend`, crear el entorno virtual e instalar las dependencias.
-3. Copiar `backend/.env.example` a `backend/.env` y escribir los valores propios: contraseña de PostgreSQL, token de Banxico y llave de Z.AI.
+3. Copiar `backend/.env.example` a `backend/.env` y escribir la contraseña de PostgreSQL. El token de Banxico y la llave de Z.AI son opcionales: sin ellos el sistema se instala con los datos de respaldo (ver [Funcionamiento sin llaves](#funcionamiento-sin-llaves)).
 4. Crear la base `supply_chain_final` y ejecutar los scripts de `db/final` (manual técnico, 5.2 y 5.4).
 5. Cargar los datos con `backend/etl` y correr los modelos con `backend/analitica` (manual técnico, 5.3 y 5.5).
 6. Generar el token interno con `python -m admin.token_interno` y crear las cuentas con `python -m admin.crear_usuario`. Las contraseñas se escriben ocultas en la consola y no se guardan en ningún archivo del repositorio.
@@ -116,6 +116,19 @@ python -m etl.simulador_vivo --dias 1
 ```
 
 Para regresar los datos a su estado base: `python -m etl.simulador_vivo --reiniciar`.
+
+## Funcionamiento sin llaves
+
+El sistema se instala y se revisa sin ninguna llave externa. Los datos externos con que se validaron los 12 meses están versionados en [`backend/etl/respaldo`](backend/etl/respaldo/LEEME.md); los ETL los usan si falta la llave, si la API no responde o con `--respaldo`, y lo indican con un aviso en la consola. Con el respaldo, `python -m etl.generar_operacion --huella` da la misma huella de datos que la base validada (`efe7c9c4...`, prueba AUT-02).
+
+| Componente | Sin llave o sin conexión | Qué se ve en el dashboard |
+|---|---|---|
+| Catálogo de productos (DummyJSON) | `etl.cargar_productos` carga `respaldo/productos.csv` con los mismos identificadores | Los mismos 12 productos |
+| Tipo de cambio FIX (Banxico SIE, `BANXICO_TOKEN`) | `etl.cargar_banxico` carga los 251 días de `respaldo/banxico_fix_sf43718.csv` | Las mismas cifras; la fuente sigue siendo Banxico SIE |
+| Clima histórico (Open-Meteo) | `etl.descargar_clima` copia `respaldo/clima` a la caché local | Los mismos retrasos por clima |
+| Tasa del día (ExchangeRate-API) | `etl.cargar_tipo_cambio` falla con error de conexión; se puede omitir | Compras muestra solo el FIX de Banxico |
+| Asistente de IA (Z.AI, `ZAI_API_KEY`) | Intenta Ollama si está instalado; si no, responde que no está disponible | Aviso "El asistente no está disponible"; el resto del dashboard funciona |
+| Simulador en vivo (pronóstico de Open-Meteo) | Usa la caché anterior o clima despejado (CC-22) | Los eventos en vivo siguen |
 
 ## Estructura del repositorio
 

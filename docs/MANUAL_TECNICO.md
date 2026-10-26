@@ -158,6 +158,7 @@ python -m etl.cargar_banxico
 python -m etl.descargar_clima
 python -m etl.generar_operacion
 ```
+Sin token de Banxico o sin conexión a DummyJSON, Banxico u Open-Meteo, los tres primeros pasos cargan los datos de respaldo de `backend/etl/respaldo` y lo indican con un aviso; con `--respaldo` se usan sin intentar la descarga (CC-27). `cargar_tipo_cambio` solo trae la tasa del día y se puede omitir sin conexión.
 
 `generar_operacion` usa una semilla fija: siempre genera los mismos 12 meses (395 órdenes, 401 renglones y 13,140 registros de demanda diaria). `python -m etl.generar_operacion --huella` imprime la huella SHA-256 de los datos sin escribir en la base; debe ser `efe7c9c4...` (CC-22).
 
