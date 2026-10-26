@@ -42,6 +42,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 | CC-23 | 2026-10-14 | 7, CC-16 | Precisión | Estado de un KPI evaluado sobre el valor publicado |
 | CC-24 | 2026-10-15 | 6 (Módulos 1 a 8), CC-10, CC-20 | Precisión e interpretación | Vistas de los módulos y administración de usuarios de solo lectura |
 | CC-25 | 2026-10-15 | 10 (Fase 9), 9 (R4) | Interpretación | Capacitación sin usuarios finales designados: guía de capacitación y formato de acta |
+| CC-26 | 2026-10-22 | 10 (Fase 6), 4.3 | Adición | Pruebas automáticas con pytest |
 
 ---
 
@@ -337,3 +338,20 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 - **Justificación:** registrar una capacitación que no ocurrió restaría confiabilidad a toda la evidencia del proyecto. La guía, junto con el manual técnico (sección 11) y el plan de mantenimiento, deja la capacitación reproducible por cualquier instructor y mantiene la mitigación del riesgo R4.
 - **Límite respetado:** no cambia el alcance ni la funcionalidad congelada; la sesión y el acta firmada quedan pendientes hasta que PluriOne asigne usuarios.
 - **Estado:** Aprobado.
+
+### CC-26. Pruebas automáticas con pytest
+- **Qué dice el PDR:** la Fase 6 (Sección 10) pide pruebas de calidad con su reporte y la Sección 4.3 pide fijar las versiones de las dependencias. El PDR no define pruebas automáticas ni una herramienta para ellas.
+- **Origen:** revisión del repositorio del 19 y 21 de octubre de 2026 (TODO Academy): la QA era manual con capturas y no se podía repetir con un comando.
+- **Cambio:**
+  - `backend/tests/` con 55 pruebas de pytest:
+    - `seguridad.py`: hash, verificación, sal, normalización y política de contraseñas en sus bordes (14, 15, 128 y 129 caracteres), y token interno con 401 y falla cerrada 503.
+    - `auth_api.py`: mismo 401 para usuario inexistente, inactivo o contraseña incorrecta; bloqueo con 429 y `Retry-After` al quinto intento; reinicio del contador con un login correcto.
+    - `kpis.py`: KPIs con valores calculados a mano, metas y umbrales de CC-16 en sus bordes y estado sobre el valor publicado (CC-23).
+    - `database.py`: valores por omisión, variables obligatorias y rechazo de la base del MVP.
+  - Sin PostgreSQL ni llaves: las credenciales de prueba se fijan en el entorno y `auth_api` usa una tabla de usuarios en memoria, de modo que las pruebas de bloqueo nunca tocan cuentas reales.
+  - `backend/requirements-dev.txt` con pytest y sus dependencias en versión exacta, solo para desarrollo; `requirements.txt` no cambia.
+  - `backend/pytest.ini`: carpeta de pruebas y sin caché de pytest en el repositorio.
+- **Justificación:** lo más delicado del sistema (seguridad y KPIs) se comprueba en segundos con un comando, antes de cada cambio y por cualquier revisor. Las pruebas detectan regresiones: fallan si cambia el número de intentos del bloqueo, el mínimo de 15 caracteres o la regla de CC-23.
+- **Límite respetado:** no cambia la funcionalidad congelada; pytest es la única dependencia nueva y solo se usa en desarrollo. No sustituye a la QA de la Fase 6 (41 pruebas) ni a `verificar_seguridad` y `validar_kpis.sql`, que prueban contra la base real.
+- **Verificación:** `python -m pytest` desde `backend`: 55 de 55 (AUT-01, `docs/qa/AUT-01.txt`). Starlette 1.7.0 emite una advertencia de obsolescencia sobre `httpx` en su cliente de pruebas; no afecta el resultado y no se instala `httpx2` para no agregar dependencias.
+- **Estado:** Aprobado e implementado.
