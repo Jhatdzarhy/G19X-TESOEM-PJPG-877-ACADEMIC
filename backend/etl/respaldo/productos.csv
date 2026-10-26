@@ -1,0 +1,13 @@
+producto_id,sku,nombre,categoria,unidad_medida,costo_unitario,moneda
+1,LAP-APP-APP-078,Apple MacBook Pro 14 Inch Space Grey,laptops,pieza,1999.99,USD
+2,LAP-ASU-ASU-079,Asus Zenbook Pro Dual Screen Laptop,laptops,pieza,1799.99,USD
+3,MOB-AMA-AMA-099,Amazon Echo Plus,mobile-accessories,pieza,99.99,USD
+4,MOB-APP-APP-100,Apple Airpods,mobile-accessories,pieza,129.99,USD
+5,SMA-APP-IPH-121,iPhone 5s,smartphones,pieza,199.99,USD
+6,SMA-APP-IPH-122,iPhone 6,smartphones,pieza,299.99,USD
+7,FUR-ANN-ANN-011,Annibale Colombo Bed,furniture,pieza,1899.99,USD
+8,FUR-ANN-ANN-012,Annibale Colombo Sofa,furniture,pieza,2499.99,USD
+9,KIT-BRD-BAM-048,Bamboo Spatula,kitchen-accessories,pieza,7.99,USD
+10,KIT-BRD-BLA-049,Black Aluminium Cup,kitchen-accessories,pieza,5.99,USD
+11,SPO-BRD-AME-137,American Football,sports-accessories,pieza,19.99,USD
+12,SPO-BRD-BAS-138,Baseball Ball,sports-accessories,pieza,8.99,USD
