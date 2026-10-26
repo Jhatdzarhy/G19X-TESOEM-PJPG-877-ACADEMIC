@@ -1,0 +1,7 @@
+# Dependencias solo de desarrollo (CC-26): pruebas automaticas con pytest.
+# Instalar desde la carpeta backend, con el entorno virtual activo:
+#   pip install -r requirements-dev.txt
+-r requirements.txt
+iniconfig==2.3.1
+pluggy==1.7.0
+pytest==9.1.1
