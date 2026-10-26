@@ -4,6 +4,16 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-26 00:17 | c96b0cf | docs(estado): registrar el bloque 3 de la retroalimentacion: funcionamiento sin llaves (CC-27) |
+| 2026-10-26 00:14 | 6233453 | docs: funcionamiento sin llaves en el README y en la carga de datos del manual tecnico (CC-27) |
+| 2026-10-26 00:10 | 6c9cf9b | docs(control-cambios): registrar CC-27 datos de respaldo versionados para instalar sin llaves |
+| 2026-10-26 00:08 | 3f6330b | docs(qa): AUT-02 carga sin llaves desde el respaldo con la misma huella efe7c9c4 (CC-27) |
+| 2026-10-25 23:58 | 49151cf | feat(etl): descargar_clima copia el respaldo si Open-Meteo no responde o con --respaldo (CC-27) |
+| 2026-10-25 23:54 | 4baa7b2 | feat(etl): cargar_banxico usa el respaldo si no hay token, si Banxico no responde o con --respaldo (CC-27) |
+| 2026-10-25 23:54 | 9163576 | feat(etl): cargar_productos usa el respaldo con los mismos producto_id si DummyJSON no responde o con --respaldo (CC-27) |
+| 2026-10-25 23:50 | 7efc968 | feat(etl): datos de respaldo versionados de DummyJSON, Banxico SIE y Open-Meteo con atribucion (CC-27, riesgo R1) |
+| 2026-10-25 23:50 | 3bff201 | feat(etl): exportador de datos de respaldo desde la base y la cache validadas (CC-27) |
+| 2026-10-25 23:31 | d0ec735 | docs(bitacora): regenerar desde git log con el bloque 2 de la retroalimentacion |
 | 2026-10-25 23:31 | f5d5487 | docs(estado): registrar el bloque 2 de la retroalimentacion: pruebas automaticas (CC-26) |
 | 2026-10-25 23:26 | db389d6 | docs(manual): pruebas automaticas en la tabla de verificacion (CC-26) |
 | 2026-10-25 23:24 | 21cb8fd | docs(qa): agregar AUT-01 al indice de evidencia (CC-26) |
