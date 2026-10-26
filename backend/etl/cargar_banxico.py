@@ -9,10 +9,14 @@ Serie SF43718: tipo de cambio FIX pesos por dolar, publicado en dias habiles ban
   La capa analitica usa la ultima tasa publicada en o antes de cada fecha.
 - Idempotente: ON CONFLICT actualiza la tasa si el dia ya existe.
 - El token se lee de backend/.env (BANXICO_TOKEN) y nunca se imprime.
+- Sin token, si Banxico no responde, o con --respaldo, carga la misma serie desde
+  etl/respaldo/banxico_fix_sf43718.csv (CC-27, control de cambios, riesgo R1). Son los
+  datos oficiales ya descargados; se guardan con la misma fuente BANXICO_SIE.
 
 Uso (desde la carpeta backend):
   python -m etl.cargar_banxico
   python -m etl.cargar_banxico --inicio 2025-10-01 --fin 2026-09-30
+  python -m etl.cargar_banxico --respaldo
 """
 import argparse
 import json
@@ -24,6 +28,7 @@ import httpx
 from dotenv import load_dotenv
 
 from app.database import get_connection
+from etl import respaldo
 
 SERIE_FIX = "SF43718"
 URL = "https://www.banxico.org.mx/SieAPIRest/service/v1/series/{serie}/datos/{inicio}/{fin}"
@@ -37,11 +42,16 @@ def periodo_por_defecto():
 
 
 def leer_token():
+    """Token de backend/.env, o None si no esta configurado."""
     load_dotenv(Path(__file__).resolve().parents[1] / ".env")
-    token = os.getenv("BANXICO_TOKEN", "").strip()
-    if not token:
-        raise RuntimeError("Falta BANXICO_TOKEN en backend/.env")
-    return token
+    return os.getenv("BANXICO_TOKEN", "").strip() or None
+
+
+def desde_respaldo(inicio, fin):
+    """Filas (fecha, tasa) del respaldo dentro del periodo (CC-27)."""
+    desde, hasta = date.fromisoformat(inicio), date.fromisoformat(fin)
+    filas = [(date.fromisoformat(f["fecha"]), f["tasa"]) for f in respaldo.leer_csv(respaldo.FIX_BANXICO)]
+    return [(dia, tasa) for dia, tasa in filas if desde <= dia <= hasta]
 
 
 def obtener_serie(inicio, fin, token):
@@ -104,18 +114,28 @@ def main():
     parser = argparse.ArgumentParser(description="Carga el FIX USD-MXN de Banxico SIE (CC-03).")
     parser.add_argument("--inicio", default=inicio_def)
     parser.add_argument("--fin", default=fin_def)
+    parser.add_argument("--respaldo", action="store_true", help="carga el respaldo versionado sin llamar a la API")
     args = parser.parse_args()
     date.fromisoformat(args.inicio)
     date.fromisoformat(args.fin)
 
-    datos = obtener_serie(args.inicio, args.fin, leer_token())
-    filas, descartados = limpiar(datos)
+    filas, descartados, origen = None, 0, "API de Banxico SIE"
+    token = None if args.respaldo else leer_token()
+    if token:
+        try:
+            filas, descartados = limpiar(obtener_serie(args.inicio, args.fin, token))
+        except (httpx.HTTPError, RuntimeError) as e:
+            respaldo.aviso("Banxico SIE", f"Banxico no respondio ({e})", respaldo.FIX_BANXICO)
+    elif not args.respaldo:
+        respaldo.aviso("Banxico SIE", "no hay BANXICO_TOKEN en backend/.env", respaldo.FIX_BANXICO)
+    if filas is None:
+        filas, origen = desde_respaldo(args.inicio, args.fin), "respaldo versionado"
     if not filas:
-        raise RuntimeError("Banxico no devolvio datos validos para el periodo")
+        raise RuntimeError("No hay datos de Banxico validos para el periodo")
     total, minf, maxf, mint, maxt = guardar(filas)
 
-    print(f"Banxico SIE {SERIE_FIX} (FIX USD-MXN) {args.inicio} a {args.fin}")
-    print(f"  dias publicados recibidos: {len(filas)}   descartados (N/E o fuera de rango): {descartados}")
+    print(f"Banxico SIE {SERIE_FIX} (FIX USD-MXN) {args.inicio} a {args.fin}, desde {origen}")
+    print(f"  dias publicados: {len(filas)}   descartados (N/E o fuera de rango): {descartados}")
     print(f"  en tipo_cambio con fuente {FUENTE}: {total} dias, {minf} a {maxf}, tasa {mint} a {maxt}")
     print("Fuente: Banco de Mexico, Sistema de Informacion Economica (SIE).")
 
