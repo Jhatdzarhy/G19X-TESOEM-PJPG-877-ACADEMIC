@@ -4,6 +4,16 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-28 13:28 | 03c27c1 | docs(estado): registrar el bloque 4 de la retroalimentacion: instalacion en un paso (CC-28) |
+| 2026-10-28 13:24 | b09eaf0 | docs(control-cambios): registrar CC-28 instalacion en un paso y la precision de CC-18 sobre el orden fijo de Isolation Forest |
+| 2026-10-28 13:21 | bf8c0ae | docs(mantenimiento): falla conocida por el bloqueo intermitente del Control de aplicaciones de Windows |
+| 2026-10-28 13:19 | f718d2c | docs(manual): seccion 5 con el instalador, orden numerico de db/final, opcion -v base, cargar_todo y CATALINA_HOME (CC-28) |
+| 2026-10-28 13:06 | 1cde14b | docs(readme): instalacion en un paso con instalar.ps1, comando de pytest y CATALINA_HOME en lugar de la ruta fija de Tomcat (CC-26, CC-28) |
+| 2026-10-28 13:01 | f59ade9 | feat: instalar.ps1 instala en un paso con respaldo validado, CATALINA_HOME, cuentas ocultas y verificacion final (CC-28) |
+| 2026-10-28 13:01 | 7f4c47b | feat(admin): cargar_todo ejecuta ETL, modelo estrella y modelos en orden y conserva los archivos versionados que solo cambian de fecha (CC-28) |
+| 2026-10-28 12:59 | d9cf11e | chore(analitica): regenerar la evaluacion de anomalias con el orden fijo: F1 0.27 igual, cambia el detalle por evento (CC-18) |
+| 2026-10-28 12:58 | 7c90900 | fix(analitica): orden fijo en la consulta de compras para que Isolation Forest no dependa del orden fisico de las filas (CC-18) |
+| 2026-10-26 00:18 | c6face0 | docs(bitacora): regenerar desde git log con el bloque 3 de la retroalimentacion |
 | 2026-10-26 00:17 | c96b0cf | docs(estado): registrar el bloque 3 de la retroalimentacion: funcionamiento sin llaves (CC-27) |
 | 2026-10-26 00:14 | 6233453 | docs: funcionamiento sin llaves en el README y en la carga de datos del manual tecnico (CC-27) |
 | 2026-10-26 00:10 | 6c9cf9b | docs(control-cambios): registrar CC-27 datos de respaldo versionados para instalar sin llaves |
