@@ -78,7 +78,7 @@ supply-chain-dashboard/
 | PostgreSQL | 18.6 | `psql` en el PATH del usuario |
 | Python | 3.13.15 | Entorno virtual en `backend\.venv` |
 | JDK | Temurin 21.0.12.1 (LTS) | `JAVA_HOME` apuntando al JDK 21 |
-| Apache Tomcat | 10.1.60 (zip) | En `C:\tomcat\apache-tomcat-10.1.60`, con `CATALINA_HOME` |
+| Apache Tomcat | 10.1.60 (zip) | En cualquier carpeta, indicada en la variable `CATALINA_HOME` |
 | Git | Última estable | |
 | Navegador | Chrome o Edge actualizado | |
 
@@ -109,7 +109,7 @@ Archivo de texto en UTF-8 sin acentos, fuera del repositorio. Variables:
 
 Opcionales para el respaldo local del asistente: `OLLAMA_URL` (por defecto `http://localhost:11434/v1/chat/completions`) y `OLLAMA_MODELO` (por defecto `qwen2.5:7b`).
 
-### 4.2 `C:\tomcat\apache-tomcat-10.1.60\bin\setenv.bat`
+### 4.2 `bin\setenv.bat` de `CATALINA_HOME`
 
 Lo escribe `python -m admin.token_interno` junto con `.env`. Define:
 - `SC_TOKEN_INTERNO`: el mismo token que en `.env`.
@@ -123,55 +123,70 @@ Los valores nunca se muestran en consola ni se copian a la documentación. Si el
 
 Todos los comandos se ejecutan en PowerShell. Se indica la carpeta en cada bloque.
 
-### 5.1 Entorno de Python (carpeta `backend`)
+### 5.1 Instalación en un paso (raíz del proyecto)
+
+`instalar.ps1` hace en orden todo lo de las secciones 5.2 a 5.8 (CC-28):
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+powershell -ExecutionPolicy Bypass -File .\instalar.ps1
 ```
 
-Después se crea `backend\.env` con las variables de la sección 4.1, excepto `SC_TOKEN_INTERNO`.
+1. Comprueba Python 3.13, `psql` (en el PATH o en `C:\Program Files\PostgreSQL\<versión>\bin`), y JDK 21 y Tomcat si se instala la capa web.
+2. Crea `backend\.venv` e instala `requirements-dev.txt`.
+3. Pide la contraseña de PostgreSQL sin mostrarla. Si no existe `backend\.env`, lo crea a partir de `.env.example`; si existe, no lo modifica.
+4. Crea la base y ejecuta `db\final\01` a `07` en orden numérico.
+5. Carga los datos de respaldo validados (CC-27) y corre los modelos con `python -m admin.cargar_todo --respaldo`.
+6. Genera el token interno y compila la capa web en `CATALINA_HOME`.
+7. Crea las cuentas `gerencia`, `operaciones` y `admin`; cada contraseña se escribe oculta.
+8. Verifica con las pruebas automáticas, `99_verificar_extensiones.sql`, `validar_kpis.sql` y la huella de datos.
 
-### 5.2 Base de datos (raíz del proyecto)
+| Opción | Uso |
+|---|---|
+| `-BaseDatos supply_chain_prueba` | Instala en otra base sin tocar `supply_chain_final`; `backend\.env` no cambia |
+| `-Descargar` | Trae los datos de las APIs en lugar del respaldo validado; requiere conexión y, para Banxico, el token (CC-27) |
+| `-SinWeb` | Omite el token interno y la capa web; no requiere Tomcat ni JDK |
+| `-TomcatHome <carpeta>` | Tomcat en otra carpeta; por omisión, `CATALINA_HOME` |
+| `-Reinstalar` | Borra la base indicada y la instala de nuevo; pide escribir su nombre para confirmar |
 
-Se crea la base y se ejecutan los scripts en este orden. Cada script es aditivo e idempotente.
+Si la base ya existe, el instalador se detiene sin cambiar nada. Nunca toca `supply_chain_mvp`. Las secciones siguientes describen los mismos pasos a mano.
+
+### 5.2 Entorno de Python (carpeta `backend`)
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt
+```
+
+Después se copia `backend\.env.example` como `backend\.env` y se escriben las variables de la sección 4.1, excepto `SC_TOKEN_INTERNO`. `BANXICO_TOKEN` y `ZAI_API_KEY` son opcionales (CC-27).
+
+### 5.3 Base de datos (raíz del proyecto)
+
+Se crea la base y se ejecutan los scripts en orden numérico. Cada script indica su base destino con `-v base=<nombre>`; sin esa opción usa `supply_chain_final`.
 
 ```powershell
 psql -U postgres -c "CREATE DATABASE supply_chain_final ENCODING 'UTF8'"
-psql -U postgres -d supply_chain_final -f db\final\01_esquema_pdr.sql
-psql -U postgres -d supply_chain_final -f db\final\02_centro_soluciones.sql
-psql -U postgres -d supply_chain_final -f db\final\03_extensiones_modelo.sql
-psql -U postgres -d supply_chain_final -f db\final\99_verificar_extensiones.sql
-psql -U postgres -d supply_chain_final -f db\final\05_asistente.sql
-psql -U postgres -d supply_chain_final -f db\final\06_usuarios.sql
+'01_esquema_pdr','02_centro_soluciones','03_extensiones_modelo','04_agregacion_fact','05_asistente','06_usuarios','07_simulador_vivo' | ForEach-Object { psql -U postgres -d supply_chain_final -v base=supply_chain_final -v ON_ERROR_STOP=1 -q -f "db\final\$_.sql" }
+psql -U postgres -d supply_chain_final -v base=supply_chain_final -f db\final\99_verificar_extensiones.sql
 ```
 
-`99_verificar_extensiones.sql` debe reportar 36 de 36 pruebas correctas.
+`99_verificar_extensiones.sql` debe reportar 36 de 36. En una base nueva, `04_agregacion_fact.sql` solo crea la función `refrescar_modelo_estrella()`; los datos se agregan en la sección 5.4.
 
-### 5.3 Carga de datos (carpeta `backend`, entorno virtual activo)
+### 5.4 Datos y modelos (carpeta `backend`, entorno virtual activo)
 
 ```powershell
-python -m etl.cargar_productos
-python -m etl.cargar_tipo_cambio
-python -m etl.cargar_banxico
-python -m etl.descargar_clima
-python -m etl.generar_operacion
+python -m admin.cargar_todo
 ```
-Sin token de Banxico o sin conexión a DummyJSON, Banxico u Open-Meteo, los tres primeros pasos cargan los datos de respaldo de `backend/etl/respaldo` y lo indican con un aviso; con `--respaldo` se usan sin intentar la descarga (CC-27). `cargar_tipo_cambio` solo trae la tasa del día y se puede omitir sin conexión.
 
-`generar_operacion` usa una semilla fija: siempre genera los mismos 12 meses (395 órdenes, 401 renglones y 13,140 registros de demanda diaria). `python -m etl.generar_operacion --huella` imprime la huella SHA-256 de los datos sin escribir en la base; debe ser `efe7c9c4...` (CC-22).
+Ejecuta, cada uno en su propio proceso y en este orden: `etl.cargar_productos`, `etl.cargar_tipo_cambio`, `etl.cargar_banxico`, `etl.descargar_clima`, `etl.generar_operacion`, `refrescar_modelo_estrella()` y los modelos de la sección 5.5. Si un paso falla, se detiene; `cargar_tipo_cambio` es opcional sin conexión.
 
-### 5.4 Modelo estrella y simulador en vivo (raíz del proyecto)
+Sin token de Banxico o sin conexión a DummyJSON, Banxico u Open-Meteo, la carga usa los datos de respaldo de `backend/etl/respaldo` y lo indica con un aviso; `python -m admin.cargar_todo --respaldo` los usa sin intentar descargas (CC-27).
 
-```powershell
-psql -U postgres -d supply_chain_final -f db\final\04_agregacion_fact.sql
-psql -U postgres -d supply_chain_final -f db\final\07_simulador_vivo.sql
-```
+`generar_operacion` usa una semilla fija: siempre genera los mismos 12 meses (395 órdenes, 401 renglones y 13,140 registros de demanda diaria). `python -m etl.generar_operacion --huella` imprime la huella SHA-256 de los datos sin escribir en la base; debe ser `efe7c9c4...` (CC-22). Si `eventos_inyectados.json` o `evaluacion_anomalias.json` solo cambian en su fecha, `cargar_todo` conserva los archivos versionados.
 
 ### 5.5 Modelos analíticos (carpeta `backend`, entorno virtual activo)
 
-El orden importa: Isolation Forest escribe sobre el modelo estrella y el motor de recomendaciones usa el pronóstico y el riesgo.
+`cargar_todo` los ejecuta al final. Se pueden volver a correr a mano en este orden, porque Isolation Forest escribe sobre el modelo estrella y el motor de recomendaciones usa el pronóstico y el riesgo:
 
 ```powershell
 python -m analitica.pronostico
@@ -184,10 +199,12 @@ python -m analitica.recomendaciones
 
 ```powershell
 python -m admin.token_interno
-python -m admin.crear_usuario
+python -m admin.crear_usuario --usuario gerencia --nombre "Gerencia general" --rol EJECUTIVO
+python -m admin.crear_usuario --usuario operaciones --nombre "Operaciones" --rol OPERACIONES
+python -m admin.crear_usuario --usuario admin --nombre "Administrador" --rol ADMIN
 ```
 
-`crear_usuario` pide la contraseña oculta (de 15 a 128 caracteres, sin el nombre de usuario). Se crean tres usuarios, uno por rol: `gerencia` (EJECUTIVO), `operaciones` (OPERACIONES) y `admin` (ADMIN). Las contraseñas se guardan en un gestor de contraseñas, nunca en el repositorio.
+`token_interno` escribe el token en `backend\.env` y en `bin\setenv.bat` de `CATALINA_HOME`. `crear_usuario` pide la contraseña oculta (de 15 a 128 caracteres, sin el nombre de usuario). Las contraseñas se guardan en un gestor de contraseñas, nunca en el repositorio.
 
 ### 5.7 Capa web (raíz del proyecto)
 
@@ -195,15 +212,26 @@ python -m admin.crear_usuario
 .\frontend\build.ps1
 ```
 
-Compila las clases con `javac --release 21 -Xlint:all` y despliega `frontend/webapp` en `webapps\supplychain` de Tomcat con `robocopy /MIR`. Se ejecuta después de cada cambio en Java, JSP, JavaScript o CSS.
+Compila las clases con `javac --release 21 -Xlint:all` contra `servlet-api.jar` de `CATALINA_HOME` y despliega `frontend/webapp` en `webapps\supplychain` con `robocopy /MIR`. Se ejecuta después de cada cambio en Java, JSP, JavaScript o CSS.
 
 ### 5.8 Verificación de la instalación
 
+Desde la carpeta `backend`, con el entorno virtual activo:
+
 ```powershell
-psql -U postgres -h localhost -d postgres -P pager=off -v vol_b64=$vol -f db\final\validar_kpis.sql
+python -m pytest
 ```
 
-`$vol` se prepara antes, desde la raíz, con `$vol = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path "backend\etl\datos\volumen_por_sku.json")))`. El resultado esperado es 23 de 23 correctas. Con FastAPI levantado, `python -m admin.verificar_seguridad` (carpeta `backend`) debe dar 21 de 21 con 26 rutas.
+Debe dar 55 de 55 (CC-26).
+
+Desde la raíz:
+
+```powershell
+$vol = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path "backend\etl\datos\volumen_por_sku.json")))
+psql -U postgres -h localhost -d postgres -P pager=off -v base=supply_chain_final -v vol_b64=$vol -f db\final\validar_kpis.sql
+```
+
+Debe dar 23 de 23. Con FastAPI levantado, `python -m admin.verificar_seguridad` (carpeta `backend`) debe dar 21 de 21 con 26 rutas.
 
 ---
 
@@ -213,12 +241,12 @@ psql -U postgres -h localhost -d postgres -P pager=off -v vol_b64=$vol -f db\fin
 
 1. PostgreSQL arranca como servicio de Windows; no requiere acción.
 2. FastAPI, en una ventana dedicada (carpeta `backend`, entorno virtual activo): `fastapi dev app/main.py`.
-3. Tomcat, en otra ventana: `C:\tomcat\apache-tomcat-10.1.60\bin\startup.bat`.
+3. Tomcat, en otra ventana: `& "$env:CATALINA_HOME\bin\startup.bat"`.
 4. Abrir `http://localhost:8080/supplychain/` e iniciar sesión.
 
 ### 6.2 Apagado
 
-1. Tomcat: `C:\tomcat\apache-tomcat-10.1.60\bin\shutdown.bat`.
+1. Tomcat: `& "$env:CATALINA_HOME\bin\shutdown.bat"`.
 2. FastAPI: Ctrl+C en su ventana.
 3. Simulador en vivo, si está corriendo: Ctrl+C. Retoma donde se quedó en la siguiente ejecución.
 
@@ -383,6 +411,7 @@ Cada decisión queda en el historial del caso con usuario y fecha.
 | Extensiones del modelo | `db\final\99_verificar_extensiones.sql` | 36 de 36 |
 | Integridad y KPIs | `db\final\validar_kpis.sql` (sección 5.8) | 23 de 23 |
 | Seguridad de la API | `python -m admin.verificar_seguridad` | 21 de 21, 26 rutas |
+| Instalación en un paso (CC-28) | `powershell -ExecutionPolicy Bypass -File .\instalar.ps1` (sección 5.1) | Termina con los cuatro resultados en OK |
 | Pruebas automáticas (CC-26) | Desde `backend`: `pip install -r requirements-dev.txt` una vez y después `python -m pytest`; no requieren PostgreSQL ni llaves | 55 de 55 |
 | Huella del generador | `python -m etl.generar_operacion --huella` | `efe7c9c4...` |
 | Pruebas funcionales | `docs/REPORTE_QA.md` y `docs/qa/` | 41 de 41 |
