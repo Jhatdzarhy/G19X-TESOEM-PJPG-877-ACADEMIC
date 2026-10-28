@@ -12,7 +12,7 @@
   "variable_demanda": "cociente 7/28 dias relativo a la red",
   "contaminacion_demanda": 0.01,
   "ventana_deteccion_dias": 35,
-  "generado": "2026-10-08"
+  "generado": "2026-10-28"
  },
  "compras_por_orden": {
   "verdaderos_positivos": 6,
@@ -26,7 +26,7 @@
   "por_evento": {
    "EV01_ALZA_PRECIO_NORTE": {
     "ordenes": 15,
-    "detectadas": 4
+    "detectadas": 3
    },
    "EV02_RETRASOS_DELTA": {
     "ordenes": 2,
@@ -38,13 +38,13 @@
    },
    "EV06_FLETE_FRONTERA": {
     "ordenes": 1,
-    "detectadas": 0
+    "detectadas": 1
    }
   },
   "causas_detectadas": {
-   "faltante": 17,
-   "lead_rel": 6,
-   "precio_rel": 1
+   "faltante": 16,
+   "lead_rel": 7,
+   "flete_rel": 1
   }
  },
  "demanda_por_dia": {
