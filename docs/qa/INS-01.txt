@@ -1,0 +1,213 @@
+INS-01. Instalacion en un paso desde un clon limpio de GitHub (CC-28)
+Fecha: 28 de octubre de 2026. Equipo: Windows, PowerShell 5.1, PostgreSQL 18, Python 3.13.
+Rama proyecto-final, commit b8fd411. <clon> es la carpeta del clon nuevo, fuera de la
+carpeta de trabajo. Las contrasenas se escribieron ocultas y no aparecen en esta salida.
+
+PS <clon>> git --no-pager log --oneline -1
+b8fd411 (HEAD -> proyecto-final, origin/proyecto-final, origin/HEAD) docs(bitacora): regenerar desde git log con el bloque 4 de la retroalimentacion
+PS <clon>> Test-Path backend\.env; Test-Path backend\.venv
+False
+False
+
+--- Primer intento: la base de prueba ya existia y el instalador se detuvo sin cambiar nada
+PS <clon>> powershell -ExecutionPolicy Bypass -File .\instalar.ps1 -BaseDatos supply_chain_prueba -SinWeb
+
+== 1/8 Requisitos
+psql: C:\Program Files\PostgreSQL\18\bin\psql.exe
+Python 3.13: py -3.13
+
+== 2/8 Entorno virtual backend\.venv
+Dependencias instaladas (requirements-dev.txt).
+
+== 3/8 Configuracion y contrasena de PostgreSQL
+Contrasena del usuario postgres de PostgreSQL: (oculta)
+backend\.env creado desde .env.example. BANXICO_TOKEN y ZAI_API_KEY quedan vacios (opcionales, CC-27).
+
+== 4/8 Base de datos supply_chain_prueba
+
+INSTALACION DETENIDA: La base supply_chain_prueba ya existe. Para borrarla y volver a instalar usa -Reinstalar; para probar sin tocarla usa -BaseDatos supply_chain_prueba.
+
+--- Segundo intento, con -Reinstalar
+PS <clon>> powershell -ExecutionPolicy Bypass -File .\instalar.ps1 -BaseDatos supply_chain_prueba -SinWeb -Reinstalar
+
+== 1/8 Requisitos
+psql: C:\Program Files\PostgreSQL\18\bin\psql.exe
+Python 3.13: py -3.13
+
+== 2/8 Entorno virtual backend\.venv
+Dependencias instaladas (requirements-dev.txt).
+
+== 3/8 Configuracion y contrasena de PostgreSQL
+Contrasena del usuario postgres de PostgreSQL: (oculta)
+backend\.env ya existe; no se modifica (las llaves y el token se conservan).
+
+== 4/8 Base de datos supply_chain_prueba
+Se borrara la base supply_chain_prueba con todos sus datos, usuarios e historial de decisiones.
+Escribe supply_chain_prueba para confirmar: supply_chain_prueba
+Base supply_chain_prueba borrada.
+Base supply_chain_prueba creada.
+  01_esquema_pdr.sql
+  02_centro_soluciones.sql
+  03_extensiones_modelo.sql
+  04_agregacion_fact.sql
+  05_asistente.sql
+  06_usuarios.sql
+  07_simulador_vivo.sql
+
+== 5/8 Datos y modelos (admin.cargar_todo)
+
+== python -m etl.cargar_productos --respaldo
+LAP-APP-APP-078  laptops              USD  1999.99  Apple MacBook Pro 14 Inch Space Grey
+LAP-ASU-ASU-079  laptops              USD  1799.99  Asus Zenbook Pro Dual Screen Laptop
+MOB-AMA-AMA-099  mobile-accessories   USD    99.99  Amazon Echo Plus
+MOB-APP-APP-100  mobile-accessories   USD   129.99  Apple Airpods
+SMA-APP-IPH-121  smartphones          USD   199.99  iPhone 5s
+SMA-APP-IPH-122  smartphones          USD   299.99  iPhone 6
+FUR-ANN-ANN-011  furniture            USD  1899.99  Annibale Colombo Bed
+FUR-ANN-ANN-012  furniture            USD  2499.99  Annibale Colombo Sofa
+KIT-BRD-BAM-048  kitchen-accessories  USD     7.99  Bamboo Spatula
+KIT-BRD-BLA-049  kitchen-accessories  USD     5.99  Black Aluminium Cup
+SPO-BRD-AME-137  sports-accessories   USD    19.99  American Football
+SPO-BRD-BAS-138  sports-accessories   USD     8.99  Baseball Ball
+12 productos cargados desde el respaldo (DummyJSON, dummyjson.com)
+   listo en 0.3 s
+
+== python -m etl.cargar_banxico --respaldo
+Banxico SIE SF43718 (FIX USD-MXN) 2025-10-01 a 2026-09-30, desde respaldo versionado
+  dias publicados: 251   descartados (N/E o fuera de rango): 0
+  en tipo_cambio con fuente BANXICO_SIE: 251 dias, 2025-10-01 a 2026-09-30, tasa 16.874800 a 18.623300
+Fuente: Banco de Mexico, Sistema de Informacion Economica (SIE).
+   listo en 0.3 s
+
+== python -m etl.descargar_clima --respaldo
+Clima historico 2025-10-01 a 2026-09-30: 10 puntos -> backend\etl\cache\clima
+
+Punto                   Origen       Dias  Lluvia  Fuerte  Tormenta
+ALM_CDMX                respaldo      365     163       3         0
+ALM_MTY                 respaldo      365      89       2         0
+ALM_GDL                 respaldo      365     125       0         0
+DESP_APODACA            respaldo      365      81       1         0
+DESP_MANZANILLO         respaldo      365      75       3         1
+DESP_NUEVO_LAREDO       respaldo      365      67       2         0
+DESP_LEON               respaldo      365      97       0         0
+DESP_ZAPOPAN            respaldo      365     121       1         0
+DESP_QUERETARO          respaldo      365     103       1         0
+DESP_LAZARO_CARDENAS    respaldo      365      89       6         5
+
+Clima listo. Fuente: Open-Meteo.com (CC BY 4.0).
+   listo en 0.1 s
+
+== python -m etl.generar_operacion
+Resumen de la simulacion (verificacion rapida, no sustituye a validar_kpis.sql)
+  ordenes: 395   renglones: 401   envios recibidos: 383
+  movimientos: 13311   demanda_diaria: 13140
+  OTIF: 80.4%   a tiempo: 88.0%
+  Fill Rate de servicio: 97.3%   Fill Rate de proveedor: 96.6%
+  Lead time promedio: 8.4 dias
+  Flete por unidad: 25.61 MXN
+  Utilizacion promedio / maxima: CDMX 57%/88%  MTY 65%/89%  GDL 64%/90%
+  Condicion climatica de envios: DESPEJADO 178, LLUVIA 208, LLUVIA_FUERTE 9
+Eventos inyectados: backend\etl\datos\eventos_inyectados.json
+   listo en 0.8 s
+   eventos_inyectados.json: mismo contenido; se conserva el archivo versionado
+
+== SELECT * FROM refrescar_modelo_estrella()
+   dim_tiempo: 365 dias   fact_supply_chain: 389 filas   renglones sin tipo de cambio: 0
+
+== python -m analitica.pronostico
+Pronostico Holt-Winters (periodo 7, horizonte 14 dias, validacion con los ultimos 28 dias)
+  TOTAL RED      MAPE     3.3%   proximos 14 dias: 17,136 u
+  producto 1     MAPE     8.6%   proximos 14 dias: 281 u
+  producto 2     MAPE     7.5%   proximos 14 dias: 225 u
+  producto 3     MAPE     8.7%   proximos 14 dias: 1,427 u
+  producto 4     MAPE    11.3%   proximos 14 dias: 1,452 u
+  producto 5     MAPE     6.9%   proximos 14 dias: 840 u
+  producto 6     MAPE     8.1%   proximos 14 dias: 1,105 u
+  producto 7     MAPE    13.8%   proximos 14 dias: 95 u
+  producto 8     MAPE    15.3%   proximos 14 dias: 68 u
+  producto 9     MAPE     8.0%   proximos 14 dias: 3,812 u
+  producto 10    MAPE     8.9%   proximos 14 dias: 4,268 u
+  producto 11    MAPE     9.7%   proximos 14 dias: 1,632 u
+  producto 12    MAPE     9.5%   proximos 14 dias: 2,093 u
+forecast_demanda: 182 filas
+   listo en 6.6 s
+
+== python -m analitica.riesgo
+Indice de riesgo de proveedores al 2026-09-30 (ventana 90 dias)
+  Delta Import                   44.4 MEDIO  (hace 30 dias: 44.1)  envios: 15  compras: 19.2%
+  Norte Electronica              33.9 BAJO   (hace 30 dias: 34.3)  envios: 16  compras: 38.2%
+  Frontera Supply                26.8 BAJO   (hace 30 dias: 25.6)  envios: 8  compras: 22.5%
+  Pacifico Trading               16.9 BAJO   (hace 30 dias: 17.2)  envios: 6  compras: 3.7%
+  Atlantico Global               16.8 BAJO   (hace 30 dias: 23.5)  envios: 8  compras: 2.1%
+  Muebles del Bajio              13.5 BAJO   (hace 30 dias: 20.2)  envios: 11  compras: 10.7%
+  Casa Hogar Distribuciones      11.6 BAJO   (hace 30 dias: 16.8)  envios: 17  compras: 2.0%
+  Deportes del Centro             4.6 BAJO   (hace 30 dias: 4.2)  envios: 12  compras: 1.6%
+Indice de la red (ponderado por compras): 30.2  (hace 30 dias: 30.6)
+   listo en 1.5 s
+
+== python -m analitica.anomalias
+Isolation Forest validado contra eventos inyectados
+  Compras (383 ordenes, 20 anomalas reales): precision 25%  recall 30%  F1 0.27
+    EV01_ALZA_PRECIO_NORTE     3 de 15 ordenes
+    EV02_RETRASOS_DELTA        1 de 2 ordenes
+    EV04_FALTANTES_PACIFICO    1 de 2 ordenes
+    EV06_FLETE_FRONTERA        1 de 1 ordenes
+    causas de las alertas: {'faltante': 16, 'lead_rel': 7, 'flete_rel': 1}
+  Demanda (por dia): precision 12%  recall 15%  falsas alarmas: 2.22 por semana
+    EV03_PICO_LAPTOP_MTY       no detectado (0 de 23 dias con alerta)
+    EV05_CAIDA_AIRPODS_CDMX    detectado a los 3 dias (15 de 35 dias con alerta)
+  renglones con score en fact_supply_chain: 389
+  evidencia: backend\analitica\evaluacion_anomalias.json
+   listo en 2.2 s
+   evaluacion_anomalias.json: mismo contenido; se conserva el archivo versionado
+
+== python -m analitica.recomendaciones
+Motor de recomendaciones al 2026-09-30 (FIX 18.0692)
+  por regla: ALZA_PRECIO 1, QUIEBRE_PROYECTADO 3
+  CRITICO       258,993 MXN  conf 80%  Alza de precio de Norte Electronica en iPhone 5s  -> Mover el volumen a Delta Import
+  ATENCION       70,427 MXN  conf 83%  Quiebre proyectado de Annibale Colombo Sofa en Almacen CDMX  -> Orden urgente con flete expres a Muebles del Bajio
+  ATENCION       13,435 MXN  conf 89%  Quiebre proyectado de American Football en Almacen Monterrey  -> Transferir 451 u desde Almacen CDMX
+  CRITICO         8,869 MXN  conf 89%  Quiebre proyectado de Baseball Ball en Almacen CDMX  -> Orden urgente con flete expres a Deportes del Cent
+  recomendaciones nuevas guardadas: 4 (impacto total 351,723 MXN)
+   listo en 0.2 s
+
+Carga completa.
+
+== 6/8 Token interno y capa web
+Omitido (-SinWeb). Despues: python -m admin.token_interno y .\frontend\build.ps1, con CATALINA_HOME definido.
+
+== 7/8 Cuentas de usuario
+  Cuenta gerencia (EJECUTIVO): escribe su contrasena, de 15 a 128 caracteres.
+Contrasena (no se muestra):
+Repite la contrasena:
+Usuario gerencia creado con rol EJECUTIVO.
+  Cuenta operaciones (OPERACIONES): escribe su contrasena, de 15 a 128 caracteres.
+Contrasena (no se muestra):
+Repite la contrasena:
+Usuario operaciones creado con rol OPERACIONES.
+  Cuenta admin (ADMIN): escribe su contrasena, de 15 a 128 caracteres.
+Contrasena (no se muestra):
+Repite la contrasena:
+Usuario admin creado con rol ADMIN.
+
+== 8/8 Verificacion
+.......................................................              [100%]
+============================ warnings summary =============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  <clon>\backend\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+55 passed, 1 warning in 6.33s
+
+  Pruebas automaticas (55)       OK
+  Extensiones del modelo (36)    OK 36
+  Integridad y KPIs (23)         OK 23
+  Huella de datos (efe7c9c4)     OK
+
+Instalacion completa en la base supply_chain_prueba.
+Para usar el dashboard: FastAPI (carpeta backend, entorno activo) con fastapi dev app/main.py,
+Tomcat con "$env:CATALINA_HOME\bin\startup.bat" y el navegador en http://localhost:8080/supplychain/
+Nota: esta instalacion quedo en supply_chain_prueba; si backend\.env ya existia, sigue apuntando a su base.
+PS <clon>> git status --short
+(sin cambios: .env, .venv y la cache estan excluidos y la instalacion no modifico archivos versionados)
