@@ -4,6 +4,11 @@ Historial de commits generado automáticamente desde 'git log'.
 
 | Fecha | Hash | Mensaje |
 |---|---|---|
+| 2026-10-28 13:46 | 6047052 | docs(estado): registrar el bloque 5 y el cierre de la retroalimentacion de TODO Academy |
+| 2026-10-28 13:43 | 0f198ac | docs(readme): declarar el uso de herramientas de IA en el desarrollo y en el producto |
+| 2026-10-28 13:42 | 72cb5ef | fix: instalar.ps1 sugiere -BaseDatos <nombre> cuando la base ya existe, sin repetir la base de prueba |
+| 2026-10-28 13:41 | fecf33a | docs(qa): INS-01 instalacion en un paso desde un clon limpio de GitHub con los cuatro resultados en OK (CC-28) |
+| 2026-10-28 13:29 | b8fd411 | docs(bitacora): regenerar desde git log con el bloque 4 de la retroalimentacion |
 | 2026-10-28 13:28 | 03c27c1 | docs(estado): registrar el bloque 4 de la retroalimentacion: instalacion en un paso (CC-28) |
 | 2026-10-28 13:24 | b09eaf0 | docs(control-cambios): registrar CC-28 instalacion en un paso y la precision de CC-18 sobre el orden fijo de Isolation Forest |
 | 2026-10-28 13:21 | bf8c0ae | docs(mantenimiento): falla conocida por el bloqueo intermitente del Control de aplicaciones de Windows |
