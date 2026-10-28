@@ -63,6 +63,7 @@ def _compras(cur):
         JOIN ordenes_compra o ON o.orden_id = d.orden_id
         JOIN envios e ON e.orden_id = d.orden_id
         WHERE o.fecha_entrega_real IS NOT NULL
+        ORDER BY d.detalle_id   -- orden fijo: Isolation Forest submuestrea por posicion (CC-18)
     """)
     df = pd.DataFrame([dict(r) for r in cur.fetchall()])
     for c in ("cantidad", "cantidad_recibida", "precio_unitario", "costo_flete", "lead"):
