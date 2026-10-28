@@ -165,7 +165,7 @@ try {
     $existe = (Consulta 'postgres' "SELECT COUNT(*) FROM pg_database WHERE datname = '$BaseDatos'") -eq '1'
     if ($existe) {
         if (-not $Reinstalar) {
-            Detener "La base $BaseDatos ya existe. Para borrarla y volver a instalar usa -Reinstalar; para probar sin tocarla usa -BaseDatos supply_chain_prueba."
+            Detener "La base $BaseDatos ya existe. Para borrarla y volver a instalar usa -Reinstalar; para instalar en otra base usa -BaseDatos <nombre>."
         }
         Write-Host "Se borrara la base $BaseDatos con todos sus datos, usuarios e historial de decisiones." -ForegroundColor Yellow
         if ((Read-Host "Escribe $BaseDatos para confirmar") -cne $BaseDatos) { Detener 'Confirmacion incorrecta; no se borro nada.' }
