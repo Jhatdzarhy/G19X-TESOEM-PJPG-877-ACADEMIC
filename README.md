@@ -147,6 +147,30 @@ El sistema se instala y se revisa sin ninguna llave externa. Los datos externos 
 | Asistente de IA (Z.AI, `ZAI_API_KEY`) | Intenta Ollama si está instalado; si no, responde que no está disponible | Aviso "El asistente no está disponible"; el resto del dashboard funciona |
 | Simulador en vivo (pronóstico de Open-Meteo) | Usa la caché anterior o clima despejado (CC-22) | Los eventos en vivo siguen |
 
+## Uso de herramientas de IA
+
+Este proyecto se desarrolló con apoyo de inteligencia artificial. Se declara aquí qué herramienta se usó, para qué y quién tomó cada decisión.
+
+### Como herramienta de desarrollo
+
+| Herramienta | Uso | Decisión y verificación |
+|---|---|---|
+| Claude Opus 5.5 (Anthropic) | Redacción del PDR, el PRD y el alcance del MVP | La desarrolladora definió el problema, el alcance y los requisitos, y aprobó cada documento |
+| Claude Opus 5.5 (Anthropic) | Propuesta de código de Python, SQL, Java, JSP, JavaScript y PowerShell | La desarrolladora pegó, ejecutó y verificó cada archivo en su equipo; lo que no le convenció lo indicó y se rehízo |
+| Claude Opus 5.5 (Anthropic) | Diagnóstico y corrección de errores | Cada corrección la aprobó o la rechazó la desarrolladora antes del commit |
+| Claude Opus 5.5 (Anthropic) | Redacción de la documentación (manual técnico, plan de mantenimiento, control de cambios, reporte QA y mensajes de commit) | Los textos se redactaron a partir de lo que la desarrolladora ejecutó y revisó; la bitácora se genera desde `git log` |
+
+Decisiones tomadas por la desarrolladora, sin propuesta de la IA:
+- el stack (PostgreSQL, FastAPI, Java Servlets y JSP sobre Tomcat);
+- las herramientas de desarrollo;
+- las APIs externas (DummyJSON, Open-Meteo, ExchangeRate-API, Banxico SIE y Z.AI).
+
+La desarrolladora aprobó cada cambio respecto al PDR (`docs/CONTROL_DE_CAMBIOS.md`). Todas las pruebas, capturas y salidas de consola de `docs/qa/` se obtuvieron en su equipo.
+
+### Como componente del producto
+
+El asistente del módulo de inteligencia artificial (CC-17) usa los modelos gratuitos GLM-4.7-Flash y GLM-4.5-Flash de Z.AI, con Ollama como respaldo local opcional. Es de solo lectura y sus cifras salen de consultas a los endpoints del motor analítico; nunca aprueba, descarta ni cambia datos.
+
 ## Estructura del repositorio
 
 ```text
