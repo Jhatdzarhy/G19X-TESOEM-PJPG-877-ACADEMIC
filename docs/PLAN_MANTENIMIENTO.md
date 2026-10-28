@@ -191,6 +191,7 @@ Tabla para N1 y N2, tomada de los errores resueltos durante el desarrollo (`docs
 | `validar_kpis.sql` da error de sintaxis | Falta el parámetro `-v vol_b64` | Usar el comando completo del manual técnico (sección 5.8) | N2 |
 | La terminal queda en el paginador de git | `git diff` o `git log` con salida larga | Presionar `q`, o usar `git --no-pager` | N2 |
 | Al presionar F12 se desconecta internet | En la laptop de desarrollo, F12 activa el modo avión | Abrir las herramientas del navegador con Ctrl+Shift+I | N1 |
+| `ImportError: DLL load failed ... Una directiva de Control de aplicaciones bloqueó este archivo` al correr un modelo o el instalador | El Control inteligente de aplicaciones de Windows bloquea de forma intermitente una biblioteca compilada (statsmodels; antes scikit-learn, CC-18) | Esperar un minuto y repetir el comando, o el instalador con `-Reinstalar`; no desactivar la protección | N1, luego N2 |
 
 ---
 
