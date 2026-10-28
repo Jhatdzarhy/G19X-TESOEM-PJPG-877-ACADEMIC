@@ -42,7 +42,7 @@ Proyecto de Residencia Profesional desarrollado por Pamela J. Perez G. en PluriO
 - **Seguridad:** contraseñas cifradas con PBKDF2 (600,000 iteraciones), bloqueo tras 5 intentos fallidos, sesión con cookie `HttpOnly` y `SameSite=Strict`, protección CSRF, política de seguridad de contenido y bibliotecas con hash de integridad. El navegador solo habla con Tomcat; el motor analítico escucha solo en la máquina local y exige un token interno.
 - **Sin secretos en el repositorio:** las contraseñas, tokens y llaves se configuran localmente en cada instalación y nunca se versionan; el repositorio solo incluye una plantilla con los valores vacíos. El código no contiene usuarios ni contraseñas; las cuentas se crean en consola.
 - **Costo $0:** todo corre en la máquina local, con APIs y modelos de IA gratuitos.
-- **Verificado:** 41 de 41 pruebas de calidad, 23 de 23 validaciones de KPIs en SQL y 21 de 21 pruebas de seguridad (ver [`docs/REPORTE_QA.md`](docs/REPORTE_QA.md)).
+- **Verificado:** 41 de 41 pruebas de calidad, 23 de 23 validaciones de KPIs en SQL y 21 de 21 pruebas de seguridad y 55 pruebas automáticas que se repiten con `python -m pytest` (ver [`docs/REPORTE_QA.md`](docs/REPORTE_QA.md)).
 
 ## Arquitectura
 
@@ -80,17 +80,34 @@ Todas las dependencias de Python están fijadas en [`backend/requirements.txt`](
 
 ## Cómo levantar el programa
 
-La primera vez hay que instalar y cargar los datos; después solo se arrancan dos servicios. La instalación completa, con cada comando en orden, está en el [manual técnico](docs/MANUAL_TECNICO.md), sección 5.
+La primera vez se instala con un solo comando; después solo se arrancan dos servicios. Cada paso del instalador se describe, también para hacerlo a mano, en el [manual técnico](docs/MANUAL_TECNICO.md), sección 5.
 
 ### Primera vez
 
-1. Instalar las versiones de la tabla anterior.
-2. En la carpeta `backend`, crear el entorno virtual e instalar las dependencias.
-3. Copiar `backend/.env.example` a `backend/.env` y escribir la contraseña de PostgreSQL. El token de Banxico y la llave de Z.AI son opcionales: sin ellos el sistema se instala con los datos de respaldo (ver [Funcionamiento sin llaves](#funcionamiento-sin-llaves)).
-4. Crear la base `supply_chain_final` y ejecutar los scripts de `db/final` (manual técnico, 5.2 y 5.4).
-5. Cargar los datos con `backend/etl` y correr los modelos con `backend/analitica` (manual técnico, 5.3 y 5.5).
-6. Generar el token interno con `python -m admin.token_interno` y crear las cuentas con `python -m admin.crear_usuario`. Las contraseñas se escriben ocultas en la consola y no se guardan en ningún archivo del repositorio.
-7. Compilar y desplegar la capa web desde la raíz con `.\frontend\build.ps1`.
+1. Instalar las versiones de la tabla anterior. Definir `CATALINA_HOME` con la carpeta de Tomcat y `JAVA_HOME` con la del JDK 21.
+2. Desde la raíz del proyecto:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\instalar.ps1
+```
+
+El instalador:
+- pide sin mostrarlas la contraseña de PostgreSQL y la de cada cuenta (`gerencia`, `operaciones` y `admin`);
+- crea `backend\.env` a partir de `.env.example` si no existe;
+- crea la base `supply_chain_final` y carga los datos;
+- compila la capa web y termina con la verificación.
+
+El token de Banxico y la llave de Z.AI son opcionales (ver [Funcionamiento sin llaves](#funcionamiento-sin-llaves)). Usa los datos de respaldo validados, así que reproduce exactamente los 12 meses del proyecto. Para probarlo sin tocar una instalación existente: `powershell -ExecutionPolicy Bypass -File .\instalar.ps1 -BaseDatos supply_chain_prueba -SinWeb`.
+
+### Pruebas automáticas
+
+Desde la carpeta `backend`, con el entorno virtual activo; no requieren PostgreSQL ni llaves:
+
+```powershell
+python -m pytest
+```
+
+Resultado esperado: 55 de 55 (CC-26).
 
 ### Cada vez que se usa
 
@@ -104,10 +121,10 @@ fastapi dev app/main.py
 Servidor web, en otra ventana:
 
 ```powershell
-C:\tomcat\apache-tomcat-10.1.60\bin\startup.bat
+& "$env:CATALINA_HOME\bin\startup.bat"
 ```
 
-Abrir `http://localhost:8080/supplychain/` e iniciar sesión con una cuenta creada en el paso 6.
+Abrir `http://localhost:8080/supplychain/` e iniciar sesión con una de las cuentas creadas al instalar.
 
 Opcional, para ver eventos en vivo (carpeta `backend`, entorno virtual activo):
 
