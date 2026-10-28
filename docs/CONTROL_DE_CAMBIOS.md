@@ -44,6 +44,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 | CC-25 | 2026-10-15 | 10 (Fase 9), 9 (R4) | Interpretación | Capacitación sin usuarios finales designados: guía de capacitación y formato de acta |
 | CC-26 | 2026-10-22 | 10 (Fase 6), 4.3 | Adición | Pruebas automáticas con pytest |
 | CC-27 | 2026-10-25 | 9 (R1), 5.1, 4.1 | Adición | Datos de respaldo versionados para instalar sin llaves ni conexión |
+| CC-28 | 2026-10-28 | 10 (Fases 7 y 8), 4.1, 9 (R8) | Adición | Instalación en un paso con `instalar.ps1` y `admin.cargar_todo` |
 
 ---
 
@@ -232,6 +233,7 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 - **Justificación:** el Control inteligente de aplicaciones de Windows bloqueó de forma intermitente la carga de las bibliotecas compiladas de scikit-learn 1.9.1 (`ImportError` en `_cd_fast`, 8 de octubre de 2026), lo que hace que el modelo no sea confiable en el equipo de desarrollo ni en la demostración. Desactivar esa protección reduciría la seguridad del equipo y no siempre es reversible.
 - **Verificación:** sobre una réplica de los datos de desarrollo y con 10 semillas, ambas implementaciones (la propia y la de scikit-learn) coinciden en el ordenamiento de los scores (correlación de Spearman de 0.994) y en la F1 promedio (0.379).
 - **Resultado con los datos del proyecto:** compras, 383 órdenes y 20 anómalas reales: precisión 25 %, exhaustividad 30 %, F1 0.27; la mayoría de las alertas son faltantes normales del simulador que no forman parte de la verdad conocida. Demanda: caída de AirPods en CDMX detectada a los 3 días; el pico de laptops en Monterrey (+22 % sobre unas 5 unidades diarias) no se distingue del ruido y lo cubrirá la proyección de quiebre del motor de recomendaciones.
+- **Precisión del 28 de octubre de 2026:** la consulta de compras de `analitica/anomalias.py` no tenía un orden fijo y PostgreSQL devolvía las filas en su orden físico. Como Isolation Forest submuestrea por posición, el detalle por evento podía cambiar entre instalaciones: en una réplica con las mismas filas reordenadas, la F1 pasó de 0.27 a 0.32. Se agregó `ORDER BY d.detalle_id`. Con el orden fijo, la base de desarrollo y una instalación nueva dan el mismo resultado: precisión 25 %, exhaustividad 30 % y F1 0.27, como se reportó. Solo cambian las órdenes detectadas en dos eventos (EV01, 3 de 15; EV06, 1 de 1), registradas en `evaluacion_anomalias.json` (commits 7c90900 y d9cf11e).
 - **Estado:** Aprobado e implementado.
 
 ### CC-19. Supuestos económicos del motor de recomendaciones
@@ -373,4 +375,19 @@ El PDR se mantiene como documento de diseño fijo. Este registro documenta cada 
 - **Licencias:** Open-Meteo publica bajo CC BY 4.0, que permite redistribuir con atribución. Banxico pide citar la fuente con su dirección para que terceros verifiquen los datos. DummyJSON ofrece datos de prueba. Las atribuciones están en `respaldo/LEEME.md` y en el pie del dashboard.
 - **Límite respetado:** no cambia la funcionalidad congelada, ni los datos ni los KPIs. Con las llaves y conexión, los ETL descargan como antes.
 - **Verificación:** en `supply_chain_prueba`, sin `BANXICO_TOKEN` y con la caché apartada, la carga desde el respaldo dio la huella `efe7c9c4...` y archivos de clima idénticos byte por byte (AUT-02, `docs/qa/AUT-02.txt`). Las 55 pruebas automáticas siguen correctas.
+- **Estado:** Aprobado e implementado.
+### CC-28. Instalación en un paso
+- **Qué dice el PDR:** la Fase 7 (Sección 10) pide documentación técnica y de usuario, y la Fase 8 el esquema de mantenimiento; el riesgo R8 (Sección 9) es la dependencia de una sola desarrolladora. El PDR no define cómo se instala el sistema.
+- **Origen:** revisiones del repositorio del 19, 21 y 23 de octubre de 2026 (TODO Academy): instalarlo exigía unos 15 comandos del manual, rutas fijas de Tomcat y llaves externas.
+- **Cambio:**
+  - `instalar.ps1` en la raíz, para PowerShell 5.1. Comprueba los requisitos, crea `backend\.venv`, crea `backend\.env` a partir de `.env.example` solo si no existe, crea la base, ejecuta `db\final\01` a `07` en orden numérico, carga los datos, genera el token interno, compila la capa web en `CATALINA_HOME`, crea las cuentas `gerencia`, `operaciones` y `admin` con la contraseña oculta y termina con la verificación (pruebas automáticas, `99_verificar_extensiones.sql`, `validar_kpis.sql` y huella de datos).
+  - Opciones: `-BaseDatos` para instalar en otra base, `-Descargar` para traer los datos de las APIs, `-SinWeb`, `-TomcatHome` y `-Reinstalar`, que pide escribir el nombre de la base para confirmar.
+  - Por omisión usa los datos de respaldo validados (CC-27), para que cualquier instalación reproduzca exactamente los 12 meses del proyecto.
+  - La contraseña de PostgreSQL solo vive en el proceso del instalador y la base destino va en su entorno, así que instalar en una base de prueba no modifica `backend\.env`. Nunca toca `supply_chain_mvp`, y si la base ya existe se detiene sin cambiar nada.
+  - `python -m admin.cargar_todo`: ejecuta en orden los ETL, `refrescar_modelo_estrella()` y los cuatro modelos, cada uno en su propio proceso, y se detiene en el primer error. Si `eventos_inyectados.json` o `evaluacion_anomalias.json` solo cambian en su fecha, conserva el archivo versionado.
+  - Manual técnico, sección 5: instalación en un paso y los mismos pasos a mano, en el orden del instalador y con la opción `-v base`. El README y el manual usan `CATALINA_HOME` en lugar de `C:\tomcat\...`.
+- **Justificación:** cualquier persona instala y verifica el sistema con un comando, sin depender de la desarrolladora (riesgo R8), y la verificación final demuestra que obtuvo los mismos datos y KPIs validados.
+- **Defecto encontrado al probarlo:** el orden de la consulta de compras de Isolation Forest no era fijo; se corrigió como precisión de CC-18.
+- **Límite respetado:** no cambia la funcionalidad congelada. Solo se usan PowerShell, Python, psql y los scripts existentes, sin herramientas nuevas.
+- **Verificación:** en el equipo de desarrollo, `instalar.ps1 -BaseDatos supply_chain_prueba -SinWeb` creó la base, cargó los datos, corrió los modelos (MAPE 3.3 %, índice de riesgo 30.2, F1 0.27 y 4 casos con 351,723 MXN), creó las tres cuentas y terminó con 55 de 55, 36 de 36, 23 de 23 y la huella `efe7c9c4...`. La prueba en un clon limpio desde GitHub queda como evidencia en `docs/qa`.
 - **Estado:** Aprobado e implementado.
