@@ -1,7 +1,7 @@
 {
   "proyecto": "Dashboard Ejecutivo de Supply Chain - Proyecto final (rama proyecto-final; el MVP esta congelado en master con la etiqueta mvp-v1.0)",
   "fecha_actualizacion": "2026-10-28",
-  "fase_actual": "Atencion de la retroalimentacion de TODO Academy: bloques 1 a 4 cerrados; sigue el bloque 5 (prueba en un clon limpio, declaracion de IA y cierre); la funcionalidad congelada no cambia",
+  "fase_actual": "Retroalimentacion de TODO Academy atendida: bloques 1 a 5 cerrados (pruebas automaticas, funcionamiento sin llaves, instalacion en un paso probada en un clon limpio y declaracion de IA); la funcionalidad congelada no cambia",
   "backlog": {
     "completado": [
       "Inicializacion de repositorio Git local",
@@ -125,11 +125,11 @@
       "Bloque 4 de la retroalimentacion: instalar.ps1 en la raiz (PowerShell 5.1) y python -m admin.cargar_todo; instalacion en un paso con respaldo validado por omision, -BaseDatos, -Descargar, -SinWeb, -TomcatHome y -Reinstalar; cuentas con contrasena oculta y verificacion final (CC-28)",
       "Prueba en el equipo de desarrollo: instalar.ps1 -BaseDatos supply_chain_prueba -SinWeb termino con 55 de 55, 36 de 36, 23 de 23 y huella efe7c9c4; MAPE 3.3, riesgo 30.2, F1 0.27 y 4 casos con 351,723 MXN, iguales a los validados",
       "README con instalacion en un paso y comando de pytest; manual tecnico seccion 5 con el orden del instalador y la opcion -v base; CATALINA_HOME en lugar de C:/tomcat en README y manual; falla conocida del Control de aplicaciones en el plan de mantenimiento",
-      "anomalias.py con ORDER BY d.detalle_id: Isolation Forest ya no depende del orden fisico de las filas; F1 0.27 igual; evaluacion_anomalias.json regenerada (precision de CC-18)"
+      "anomalias.py con ORDER BY d.detalle_id: Isolation Forest ya no depende del orden fisico de las filas; F1 0.27 igual; evaluacion_anomalias.json regenerada (precision de CC-18)",
+      "Bloque 5 de la retroalimentacion: instalar.ps1 probado en un clon limpio de GitHub (commit b8fd411) sin .env ni .venv, con los cuatro resultados en OK y git status sin cambios (INS-01, docs/qa/INS-01.txt)",
+      "Seccion Uso de herramientas de IA en el README: Claude Opus 5.5 como herramienta de desarrollo con decisiones y verificacion de la desarrolladora, y Z.AI como componente del producto"
     ],
-"en_progreso": [
-  "Bloque 5 de la retroalimentacion: instalar en un clon limpio desde GitHub con -BaseDatos supply_chain_prueba y dejar la evidencia en docs/qa; declarar el uso de IA en el README; cierre y push"
-],
+"en_progreso": [],
 "pendiente": [
   "Subir el descriptivo del proyecto (PDF) en TODO Academy, Mis proyectos; no se versiona en el repositorio",
   "Antes de la demostracion: python -m etl.simulador_vivo --reiniciar y despues correr el simulador con pausas",
@@ -138,14 +138,11 @@
 ]
   },
 "archivos_modificados_recientemente": [
+  "docs/qa/INS-01.txt",
+  "docs/qa/INDICE.txt",
+  "docs/REPORTE_QA.md",
   "instalar.ps1",
-  "backend/admin/cargar_todo.py",
-  "backend/analitica/anomalias.py",
-  "backend/analitica/evaluacion_anomalias.json",
   "README.md",
-  "docs/MANUAL_TECNICO.md",
-  "docs/PLAN_MANTENIMIENTO.md",
-  "docs/CONTROL_DE_CAMBIOS.md",
   "docs/project_state.json"
 ],
   "decisiones_de_diseno": [
@@ -382,6 +379,7 @@
     "Las variables de entorno de PowerShell valen solo en la ventana donde se definen: DB_NAME de la prueba se quito en la terminal de backend, no en la de la raiz",
     "Isolation Forest daba detalle por evento distinto entre la base de desarrollo y una instalacion nueva porque la consulta de compras no tenia ORDER BY y el modelo submuestrea por posicion; en una replica reordenada la F1 paso de 0.27 a 0.32; corregido con ORDER BY d.detalle_id",
     "analitica.anomalias reescribe evaluacion_anomalias.json con la fecha del dia; cargar_todo restaura el archivo si solo cambia la fecha",
-    "El Control inteligente de aplicaciones de Windows bloqueo statsmodels (_innovations) durante la primera prueba del instalador; al reintentar cargo sin problema"
+    "El Control inteligente de aplicaciones de Windows bloqueo statsmodels (_innovations) durante la primera prueba del instalador; al reintentar cargo sin problema",
+    "El mensaje de base existente de instalar.ps1 sugeria -BaseDatos supply_chain_prueba aunque ya fuera esa la base; ahora sugiere -BaseDatos <nombre>"
   ]
 }
